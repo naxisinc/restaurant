@@ -26,7 +26,7 @@
     };
 
     FB.getLoginStatus(function (response) {
-      statusChangeCallback(response);
+      // statusChangeCallback(response);
       if (response.status === 'connected') {
         document.getElementById('status').innerHTML = 'I am connected';
       } else if (response.status === 'not_authorized') {
