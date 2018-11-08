@@ -12,7 +12,8 @@
   <h1>Home Page</h1>
 
   <div id="status"></div>
-  <button onclick="login()">Facebook</button>
+  <button onclick="login()">Facebook Login</button>
+  <button onclick="logout()">Facebook Logout</button>
 
   <script>
     window.fbAsyncInit = function () {
@@ -55,6 +56,12 @@
         } else {
           document.getElementById('status').innerHTML = 'I am not logged in into Facebook';
         }
+      })
+    }
+
+    function logout() {
+      FB.logout(function (response) {
+        console.log(response);
       })
     }
   </script>
