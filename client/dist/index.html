@@ -23,18 +23,21 @@
         version: 'v3.2'
       });
       FB.AppEvents.logPageView();
+
+      // Testing the connection
+      FB.getLoginStatus(function (response) {
+        // statusChangeCallback(response);
+        if (response.status === 'connected') {
+          document.getElementById('status').innerHTML = 'I am connected';
+        } else if (response.status === 'not_authorized') {
+          document.getElementById('status').innerHTML = 'I am not logged in';
+        } else {
+          document.getElementById('status').innerHTML = 'I am not logged in into Facebook';
+        }
+      });
     };
 
-    FB.getLoginStatus(function (response) {
-      // statusChangeCallback(response);
-      if (response.status === 'connected') {
-        document.getElementById('status').innerHTML = 'I am connected';
-      } else if (response.status === 'not_authorized') {
-        document.getElementById('status').innerHTML = 'I am not logged in';
-      } else {
-        document.getElementById('status').innerHTML = 'I am not logged in into Facebook';
-      }
-    });
+
 
     (function (d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
