@@ -36,7 +36,13 @@ const UserSchema = new mongoose.Schema(
           required: true
         }
       }
-    ]
+    ],
+    rol: {
+      // 0=>users, 1=>admin
+      type: Number,
+      requered: true,
+      default: 0
+    }
   },
   {
     versionKey: false // esto es para evitar el campo __v q tanto problema dio en las busquedas

@@ -7,7 +7,8 @@ const SizeSchema = new mongoose.Schema(
   {
     description: {
       type: String,
-      requiered: true
+      requiered: true,
+      minlength: 1
     }
   },
   {

@@ -28,8 +28,6 @@ mongoose.connection.on('error', err => {
 
 const app = express();
 
-const users = require('./routes/users');
-
 // Port number
 const port = process.env.PORT || 3000;
 
@@ -47,12 +45,11 @@ app.use(express.static(path.join(__dirname, 'client/dist')));
 // Body Parse Middleware
 app.use(bodyParser.json());
 
-app.use('/users', users);
+const users = require('./routes/users');
+const sizes = require('./routes/sizes');
 
-// Index route
-app.get('/', (req, res) => {
-  res.send('Invalid Endpoint');
-});
+app.use('/users', users);
+app.use('/sizes', sizes);
 
 // Start serve
 app.listen(port, () => {
