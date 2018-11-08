@@ -26,9 +26,9 @@
 
       // Testing the connection
       FB.getLoginStatus(function (response) {
-        // statusChangeCallback(response);
         if (response.status === 'connected') {
           document.getElementById('status').innerHTML = 'I am connected';
+          console.log(JSON.stringify(response));
         } else if (response.status === 'not_authorized') {
           document.getElementById('status').innerHTML = 'I am not logged in';
         } else {
@@ -36,8 +36,6 @@
         }
       });
     };
-
-
 
     (function (d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
@@ -51,6 +49,7 @@
       FB.login(function (response) {
         if (response.status === 'connected') {
           document.getElementById('status').innerHTML = 'I am connected';
+          console.log(JSON.stringify(response));
         } else if (response.status === 'not_authorized') {
           document.getElementById('status').innerHTML = 'I am not logged in';
         } else {
