@@ -23,14 +23,15 @@
   <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false"
     data-auto-logout-link="true" data-use-continue-as="true"></div>
 
-  <button (click)="getLoginStatus()">getStatus</button>
+  <button (click)="checkLoginState()">getStatus</button>
 
 
   <script>
-    FB.getLoginStatus(function (response) {
-      console.log(response);
-      statusChangeCallback(response);
-    });
+    function checkLoginState() {
+      FB.getLoginStatus(function (response) {
+        statusChangeCallback(response);
+      });
+    }
   </script>
 
 </body>
