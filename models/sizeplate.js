@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const config = require('../config/database');
 
-// Comment Schema
-const CommentSchema = new mongoose.Schema(
+// SizePlate Schema
+const SizePlateSchema = new mongoose.Schema(
   {
-    _creator: {
+    _size: {
       type: mongoose.Schema.Types.ObjectId,
       required: true
     },
@@ -13,19 +13,21 @@ const CommentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true
     },
-    created_at: {
-      type: Date,
-      required: true,
-      default: Date.now
-    },
-    comment: {
-      type: String,
-      trim: true
-    },
-    rate: {
+    price: {
       type: Number,
-      required: true,
-      default: 1
+      required: true
+    },
+    calories: {
+      type: Number,
+      required: true
+    },
+    totalfat: {
+      type: Number,
+      required: true
+    },
+    totalcarbs: {
+      type: Number,
+      required: true
     }
   },
   {
@@ -33,4 +35,7 @@ const CommentSchema = new mongoose.Schema(
   }
 );
 
-const Comment = (module.exports = mongoose.model('Comment', CommentSchema));
+const SizePlate = (module.exports = mongoose.model(
+  'SizePlate',
+  SizePlateSchema
+));

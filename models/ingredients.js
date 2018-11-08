@@ -5,6 +5,12 @@ const config = require('../config/database');
 // Ingredient Schema
 const IngredientSchema = new mongoose.Schema(
   {
+    _plates: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        requiered: true
+      }
+    ],
     img: {
       type: String,
       required: true
