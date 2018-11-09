@@ -23,6 +23,10 @@ const PlateSchema = new mongoose.Schema(
     description: {
       type: String,
       required: true
+    },
+    group: {
+      type: String,
+      required: true
     }
   },
   {
