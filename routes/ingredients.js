@@ -2,49 +2,52 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 const { ObjectID } = require('mongodb');
+const multer = require('multer');
+const GridFsStorage = require('multer-gridfs-storage');
+const Grid = require('gridfs-stream');
 
-const Size = require('../models/sizes');
+const Ingredient = require('../models/ingredients');
 const { authenticate } = require('../middleware/authenticate');
 
-// POST /sizes
+// POST /ingredients
 router.post('/', authenticate, async (req, res) => {
   try {
     if (req.user.rol !== 1) {
       return res.status(401).send();
     }
     const description = _.pick(req.body, ['description']);
-    const size = new Size(description);
-    await size.save();
-    res.status(200).send(size);
+    const ingredient = new Ingredient(description);
+    await ingredient.save();
+    res.status(200).send(ingredient);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
-// GET /sizes
+// GET /ingredients
 router.get('/', async (req, res) => {
   try {
-    const sizes = await Size.find();
-    res.status(200).send(sizes);
+    const ingredients = await Ingredient.find();
+    res.status(200).send(ingredients);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
-// GET /sizes/id
+// GET /ingredients/id
 router.get('/:id', async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const size = await Size.findById(id);
-    if (!size) return res.status(404).send();
-    res.status(200).send(size);
+    const ingredient = await Ingredient.findById(id);
+    if (!ingredient) return res.status(404).send();
+    res.status(200).send(ingredient);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
-// PATCH /sizes/id
+// PATCH /ingredients/id
 router.patch('/:id', authenticate, async (req, res) => {
   try {
     if (req.user.rol !== 1) {
@@ -53,19 +56,19 @@ router.patch('/:id', authenticate, async (req, res) => {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const description = req.body.description;
-    const size = await Size.findByIdAndUpdate(
+    const ingredient = await Ingredient.findByIdAndUpdate(
       id,
       { description },
       { new: true }
     );
-    if (!size) return res.status(404).send();
-    res.status(200).send(size);
+    if (!ingredient) return res.status(404).send();
+    res.status(200).send(ingredient);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
-// DELETE /sizes/id
+// DELETE /ingredients/id
 router.delete('/:id', authenticate, async (req, res) => {
   try {
     if (req.user.rol !== 1) {
@@ -73,8 +76,8 @@ router.delete('/:id', authenticate, async (req, res) => {
     }
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const size = await Size.findByIdAndRemove(id);
-    res.status(200).send(size);
+    const ingredient = await Ingredient.findByIdAndRemove(id);
+    res.status(200).send(ingredient);
   } catch (e) {
     res.status(400).send(e);
   }
