@@ -77,13 +77,18 @@ app.get('/files', (req, res) => {
   });
 });
 
-// @route GET /file/:id
-// @desc Display just one file in JSON
-app.get('/file', (req, res) => {
-  gfs.files.findOne().toArray((err, files) => {
+// @route GET /files/:filename
+// @desc Display single file object
+app.get('/files/:filename', (req, res) => {
+  gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
     // Check if files
-    if (!files || files.length === 0) {
-      return res.status(404).json({ err: 'No files exist' });
+    if (!file || file.length === 0) {
+      return res.status(404).json({ err: 'No file exists' });
+    }
+
+    // Check if image
+    if (file.contentType == 'image/jpeg') {
+      return res.status(404).json({ err: 'No file exists' });
     }
     return res.json(files);
   });
