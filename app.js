@@ -58,9 +58,35 @@ const storage = new GridFsStorage({
 });
 const upload = multer({ storage });
 
-//Route test file uploader
+// @route POST /upload
+// @desc Uploads file to DB
 app.post('/upload', upload.single('file'), (req, res) => {
-  res.json({ file: req.file });
+  // res.json({ file: req.file });
+  res.redirect('/');
+});
+
+// @route GET /files
+// @desc Display all files in JSON
+app.get('/files', (req, res) => {
+  gfs.files.find().toArray((err, files) => {
+    // Check if files
+    if (!files || files.length === 0) {
+      return res.status(404).json({ err: 'No files exist' });
+    }
+    return res.json(files);
+  });
+});
+
+// @route GET /file/:id
+// @desc Display just one file in JSON
+app.get('/file', (req, res) => {
+  gfs.files.findOne().toArray((err, files) => {
+    // Check if files
+    if (!files || files.length === 0) {
+      return res.status(404).json({ err: 'No files exist' });
+    }
+    return res.json(files);
+  });
 });
 
 // Port number
