@@ -6,7 +6,10 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
+const crypto = require('crypto');
 const config = require('./config/database');
+
+const app = express();
 
 // Connect To Database
 const uri = config.database;
@@ -14,25 +17,51 @@ const options = {
   useNewUrlParser: true,
   useCreateIndex: true
 };
-const conn = mongoose.createConnection(uri, options);
-// mongoose.connect(
-//   uri,
-//   options
-// );
+mongoose.connect(
+  uri,
+  options
+);
 
-// // On Connection
-// mongoose.connection.on('connected', () => {
-//   console.log('Connected to database ' + config.database);
-// });
+// On Connection
+mongoose.connection.on('connected', () => {
+  console.log('Connected to database ' + config.database);
+});
 
-// // On Error
-// mongoose.connection.on('error', err => {
-//   console.log('Database error ' + err);
-// });
+// On Error
+mongoose.connection.on('error', err => {
+  console.log('Database error ' + err);
+});
 
 let gfs;
+mongoose.connection.once('open', () => {
+  gfs = Grid(mongoose.connection.db, mongoose.mongo);
+  gfs.collection('uploads');
+});
 
-const app = express();
+const storage = new GridFsStorage({
+  url: uri,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) {
+          return reject(err);
+        }
+        const filename = buf.toString('hex') + path.extname(file.originalname);
+        const fileInfo = {
+          filename: filename,
+          bucketName: 'uploads'
+        };
+        resolve(fileInfo);
+      });
+    });
+  }
+});
+const upload = multer({ storage });
+
+//Route test file uploader
+app.post('/upload', upload.single('file'), (req, res) => {
+  res.json({ file: req.file });
+});
 
 // Port number
 const port = process.env.PORT || 3000;
