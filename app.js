@@ -3,6 +3,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const multer = require('multer');
+const GridFsStorage = require('multer-gridfs-storage');
+const Grid = require('gridfs-stream');
 const config = require('./config/database');
 
 // Connect To Database
@@ -11,20 +14,23 @@ const options = {
   useNewUrlParser: true,
   useCreateIndex: true
 };
-mongoose.connect(
-  uri,
-  options
-);
+const conn = mongoose.createConnection(uri, options);
+// mongoose.connect(
+//   uri,
+//   options
+// );
 
-// On Connection
-mongoose.connection.on('connected', () => {
-  console.log('Connected to database ' + config.database);
-});
+// // On Connection
+// mongoose.connection.on('connected', () => {
+//   console.log('Connected to database ' + config.database);
+// });
 
-// On Error
-mongoose.connection.on('error', err => {
-  console.log('Database error ' + err);
-});
+// // On Error
+// mongoose.connection.on('error', err => {
+//   console.log('Database error ' + err);
+// });
+
+let gfs;
 
 const app = express();
 
