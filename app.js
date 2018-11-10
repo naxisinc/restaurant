@@ -9,17 +9,11 @@ const config = require('./config/database');
 const app = express();
 
 // Connect To Database
-const uri = config.database;
-const options = {
-  useNewUrlParser: true,
-  useCreateIndex: true
-};
-
-const conn = mongoose.createConnection(uri, options);
+const conn = mongoose.createConnection(config.uri, config.options);
 
 // On Connection
 conn.on('connected', () => {
-  console.log('Connected to database ' + config.database);
+  console.log('Connected to database ' + config.uri);
 });
 
 // On Error
@@ -27,62 +21,11 @@ conn.on('error', err => {
   console.log('Database error ' + err);
 });
 
-// mongoose.connect(
-//   uri,
-//   options
-// );
-
-// // On Connection
-// mongoose.connection.on('connected', () => {
-//   console.log('Connected to database ' + config.database);
-// });
-
-// // On Error
-// mongoose.connection.on('error', err => {
-//   console.log('Database error ' + err);
-// });
-
-// function gfs() {
-//   let gfs;
-//   mongoose.connection.once('open', () => {
-//     gfs = Grid(mongoose.connection.db, mongoose.mongo);
-//     gfs.collection('uploads');
-//   });
-//   return gfs;
-// }
-
 let gfs;
 conn.once('open', () => {
   gfs = Grid(conn.db, mongoose.mongo);
   gfs.collection('uploads');
 });
-
-// const storage = new GridFsStorage({
-//   url: uri,
-//   file: (req, file) => {
-//     return new Promise((resolve, reject) => {
-//       crypto.randomBytes(16, (err, buf) => {
-//         if (err) {
-//           return reject(err);
-//         }
-//         const filename = buf.toString('hex') + path.extname(file.originalname);
-//         const fileInfo = {
-//           filename: filename,
-//           bucketName: 'uploads'
-//         };
-//         resolve(fileInfo);
-//       });
-//     });
-//   }
-// });
-// const upload = multer({ storage });
-
-// // @route POST /upload
-// // @desc Uploads file to DB
-// app.post('/upload', upload.single('file'), (req, res) => {
-//   // res.json({ file: req.file });
-//   res.redirect('/');
-// });
 
 // @route GET /files
 // @desc Display all files in JSON
@@ -95,35 +38,6 @@ app.get('/files', (req, res) => {
     return res.json(files);
   });
 });
-
-// // @route GET /files/:filename
-// // @desc Display single file object
-// app.get('/files/:filename', (req, res) => {
-//   gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
-//     // Check if files
-//     if (!file || file.length === 0) {
-//       return res.status(404).json({ err: 'No file exists' });
-//     }
-//     res.json({ file });
-//   });
-// });
-
-// // @route GET /image/:filename
-// // @desc Display Image
-// app.get('/image/:filename', (req, res) => {
-//   gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
-//     // Check if files
-//     if (!file || file.length === 0) {
-//       return res.status(404).json({ err: 'No file exists' });
-//     }
-//     if (file.contentType === 'image/png' || file.contentType === 'image/jpeg') {
-//       const readstream = gfs.createReadStream(file.filename);
-//       readstream.pipe(res);
-//     } else {
-//       res.json({ err: 'No an image' });
-//     }
-//   });
-// });
 
 // Port number
 const port = process.env.PORT || 3000;
@@ -154,5 +68,3 @@ app.use('/ingredients', ingredients);
 app.listen(port, () => {
   console.log('server started on port: ' + port);
 });
-
-// module.exports = conn;

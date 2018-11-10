@@ -5,7 +5,7 @@ const { ObjectID } = require('mongodb');
 const mongoose = require('mongoose');
 var Grid = require('gridfs-stream');
 
-const config = require('../config/database');
+// const config = require('../config/database');
 const Ingredient = require('../models/ingredients');
 const { upload } = require('../config/filestorage');
 const { authenticate } = require('../middleware/authenticate');
@@ -21,18 +21,15 @@ router.post('/upload', upload().single('file'), (req, res) => {
 // @desc Display all files in JSON
 router.get('/files', async (req, res) => {
   try {
-    // var conn = mongoose.createConnection(config.database, config.options);
-    var conn = mongoose.connection;
-    conn.once('open', function() {
-      var gfs = Grid(conn.db, mongoose.mongo);
-
-      gfs.files.find().toArray((err, files) => {
-        if (!files || files.length === 0) {
-          return res.status(404).json({ err: 'No files exist' });
-        }
-        return res.json(files);
-      });
-    });
+    console.log(gfs());
+    res.send();
+    // const gfs = app.gfs;
+    // gfs.files.find().toArray((err, files) => {
+    //   if (!files || files.length === 0) {
+    //     return res.status(404).json({ err: 'No files exist' });
+    //   }
+    //   return res.json(files);
+    // });
   } catch (e) {
     res.status(400).send(e);
   }

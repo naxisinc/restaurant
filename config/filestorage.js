@@ -6,23 +6,27 @@ const crypto = require('crypto');
 // const mongoose = require('mongoose');
 const config = require('./database');
 
-// function gfs() {
-//   let gfs;
-//   mongoose.connection.once('open', () => {
-//     gfs = Grid(mongoose.connection.db, mongoose.mongo);
-//     gfs.collection('uploads');
-//   });
-//   return gfs;
-// }
+// const gfs = async () => {
+//   try {
+//     let res;
+//     let gfs;
 
-// function aaa() {
-//   let gfs = 'Hello World';
-//   return gfs;
-// }
+//     var conn = mongoose.createConnection(config.uri, config.options);
+//     conn.once('open', async () => {
+//       gfs = Grid(conn.db, mongoose.mongo);
+//     });
+
+//     res = gfs.files.find().toArray();
+//     console.log(res);
+//     return res;
+//   } catch (e) {
+//     return 10;
+//   }
+// };
 
 function upload() {
   const storage = new GridFsStorage({
-    url: config.database,
+    url: config.uri,
     file: (req, file) => {
       return new Promise((resolve, reject) => {
         crypto.randomBytes(16, (err, buf) => {
