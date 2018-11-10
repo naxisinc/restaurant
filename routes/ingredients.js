@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 const { ObjectID } = require('mongodb');
+const mongoose = require('mongoose');
+var Grid = require('gridfs-stream');
 
+const config = require('../config/database');
 const Ingredient = require('../models/ingredients');
 const { upload } = require('../config/filestorage');
-const { gfs } = require('../middleware/gridfs');
 const { authenticate } = require('../middleware/authenticate');
 
 // @route POST /upload
@@ -17,23 +19,19 @@ router.post('/upload', upload().single('file'), (req, res) => {
 
 // @route GET /files
 // @desc Display all files in JSON
-const mongoose = require('mongoose');
-const Grid = require('gridfs-stream');
 router.get('/files', async (req, res) => {
   try {
-    let gfs;
-    mongoose.connection.once('open', () => {
-      gfs = Grid(mongoose.connection.db, mongoose.mongo);
-      gfs.collection('uploads');
-      console.log('entre');
-    });
-    gfs.files.find().toArray((err, files) => {
-      console.log(files);
-      // Check if files
-      if (!files || files.length === 0) {
-        return res.status(404).json({ err: 'No files exist' });
-      }
-      return res.json(files);
+    // var conn = mongoose.createConnection(config.database, config.options);
+    var conn = mongoose.connection;
+    conn.once('open', function() {
+      var gfs = Grid(conn.db, mongoose.mongo);
+
+      gfs.files.find().toArray((err, files) => {
+        if (!files || files.length === 0) {
+          return res.status(404).json({ err: 'No files exist' });
+        }
+        return res.json(files);
+      });
     });
   } catch (e) {
     res.status(400).send(e);

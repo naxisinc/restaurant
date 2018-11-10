@@ -3,10 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-// const multer = require('multer');
-// const GridFsStorage = require('multer-gridfs-storage');
-// const Grid = require('gridfs-stream');
-// const crypto = require('crypto');
+const Grid = require('gridfs-stream');
 const config = require('./config/database');
 
 const app = express();
@@ -17,26 +14,48 @@ const options = {
   useNewUrlParser: true,
   useCreateIndex: true
 };
-mongoose.connect(
-  uri,
-  options
-);
+
+const conn = mongoose.createConnection(uri, options);
 
 // On Connection
-mongoose.connection.on('connected', () => {
+conn.on('connected', () => {
   console.log('Connected to database ' + config.database);
 });
 
 // On Error
-mongoose.connection.on('error', err => {
+conn.on('error', err => {
   console.log('Database error ' + err);
 });
 
-// let gfs;
-// mongoose.connection.once('open', () => {
-//   gfs = Grid(mongoose.connection.db, mongoose.mongo);
-//   gfs.collection('uploads');
+// mongoose.connect(
+//   uri,
+//   options
+// );
+
+// // On Connection
+// mongoose.connection.on('connected', () => {
+//   console.log('Connected to database ' + config.database);
 // });
+
+// // On Error
+// mongoose.connection.on('error', err => {
+//   console.log('Database error ' + err);
+// });
+
+// function gfs() {
+//   let gfs;
+//   mongoose.connection.once('open', () => {
+//     gfs = Grid(mongoose.connection.db, mongoose.mongo);
+//     gfs.collection('uploads');
+//   });
+//   return gfs;
+// }
+
+let gfs;
+conn.once('open', () => {
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection('uploads');
+});
 
 // const storage = new GridFsStorage({
 //   url: uri,
@@ -65,17 +84,17 @@ mongoose.connection.on('error', err => {
 //   res.redirect('/');
 // });
 
-// // @route GET /files
-// // @desc Display all files in JSON
-// app.get('/files', (req, res) => {
-//   gfs.files.find().toArray((err, files) => {
-//     // Check if files
-//     if (!files || files.length === 0) {
-//       return res.status(404).json({ err: 'No files exist' });
-//     }
-//     return res.json(files);
-//   });
-// });
+// @route GET /files
+// @desc Display all files in JSON
+app.get('/files', (req, res) => {
+  gfs.files.find().toArray((err, files) => {
+    // Check if files
+    if (!files || files.length === 0) {
+      return res.status(404).json({ err: 'No files exist' });
+    }
+    return res.json(files);
+  });
+});
 
 // // @route GET /files/:filename
 // // @desc Display single file object
@@ -135,3 +154,5 @@ app.use('/ingredients', ingredients);
 app.listen(port, () => {
   console.log('server started on port: ' + port);
 });
+
+// module.exports = conn;
