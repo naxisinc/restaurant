@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const config = require('../config/database');
-
 // Ingredient Schema
 const IngredientSchema = new mongoose.Schema(
   {

@@ -1,28 +1,16 @@
 const path = require('path');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
-// const Grid = require('gridfs-stream');
 const crypto = require('crypto');
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const Grid = require('gridfs-stream');
 const config = require('./database');
 
-// const gfs = async () => {
-//   try {
-//     let res;
-//     let gfs;
-
-//     var conn = mongoose.createConnection(config.uri, config.options);
-//     conn.once('open', async () => {
-//       gfs = Grid(conn.db, mongoose.mongo);
-//     });
-
-//     res = gfs.files.find().toArray();
-//     console.log(res);
-//     return res;
-//   } catch (e) {
-//     return 10;
-//   }
-// };
+function gfs() {
+  let gfs = Grid(mongoose.connection.db, mongoose.mongo);
+  gfs.collection('uploads');
+  return gfs;
+}
 
 function upload() {
   const storage = new GridFsStorage({
@@ -47,4 +35,4 @@ function upload() {
   return multer({ storage });
 }
 
-module.exports = { upload };
+module.exports = { gfs, upload };

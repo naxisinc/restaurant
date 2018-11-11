@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const config = require('../config/database');
-
 // Plate Schema
 const PlateSchema = new mongoose.Schema(
   {

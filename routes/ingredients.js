@@ -2,13 +2,10 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 const { ObjectID } = require('mongodb');
-const mongoose = require('mongoose');
-var Grid = require('gridfs-stream');
 
-// const config = require('../config/database');
 const Ingredient = require('../models/ingredients');
-const { upload } = require('../config/filestorage');
 const { authenticate } = require('../middleware/authenticate');
+const { gfs, upload } = require('../config/filestorage');
 
 // @route POST /upload
 // @desc Uploads file to DB
@@ -21,48 +18,19 @@ router.post('/upload', upload().single('file'), (req, res) => {
 // @desc Display all files in JSON
 router.get('/files', async (req, res) => {
   try {
-    console.log(gfs());
-    res.send();
-    // const gfs = app.gfs;
-    // gfs.files.find().toArray((err, files) => {
-    //   if (!files || files.length === 0) {
-    //     return res.status(404).json({ err: 'No files exist' });
-    //   }
-    //   return res.json(files);
-    // });
+    gfs()
+      .files.find()
+      .toArray((err, files) => {
+        // Check if files
+        if (!files || files.length === 0) {
+          return res.status(404).json({ err: 'No files exist' });
+        }
+        return res.json(files);
+      });
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send();
   }
 });
-
-// // @route GET /files/:filename
-// // @desc Display single file object
-// app.get('/files/:filename', (req, res) => {
-//   gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
-//     // Check if files
-//     if (!file || file.length === 0) {
-//       return res.status(404).json({ err: 'No file exists' });
-//     }
-//     res.json({ file });
-//   });
-// });
-
-// // @route GET /image/:filename
-// // @desc Display Image
-// app.get('/image/:filename', (req, res) => {
-//   gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
-//     // Check if files
-//     if (!file || file.length === 0) {
-//       return res.status(404).json({ err: 'No file exists' });
-//     }
-//     if (file.contentType === 'image/png' || file.contentType === 'image/jpeg') {
-//       const readstream = gfs.createReadStream(file.filename);
-//       readstream.pipe(res);
-//     } else {
-//       res.json({ err: 'No an image' });
-//     }
-//   });
-// });
 
 // // POST /ingredients
 // router.post('/', authenticate, async (req, res) => {

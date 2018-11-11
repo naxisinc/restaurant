@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const config = require('../config/database');
-
 // Comment Schema
 const CommentSchema = new mongoose.Schema(
   {

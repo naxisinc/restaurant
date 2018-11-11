@@ -3,40 +3,24 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const Grid = require('gridfs-stream');
 const config = require('./config/database');
 
 const app = express();
 
 // Connect To Database
-const conn = mongoose.createConnection(config.uri, config.options);
+mongoose.connect(
+  config.uri,
+  config.options
+);
 
 // On Connection
-conn.on('connected', () => {
+mongoose.connection.on('connected', () => {
   console.log('Connected to database ' + config.uri);
 });
 
 // On Error
-conn.on('error', err => {
+mongoose.connection.on('error', err => {
   console.log('Database error ' + err);
-});
-
-let gfs;
-conn.once('open', () => {
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection('uploads');
-});
-
-// @route GET /files
-// @desc Display all files in JSON
-app.get('/files', (req, res) => {
-  gfs.files.find().toArray((err, files) => {
-    // Check if files
-    if (!files || files.length === 0) {
-      return res.status(404).json({ err: 'No files exist' });
-    }
-    return res.json(files);
-  });
 });
 
 // Port number
