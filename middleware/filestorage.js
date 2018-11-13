@@ -4,7 +4,7 @@ const GridFsStorage = require('multer-gridfs-storage');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const Grid = require('gridfs-stream');
-const config = require('./database');
+const config = require('../config/database');
 
 function gfs() {
   let gfs = Grid(mongoose.connection.db, mongoose.mongo);

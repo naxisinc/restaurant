@@ -5,32 +5,7 @@ const { ObjectID } = require('mongodb');
 
 const Ingredient = require('../models/ingredients');
 const { authorized } = require('../middleware/authorized');
-const { gfs, upload } = require('../config/filestorage');
-
-// @route POST /upload
-// @desc Uploads file to DB
-router.post('/upload', authorized, upload().single('file'), (req, res) => {
-  res.json({ file: req.file });
-  // res.redirect('/');
-});
-
-// @route GET /files
-// @desc Display all files in JSON
-router.get('/files', async (req, res) => {
-  try {
-    gfs()
-      .files.find()
-      .toArray((err, files) => {
-        // Check if files
-        if (!files || files.length === 0) {
-          return res.status(404).json({ err: 'No files exist' });
-        }
-        return res.json(files);
-      });
-  } catch (e) {
-    res.status(400).send();
-  }
-});
+const { gfs, upload } = require('../middleware/filestorage');
 
 // POST /ingredients
 router.post('/', authorized, upload().single('file'), async (req, res) => {
@@ -64,20 +39,6 @@ router.get('/:id', async (req, res) => {
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const ingredient = await Ingredient.findById(id);
     if (!ingredient) return res.status(404).send();
-    // gfs().files.findOne({ _id: ingredient.img }, (err, file) => {
-    //   // Check if file
-    //   if (!file || file.length === 0) {
-    //     return res.status(404).send();
-    //   }
-    //   let ftype = file.contentType;
-    //   if (ftype === 'image/jpeg' || ftype === 'image/png') {
-    //     // Read output to browser
-    //     const readstream = gfs().createReadStream(file._id);
-    //     readstream.pipe(res);
-    //   } else {
-    //     res.status(404).send();
-    //   }
-    // });
     res.status(200).send(ingredient);
   } catch (e) {
     res.status(400).send(e);
@@ -87,25 +48,17 @@ router.get('/:id', async (req, res) => {
 // PATCH /ingredients/id
 router.patch('/:id', authorized, async (req, res) => {
   try {
-    const ingredient = await findById(req.params.id);
-    console.log(ingredient);
-    if (ingredient.isModified('description')) {
-      console.log('Was modified');
-    } else {
-      console.log('Was NOT modified');
-    }
-    // const id = req.params.id;
-    // if (!ObjectID.isValid(id)) return res.status(404).send();
-    // // const description = req.body.description;
-    // const ingredient = {};
-    // const ingredient = await Ingredient.findByIdAndUpdate(
-    //   id,
-    //   { description },
-    //   { new: true }
-    // );
-    // if (!ingredient) return res.status(404).send();
-    // res.status(200).send(ingredient);
-    res.send();
+    const id = req.params.id;
+    if (!ObjectID.isValid(id)) return res.status(404).send();
+    // const ingredient = await Ingredient.findById(req.params.id);
+    console.log(req.body);
+    // console.log(ingredient);
+    // if (ingredient.isModified('description')) {
+    //   console.log('Was modified');
+    // } else {
+    //   console.log('Was NOT modified');
+    // }
+    res.send(req.body);
   } catch (e) {
     res.status(400).send(e);
   }
