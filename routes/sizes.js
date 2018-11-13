@@ -4,14 +4,11 @@ const _ = require('lodash');
 const { ObjectID } = require('mongodb');
 
 const Size = require('../models/sizes');
-const { authenticate } = require('../middleware/authenticate');
+const { authorized } = require('../middleware/authorized');
 
 // POST /sizes
-router.post('/', authenticate, async (req, res) => {
+router.post('/', authorized, async (req, res) => {
   try {
-    if (req.user.rol !== 1) {
-      return res.status(401).send();
-    }
     const description = _.pick(req.body, ['description']);
     const size = new Size(description);
     await size.save();
@@ -45,11 +42,8 @@ router.get('/:id', async (req, res) => {
 });
 
 // PATCH /sizes/id
-router.patch('/:id', authenticate, async (req, res) => {
+router.patch('/:id', authorized, async (req, res) => {
   try {
-    if (req.user.rol !== 1) {
-      return res.status(401).send();
-    }
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const description = req.body.description;
@@ -66,11 +60,8 @@ router.patch('/:id', authenticate, async (req, res) => {
 });
 
 // DELETE /sizes/id
-router.delete('/:id', authenticate, async (req, res) => {
+router.delete('/:id', authorized, async (req, res) => {
   try {
-    if (req.user.rol !== 1) {
-      return res.status(401).send();
-    }
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const size = await Size.findByIdAndRemove(id);

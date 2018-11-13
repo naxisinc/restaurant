@@ -10,7 +10,7 @@ const IngredientSchema = new mongoose.Schema(
       }
     ],
     img: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true
     },
     description: {
