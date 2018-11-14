@@ -43,10 +43,12 @@ app.use(bodyParser.json());
 const users = require('./routes/users');
 const sizes = require('./routes/sizes');
 const ingredients = require('./routes/ingredients');
+const comments = require('./routes/comments');
 
 app.use('/users', users);
 app.use('/sizes', sizes);
 app.use('/ingredients', ingredients);
+app.use('/comments', comments);
 
 // Start serve
 app.listen(port, () => {

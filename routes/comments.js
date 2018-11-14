@@ -6,11 +6,13 @@ const Comment = require('../models/comments');
 const { authenticate } = require('../middleware/authenticate');
 
 // POST /comments
-router.post('/', authorized, upload().single('file'), async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
   try {
     const comment = new Comment({
-      description: req.body.description,
-      img: req.file.id
+      _creator: req.body._creator,
+      _plate: req.body._plate,
+      comment: req.body.comment,
+      rate: req.body.rate
     });
     await comment.save();
     res.status(200).send(comment);
@@ -43,21 +45,17 @@ router.get('/:id', async (req, res) => {
 });
 
 // PATCH /comments/id
-router.patch('/:id', authorized, upload().single('file'), async (req, res) => {
+router.patch('/:id', authenticate, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const comment = {
-      description: req.body.description
-    };
-    if (req.file) {
-      comment.img = req.file.id;
-      const current = await Comment.findById(id);
-      await gfs().remove({ _id: current.img, root: 'uploads' });
-    }
-    const ingredientUpdated = await Comment.findByIdAndUpdate(id, comment, {
-      new: true
-    });
+    const body = _.pick(req.body, ['_creator', 'comment', 'rate']);
+    const comment = await Comment.findByIdAndUpdate(
+      id,
+      { $set: body },
+      { new: true }
+    );
+    if (!comment) return res.status(404).send();
     res.status(200).send(ingredientUpdated);
   } catch (e) {
     res.status(400).send(e);
@@ -65,12 +63,12 @@ router.patch('/:id', authorized, upload().single('file'), async (req, res) => {
 });
 
 // DELETE /comments/id
-router.delete('/:id', authorized, async (req, res) => {
+router.delete('/:id', authenticate, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const comment = await Comment.findByIdAndRemove(id);
-    await gfs().remove({ _id: comment.img, root: 'uploads' });
+    if (!comment) return res.status(404).send();
     res.status(200).send(comment);
   } catch (e) {
     res.status(400).send(e);
