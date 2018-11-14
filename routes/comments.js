@@ -2,79 +2,76 @@ const express = require('express');
 const router = express.Router();
 const { ObjectID } = require('mongodb');
 
-const Ingredient = require('../models/ingredients');
-const { authorized } = require('../middleware/authorized');
-const { gfs, upload } = require('../middleware/filestorage');
+const Comment = require('../models/comments');
+const { authenticate } = require('../middleware/authenticate');
 
-// POST /ingredients
+// POST /comments
 router.post('/', authorized, upload().single('file'), async (req, res) => {
   try {
-    const ingredient = new Ingredient({
+    const comment = new Comment({
       description: req.body.description,
       img: req.file.id
     });
-    await ingredient.save();
-    res.status(200).send(ingredient);
+    await comment.save();
+    res.status(200).send(comment);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
-// GET /ingredients
+// GET /comments
 router.get('/', async (req, res) => {
   try {
-    const ingredients = await Ingredient.find();
-    res.status(200).send(ingredients);
+    const comments = await Comment.find();
+    res.status(200).send(comments);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
-// GET /ingredients/id
+// GET /comments/id
 router.get('/:id', async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const ingredient = await Ingredient.findById(id);
-    if (!ingredient) return res.status(404).send();
-    res.status(200).send(ingredient);
+    const comment = await Comment.findById(id);
+    if (!comment) return res.status(404).send();
+    res.status(200).send(comment);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
-// PATCH /ingredients/id
+// PATCH /comments/id
 router.patch('/:id', authorized, upload().single('file'), async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const ingredient = {
+    const comment = {
       description: req.body.description
     };
     if (req.file) {
-      ingredient.img = req.file.id;
-      const current = await Ingredient.findById(id);
+      comment.img = req.file.id;
+      const current = await Comment.findById(id);
       await gfs().remove({ _id: current.img, root: 'uploads' });
     }
-    const ingredientUpdated = await Ingredient.findByIdAndUpdate(
-      id,
-      ingredient,
-      { new: true }
-    );
+    const ingredientUpdated = await Comment.findByIdAndUpdate(id, comment, {
+      new: true
+    });
     res.status(200).send(ingredientUpdated);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
-// DELETE /ingredients/id
+// DELETE /comments/id
 router.delete('/:id', authorized, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const ingredient = await Ingredient.findByIdAndRemove(id);
-    await gfs().remove({ _id: ingredient.img, root: 'uploads' });
-    res.status(200).send(ingredient);
+    const comment = await Comment.findByIdAndRemove(id);
+    await gfs().remove({ _id: comment.img, root: 'uploads' });
+    res.status(200).send(comment);
   } catch (e) {
     res.status(400).send(e);
   }
