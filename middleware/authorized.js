@@ -4,7 +4,7 @@ let authorized = async (req, res, next) => {
   try {
     const token = req.header('x-auth');
     const user = await User.findByToken(token);
-    if (!user || user.rol === 0) return Promise.reject();
+    if (!user || user.rol !== 1) return Promise.reject();
     req.user = user;
     req.token = token;
     next();
