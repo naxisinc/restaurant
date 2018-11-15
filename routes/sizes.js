@@ -65,6 +65,7 @@ router.delete('/:id', authorized, async (req, res) => {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const size = await Size.findByIdAndRemove(id);
+    if (!size) return res.status(404).send();
     res.status(200).send(size);
   } catch (e) {
     res.status(400).send(e);

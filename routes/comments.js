@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const _ = require('lodash');
 const { ObjectID } = require('mongodb');
 
 const Comment = require('../models/comments');
@@ -9,7 +10,7 @@ const { authenticate } = require('../middleware/authenticate');
 router.post('/', authenticate, async (req, res) => {
   try {
     const comment = new Comment({
-      _creator: req.body._creator,
+      _creator: req.user._id,
       _plate: req.body._plate,
       comment: req.body.comment,
       rate: req.body.rate
@@ -49,14 +50,14 @@ router.patch('/:id', authenticate, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const body = _.pick(req.body, ['_creator', 'comment', 'rate']);
-    const comment = await Comment.findByIdAndUpdate(
-      id,
+    const body = _.pick(req.body, ['comment', 'rate']);
+    const comment = await Comment.findOneAndUpdate(
+      { _id: id, _creator: req.user._id },
       { $set: body },
       { new: true }
     );
     if (!comment) return res.status(404).send();
-    res.status(200).send(ingredientUpdated);
+    res.status(200).send(comment);
   } catch (e) {
     res.status(400).send(e);
   }
@@ -67,7 +68,10 @@ router.delete('/:id', authenticate, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const comment = await Comment.findByIdAndRemove(id);
+    const comment = await Comment.findOneAndRemove({
+      _id: id,
+      _creator: req.user._id
+    });
     if (!comment) return res.status(404).send();
     res.status(200).send(comment);
   } catch (e) {

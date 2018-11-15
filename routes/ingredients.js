@@ -56,12 +56,11 @@ router.patch('/:id', authorized, upload().single('file'), async (req, res) => {
       const current = await Ingredient.findById(id);
       await gfs().remove({ _id: current.img, root: 'uploads' });
     }
-    const ingredientUpdated = await Ingredient.findByIdAndUpdate(
-      id,
-      ingredient,
-      { new: true }
-    );
-    res.status(200).send(ingredientUpdated);
+    const updated = await Ingredient.findByIdAndUpdate(id, ingredient, {
+      new: true
+    });
+    if (!updated) return res.status(404).send();
+    res.status(200).send(updated);
   } catch (e) {
     res.status(400).send(e);
   }
@@ -74,6 +73,7 @@ router.delete('/:id', authorized, async (req, res) => {
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const ingredient = await Ingredient.findByIdAndRemove(id);
     await gfs().remove({ _id: ingredient.img, root: 'uploads' });
+    if (!ingredient) return res.status(404).send();
     res.status(200).send(ingredient);
   } catch (e) {
     res.status(400).send(e);
