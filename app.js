@@ -44,11 +44,13 @@ const users = require('./routes/users');
 const sizes = require('./routes/sizes');
 const ingredients = require('./routes/ingredients');
 const comments = require('./routes/comments');
+const plates = require('./routes/plates');
 
 app.use('/users', users);
 app.use('/sizes', sizes);
 app.use('/ingredients', ingredients);
 app.use('/comments', comments);
+app.use('/plates', plates);
 
 // Start serve
 app.listen(port, () => {

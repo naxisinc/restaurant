@@ -22,7 +22,7 @@ const PlateSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    group: {
+    category: {
       type: String,
       required: true
     }

@@ -3,12 +3,6 @@ const mongoose = require('mongoose');
 // Ingredient Schema
 const IngredientSchema = new mongoose.Schema(
   {
-    _plates: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        requiered: true
-      }
-    ],
     img: {
       type: mongoose.Schema.Types.ObjectId,
       required: true

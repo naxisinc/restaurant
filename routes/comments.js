@@ -4,18 +4,31 @@ const _ = require('lodash');
 const { ObjectID } = require('mongodb');
 
 const Comment = require('../models/comments');
+const Plate = require('../models/plates');
 const { authenticate } = require('../middleware/authenticate');
 
 // POST /comments
 router.post('/', authenticate, async (req, res) => {
   try {
+    const plateId = req.body._plate;
+    const comment_rate = req.body.rate;
     const comment = new Comment({
       _creator: req.user._id,
-      _plate: req.body._plate,
+      _plate: plateId,
       comment: req.body.comment,
-      rate: req.body.rate
+      rate: comment_rate
     });
     await comment.save();
+    // Update the plate average rate
+    // const plate_rate = await Plate.findOne(
+    //   { _id: plateId },
+    //   { averagerate: 1 }
+    // );
+    // const avg = (plate_rate.averagerate + comment_rate) / 2;
+    // await Plate.findOneAndUpdate(
+    //   { _id: plateId },
+    //   { $set: { averagerate: avg } }
+    // );
     res.status(200).send(comment);
   } catch (e) {
     res.status(400).send(e);
