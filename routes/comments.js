@@ -19,16 +19,7 @@ router.post('/', authenticate, async (req, res) => {
       rate: comment_rate
     });
     await comment.save();
-    // Update the plate average rate
-    // const plate_rate = await Plate.findOne(
-    //   { _id: plateId },
-    //   { averagerate: 1 }
-    // );
-    // const avg = (plate_rate.averagerate + comment_rate) / 2;
-    // await Plate.findOneAndUpdate(
-    //   { _id: plateId },
-    //   { $set: { averagerate: avg } }
-    // );
+    await updatingPlateAvg(plateId, parseInt(comment_rate));
     res.status(200).send(comment);
   } catch (e) {
     res.status(400).send(e);
@@ -64,6 +55,10 @@ router.patch('/:id', authenticate, async (req, res) => {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const body = _.pick(req.body, ['comment', 'rate']);
+    const wholecomment = await Comment.findById(id);
+    if (parseInt(body.rate) !== wholecomment.rate) {
+      await updatingPlateAvg(wholecomment._plate, parseInt(body.rate));
+    }
     const comment = await Comment.findOneAndUpdate(
       { _id: id, _creator: req.user._id },
       { $set: body },
@@ -86,10 +81,37 @@ router.delete('/:id', authenticate, async (req, res) => {
       _creator: req.user._id
     });
     if (!comment) return res.status(404).send();
+    // Update Plate rating
+    const average = await Comment.aggregate([
+      { $match: { _plate: comment._plate } },
+      {
+        $group: {
+          _id: '$_plate',
+          avg: { $avg: '$rate' }
+        }
+      }
+    ]);
+    await Plate.findOneAndUpdate(
+      { _id: comment._plate },
+      { $set: { averagerate: average[0].avg.toFixed(2) } }
+    );
     res.status(200).send(comment);
   } catch (e) {
     res.status(400).send(e);
   }
 });
+
+async function updatingPlateAvg(plateId, rate) {
+  try {
+    const plate = await Plate.findOne({ _id: plateId }, { averagerate: 1 });
+    const avg = ((plate.averagerate + rate) / 2).toFixed(2);
+    await Plate.findOneAndUpdate(
+      { _id: plateId },
+      { $set: { averagerate: avg } }
+    );
+  } catch (e) {
+    return Promise.reject();
+  }
+}
 
 module.exports = router;

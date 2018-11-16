@@ -31,26 +31,4 @@ const CommentSchema = new mongoose.Schema(
   }
 );
 
-CommentSchema.pre('save', function(next) {
-  let comment = this;
-
-  if (comment.isModified('rate')) {
-    console.log('Was modified');
-  } else {
-    console.log('Was NOT modified');
-    next();
-  }
-});
-
-CommentSchema.pre('find', function(next) {
-  let comment = this;
-
-  if (comment.isModified('rate')) {
-    console.log('Was modified');
-  } else {
-    console.log('Was NOT modified');
-    next();
-  }
-});
-
 const Comment = (module.exports = mongoose.model('Comment', CommentSchema));
