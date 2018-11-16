@@ -91,10 +91,17 @@ router.delete('/:id', authenticate, async (req, res) => {
         }
       }
     ]);
-    await Plate.findOneAndUpdate(
-      { _id: comment._plate },
-      { $set: { averagerate: average[0].avg.toFixed(2) } }
-    );
+    if (!average[0] || average[0].lenght === 0) {
+      await Plate.findOneAndUpdate(
+        { _id: comment._plate },
+        { $set: { averagerate: 1 } }
+      );
+    } else {
+      await Plate.findOneAndUpdate(
+        { _id: comment._plate },
+        { $set: { averagerate: average[0].avg.toFixed(2) } }
+      );
+    }
     res.status(200).send(comment);
   } catch (e) {
     res.status(400).send(e);
