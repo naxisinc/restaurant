@@ -3,6 +3,7 @@ const router = express.Router();
 const { ObjectID } = require('mongodb');
 
 const Plate = require('../models/plates');
+const SizePlate = require('../models/sizeplate');
 const { authorized } = require('../middleware/authorized');
 const { gfs, upload } = require('../middleware/filestorage');
 
@@ -15,6 +16,9 @@ router.post('/', authorized, upload().single('file'), async (req, res) => {
       description: req.body.description,
       category: req.body.category
     });
+    // const sizeplate = new SizePlate({
+    //   _
+    // })
     await plate.save();
     res.status(200).send(plate);
   } catch (e) {
