@@ -16,15 +16,15 @@ const SizePlateSchema = new mongoose.Schema(
       required: true
     },
     calories: {
-      type: Number,
+      type: String,
       required: true
     },
     totalfat: {
-      type: Number,
+      type: String,
       required: true
     },
     totalcarbs: {
-      type: Number,
+      type: String,
       required: true
     }
   },

@@ -9,11 +9,11 @@ const { gfs, upload } = require('../middleware/filestorage');
 // POST /ingredients
 router.post('/', authorized, upload().single('file'), async (req, res) => {
   try {
-    const ingredient = new Ingredient({
+    const newingredient = new Ingredient({
       description: req.body.description,
       img: req.file.id
     });
-    await ingredient.save();
+    const ingredient = await newingredient.save();
     res.status(200).send(ingredient);
   } catch (e) {
     res.status(400).send(e);
