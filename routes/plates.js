@@ -51,7 +51,9 @@ router.patch('/:id', authorized, upload().single('file'), async (req, res) => {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const plate = {
-      description: req.body.description
+      _ingredients: req.body._ingredients,
+      description: req.body.description,
+      category: req.body.category
     };
     if (req.file) {
       plate.img = req.file.id;
