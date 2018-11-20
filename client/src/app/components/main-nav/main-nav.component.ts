@@ -6,15 +6,14 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
-  styleUrls: ['./main-nav.component.scss'],
+  styleUrls: ['./main-nav.component.scss']
 })
 export class MainNavComponent {
+  admin: boolean = true;
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches)
-    );
+  isHandset$: Observable<boolean> = this.breakpointObserver
+    .observe(Breakpoints.Handset)
+    .pipe(map(result => result.matches));
 
   constructor(private breakpointObserver: BreakpointObserver) {}
-
 }
