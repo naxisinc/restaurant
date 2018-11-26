@@ -12,6 +12,7 @@ import { PlatesComponent } from './plates/plates.component';
 import { CommentsComponent } from './comments/comments.component';
 import { ChangePassComponent } from './users/change-pass/change-pass.component';
 import { RecoverPassComponent } from './users/recover-pass/recover-pass.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,6 @@ import { RecoverPassComponent } from './users/recover-pass/recover-pass.componen
     ChangePassComponent,
     RecoverPassComponent
   ],
-  imports: [CommonModule, PagesRoutingModule, MaterialModule]
+  imports: [CommonModule, PagesRoutingModule, MaterialModule, HttpClientModule]
 })
 export class PagesModule {}
