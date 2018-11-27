@@ -1,10 +1,64 @@
-<div class="mat-elevation-z8">
-  <mat-table [dataSource]="listData">
-    <ng-container matColumnDef="description">
-      <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{ element.description }}</mat-cell>
-    </ng-container>
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns">{{ row }}</mat-row>
-  </mat-table>
+<div id="grid-div">
+  <div class="search-div">
+    <!-- <button mat-raised-button><mat-icon>add</mat-icon>Create</button> -->
+    <mat-form-field class="search-form-field" floatLabel="never">
+      <input
+        matInput
+        [(ngModel)]="searchKey"
+        placeholder="Search..."
+        autocomplete="off"
+        (keyup)="applyFilter()"
+      />
+      <button
+        mat-button
+        matSuffix
+        mat-icon-button
+        arial-label="Clear"
+        *ngIf="searchKey"
+        (click)="onSearchClear()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <div class="mat-elevation-z8">
+    <mat-table [dataSource]="listData" matSort>
+      <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          ><h3>Sizes</h3></mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">{{ element.description }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="noData">
+        <mat-footer-cell *matFooterCellDef colspan="6"
+          >No Data.</mat-footer-cell
+        >
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns">{{
+        row
+      }}</mat-row>
+      <mat-footer-row
+        *matFooterRowDef="['noData']"
+        [ngClass]="{ hide: !(listData != null && listData.data.length === 0) }"
+      ></mat-footer-row>
+    </mat-table>
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      [pageSize]="5"
+    ></mat-paginator>
+  </div>
+</div>
+<div id="actions-div">
+  <div class="content">
+    <form>
+      <mat-form-field> <input matInput placeholder="Size" /> </mat-form-field>
+    </form>
+    <button mat-stroked-button color="primary">Add</button>
+    <button mat-stroked-button color="primary">Edit</button>
+    <button mat-stroked-button color="primary">Delete</button>
+    <button mat-stroked-button color="primary">Cancel</button>
+    <mat-divider></mat-divider>
+    <div id="info">popp</div>
+  </div>
 </div>

@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { PagesRoutingModule } from './pages-routing.module';
 import { MaterialModule } from '../material';
@@ -12,7 +15,6 @@ import { PlatesComponent } from './plates/plates.component';
 import { CommentsComponent } from './comments/comments.component';
 import { ChangePassComponent } from './users/change-pass/change-pass.component';
 import { RecoverPassComponent } from './users/recover-pass/recover-pass.component';
-import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,13 @@ import { HttpClientModule } from '@angular/common/http';
     ChangePassComponent,
     RecoverPassComponent
   ],
-  imports: [CommonModule, PagesRoutingModule, MaterialModule, HttpClientModule]
+  imports: [
+    CommonModule,
+    PagesRoutingModule,
+    MaterialModule,
+    HttpClientModule,
+    FormsModule,
+    FlexLayoutModule
+  ]
 })
 export class PagesModule {}

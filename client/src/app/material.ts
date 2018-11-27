@@ -10,7 +10,9 @@ import {
   MatInputModule,
   MatTableModule,
   MatPaginatorModule,
-  MatSortModule
+  MatSortModule,
+  MatDialogModule,
+  MatGridListModule
 } from '@angular/material';
 
 const MODULES = [
@@ -24,7 +26,9 @@ const MODULES = [
   MatInputModule,
   MatTableModule,
   MatPaginatorModule,
-  MatSortModule
+  MatSortModule,
+  MatDialogModule,
+  MatGridListModule
 ];
 
 @NgModule({

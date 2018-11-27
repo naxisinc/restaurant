@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SizesService } from 'src/app/services/sizes.service';
-import { MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 
 @Component({
   selector: 'app-sizes',
@@ -12,11 +12,25 @@ export class SizesComponent implements OnInit {
 
   listData: MatTableDataSource<any>;
   displayedColumns: string[] = ['description'];
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  searchKey: string;
 
   ngOnInit() {
     this.sizeService.getSizes().subscribe(res => {
       let array = Object.keys(res).map(key => res[key]);
       this.listData = new MatTableDataSource(array);
+      this.listData.sort = this.sort;
+      this.listData.paginator = this.paginator;
     });
+  }
+
+  onSearchClear() {
+    this.searchKey = '';
+    this.applyFilter();
+  }
+
+  applyFilter() {
+    this.listData.filter = this.searchKey.trim().toLowerCase();
   }
 }
