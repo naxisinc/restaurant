@@ -1,6 +1,5 @@
 <div id="grid-div">
   <div class="search-div">
-    <!-- <button mat-raised-button><mat-icon>add</mat-icon>Create</button> -->
     <mat-form-field class="search-form-field" floatLabel="never">
       <input
         matInput
@@ -27,7 +26,9 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header
           ><h3>Sizes</h3></mat-header-cell
         >
-        <mat-cell *matCellDef="let element">{{ element.description }}</mat-cell>
+        <mat-cell *matCellDef="let element" (click)="show(element)">{{
+          element.description
+        }}</mat-cell>
       </ng-container>
       <ng-container matColumnDef="noData">
         <mat-footer-cell *matFooterCellDef colspan="6"
@@ -51,13 +52,46 @@
 </div>
 <div id="actions-div">
   <div class="content">
-    <form>
-      <mat-form-field> <input matInput placeholder="Size" /> </mat-form-field>
+    <form [formGroup]="SizeForm">
+      <mat-form-field>
+        <input matInput placeholder="Size" formControlName="size" />
+        <mat-error *ngIf="SizeForm.hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
     </form>
-    <button mat-stroked-button color="primary">Add</button>
-    <button mat-stroked-button color="primary">Edit</button>
-    <button mat-stroked-button color="primary">Delete</button>
-    <button mat-stroked-button color="primary">Cancel</button>
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="add()"
+      *ngIf="!selected"
+    >
+      Add
+    </button>
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="edit()"
+      *ngIf="selected"
+    >
+      Edit
+    </button>
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="delete()"
+      *ngIf="selected"
+    >
+      Delete
+    </button>
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="resetForm()"
+      *ngIf="selected"
+    >
+      Cancel
+    </button>
     <mat-divider></mat-divider>
     <div id="info">popp</div>
   </div>

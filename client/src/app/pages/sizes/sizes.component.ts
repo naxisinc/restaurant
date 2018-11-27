@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SizesService } from 'src/app/services/sizes.service';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-sizes',
@@ -8,13 +9,22 @@ import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
   styleUrls: ['./sizes.component.scss']
 })
 export class SizesComponent implements OnInit {
-  constructor(private sizeService: SizesService) {}
-
   listData: MatTableDataSource<any>;
   displayedColumns: string[] = ['description'];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   searchKey: string;
+  selected: boolean = false;
+  SizeForm: FormGroup;
+
+  constructor(private sizeService: SizesService, private fb: FormBuilder) {
+    this.SizeForm = fb.group({
+      size: [
+        '',
+        [Validators.required, Validators.minLength(3), Validators.maxLength(15)]
+      ]
+    });
+  }
 
   ngOnInit() {
     this.sizeService.getSizes().subscribe(res => {
@@ -32,5 +42,27 @@ export class SizesComponent implements OnInit {
 
   applyFilter() {
     this.listData.filter = this.searchKey.trim().toLowerCase();
+  }
+
+  show(size) {
+    this.SizeForm.patchValue({ size: size.description });
+    this.selected = true;
+  }
+
+  add() {
+    console.log('add');
+  }
+
+  edit() {
+    console.log('edit');
+  }
+
+  delete() {
+    console.log('delete');
+  }
+
+  resetForm() {
+    this.SizeForm.reset();
+    this.selected = false;
   }
 }

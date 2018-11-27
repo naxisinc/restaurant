@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { PagesRoutingModule } from './pages-routing.module';
 import { MaterialModule } from '../material';
@@ -34,7 +33,7 @@ import { RecoverPassComponent } from './users/recover-pass/recover-pass.componen
     MaterialModule,
     HttpClientModule,
     FormsModule,
-    FlexLayoutModule
+    ReactiveFormsModule
   ]
 })
 export class PagesModule {}
