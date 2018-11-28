@@ -52,11 +52,22 @@
 </div>
 <div id="actions-div">
   <div class="content">
-    <form [formGroup]="SizeForm">
+    <form>
       <mat-form-field>
-        <input matInput placeholder="Size" formControlName="size" />
-        <mat-error *ngIf="SizeForm.hasError('required')">
-          Email is <strong>required</strong>
+        <input
+          matInput
+          placeholder="Size"
+          [formControl]="sizeFormControl"
+          [errorStateMatcher]="matcher"
+        />
+        <mat-error *ngIf="sizeFormControl.hasError('required')">
+          Size is <strong>required.</strong>
+        </mat-error>
+        <mat-error *ngIf="sizeFormControl.hasError('minlength')">
+          Size must be at least 3 characters long.
+        </mat-error>
+        <mat-error *ngIf="sizeFormControl.hasError('maxlength')">
+          Size is too long.
         </mat-error>
       </mat-form-field>
     </form>
@@ -64,7 +75,8 @@
       mat-stroked-button
       color="primary"
       (click)="add()"
-      *ngIf="!selected"
+      *ngIf="!isSelected"
+      [disabled]="sizeFormControl.invalid"
     >
       Add
     </button>
@@ -72,7 +84,8 @@
       mat-stroked-button
       color="primary"
       (click)="edit()"
-      *ngIf="selected"
+      *ngIf="isSelected"
+      [disabled]="sizeFormControl.invalid"
     >
       Edit
     </button>
@@ -80,19 +93,25 @@
       mat-stroked-button
       color="primary"
       (click)="delete()"
-      *ngIf="selected"
+      *ngIf="isSelected"
     >
       Delete
     </button>
     <button
       mat-stroked-button
       color="primary"
-      (click)="resetForm()"
-      *ngIf="selected"
+      (click)="cancel()"
+      *ngIf="isSelected"
     >
       Cancel
     </button>
-    <mat-divider></mat-divider>
-    <div id="info">popp</div>
+    <mat-divider id="divider"></mat-divider>
+    <div id="info">
+      <div *ngIf="!isSelected">
+        To <strong>edit</strong> or <strong>delete</strong> an item, it must be
+        selected from the list.
+      </div>
+      <div *ngIf="isSelected">Press <strong>Cancel</strong> to go back.</div>
+    </div>
   </div>
 </div>

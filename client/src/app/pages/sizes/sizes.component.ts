@@ -1,7 +1,28 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SizesService } from 'src/app/services/sizes.service';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroupDirective,
+  NgForm,
+  Validators
+} from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+/** Error when invalid control is dirty, touched, or submitted. */
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(
+      control &&
+      control.invalid &&
+      (control.dirty || control.touched || isSubmitted)
+    );
+  }
+}
 
 @Component({
   selector: 'app-sizes',
@@ -14,19 +35,25 @@ export class SizesComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   searchKey: string;
-  selected: boolean = false;
-  SizeForm: FormGroup;
 
-  constructor(private sizeService: SizesService, private fb: FormBuilder) {
-    this.SizeForm = fb.group({
-      size: [
-        '',
-        [Validators.required, Validators.minLength(3), Validators.maxLength(15)]
-      ]
-    });
-  }
+  isSelected: boolean = false;
+  selected: Object;
+
+  sizeFormControl = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(20)
+  ]);
+
+  matcher = new MyErrorStateMatcher();
+
+  constructor(private sizeService: SizesService) {}
 
   ngOnInit() {
+    this.getSizes();
+  }
+
+  getSizes() {
     this.sizeService.getSizes().subscribe(res => {
       let array = Object.keys(res).map(key => res[key]);
       this.listData = new MatTableDataSource(array);
@@ -45,24 +72,57 @@ export class SizesComponent implements OnInit {
   }
 
   show(size) {
-    this.SizeForm.patchValue({ size: size.description });
-    this.selected = true;
+    this.selected = size;
+    this.sizeFormControl.patchValue(size.description);
+    this.isSelected = true;
   }
 
   add() {
-    console.log('add');
+    let obj = { description: this.sizeFormControl.value };
+    this.sizeService.postSize(obj).subscribe(
+      succ => {
+        this.getSizes();
+        this.sizeFormControl.reset();
+      },
+      error => {
+        console.log('Something is wrong');
+      }
+    );
   }
 
   edit() {
-    console.log('edit');
+    let obj = {
+      id: this.selected['_id'],
+      description: this.sizeFormControl.value
+    };
+    this.sizeService.patchSize(obj).subscribe(
+      succ => {
+        this.getSizes();
+        this.sizeFormControl.reset();
+        this.isSelected = false;
+      },
+      error => {
+        console.log('Something is wrong');
+      }
+    );
   }
 
   delete() {
-    console.log('delete');
+    this.sizeService.deleteSize(this.selected['_id']).subscribe(
+      succ => {
+        this.getSizes();
+        this.sizeFormControl.reset();
+        this.isSelected = false;
+      },
+      error => {
+        console.log('Something is wrong');
+      }
+    );
   }
 
-  resetForm() {
-    this.SizeForm.reset();
-    this.selected = false;
+  cancel() {
+    this.sizeFormControl.reset();
+    this.isSelected = false;
+    this.selected = null;
   }
 }
