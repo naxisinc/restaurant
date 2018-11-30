@@ -31,7 +31,7 @@
         }}</mat-cell>
       </ng-container>
       <ng-container matColumnDef="noData">
-        <mat-footer-cell *matFooterCellDef colspan="6"
+        <mat-footer-cell class="footer-cell" *matFooterCellDef colspan="6"
           >No Data.</mat-footer-cell
         >
       </ng-container>
@@ -40,6 +40,7 @@
         row
       }}</mat-row>
       <mat-footer-row
+        class="footer-row"
         *matFooterRowDef="['noData']"
         [ngClass]="{ hide: !(listData != null && listData.data.length === 0) }"
       ></mat-footer-row>
@@ -51,7 +52,7 @@
   </div>
 </div>
 <div id="actions-div">
-  <div class="content">
+  <div class="cud-div">
     <form>
       <mat-form-field>
         <input

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IngredientsService } from 'src/app/services/ingredients.service';
 
 @Component({
   selector: 'app-ingredients',
@@ -6,9 +7,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ingredients.component.scss']
 })
 export class IngredientsComponent implements OnInit {
-  isSelected: boolean = false;
+  constructor(private ingredientService: IngredientsService) {}
 
-  constructor() {}
+  ngOnInit() {
+    this.getIngredients();
+  }
 
-  ngOnInit() {}
+  getIngredients() {
+    this.ingredientService.getIngredients().subscribe(
+      succ => {
+        console.log(succ);
+      },
+      error => {}
+    );
+  }
 }

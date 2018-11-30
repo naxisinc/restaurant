@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SizesService } from 'src/app/services/sizes.service';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
+import { SizesService } from 'src/app/services/sizes.service';
 import {
   FormControl,
   FormGroupDirective,

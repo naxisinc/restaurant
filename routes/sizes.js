@@ -21,7 +21,7 @@ router.post('/', authorized, async (req, res) => {
 // GET /sizes
 router.get('/', async (req, res) => {
   try {
-    const sizes = await Size.find();
+    const sizes = await Size.find().sort({ _id: -1 });
     res.status(200).send(sizes);
   } catch (e) {
     res.status(400).send(e);

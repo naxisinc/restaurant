@@ -23,12 +23,61 @@ router.post('/', authorized, upload().single('file'), async (req, res) => {
 // GET /ingredients
 router.get('/', async (req, res) => {
   try {
-    const ingredients = await Ingredient.find();
-    res.status(200).send(ingredients);
+    const ingredients = await Ingredient.find().lean();
+    let ingWithImg = ingredients.map(obj => {
+      obj.img = 'No picture';
+      return obj;
+    });
+    // console.log(ingWithImg);
+    // res.status(200).send(ingredients);
+    res.status(200).send(ingWithImg);
   } catch (e) {
     res.status(400).send(e);
   }
 });
+
+function streaming() {
+  // return gfs().files.findOne({ _id: obj.img }, (err, file) => {
+  //   // Check if file
+  //   if (!file || file.length === 0) {
+  //     obj.img = 'No picture';
+  //     return obj;
+  //   }
+  //   // Check if image
+  //   if (
+  //     file.contentType === 'image/jpeg' ||
+  //     file.contentType === 'image/png'
+  //   ) {
+  //     const readstream = gfs().createReadStream(file.filename);
+  //     readstream.pipe(process.stdout);
+  //     obj.img = 'rere';
+  //     return obj;
+  //   } else {
+  //     obj.img = 'No picture';
+  //     return obj;
+  //   }
+  // });
+  // const file = await gfs().files.findOne({ _id: obj.img });
+  // // Check if file
+  // if (!file || file.length === 0) {
+  //   obj.img = 'No picture';
+  //   return obj;
+  // }
+  // // Check if image
+  // if (
+  //   file.contentType === 'image/jpeg' ||
+  //   file.contentType === 'image/png'
+  // ) {
+  //   console.log('entreee');
+  //   obj.img = 'rere';
+  //   return obj;
+  //   // const readstream = gfs().createReadStream(file.filename);
+  //   // readstream.pipe(process.stdout);
+  // } else {
+  //   obj.img = 'No picture';
+  //   return obj;
+  // }
+}
 
 // GET /ingredients/id
 router.get('/:id', async (req, res) => {

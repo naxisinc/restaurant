@@ -24,14 +24,14 @@
     <mat-table [dataSource]="listData" matSort>
       <ng-container matColumnDef="description">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          ><h3>Sizes</h3></mat-header-cell
+          ><h3>Ingredients</h3></mat-header-cell
         >
         <mat-cell *matCellDef="let element" (click)="show(element)">{{
           element.description
         }}</mat-cell>
       </ng-container>
       <ng-container matColumnDef="noData">
-        <mat-footer-cell *matFooterCellDef colspan="6"
+        <mat-footer-cell class="footer-cell" *matFooterCellDef colspan="6"
           >No Data.</mat-footer-cell
         >
       </ng-container>
@@ -40,6 +40,7 @@
         row
       }}</mat-row>
       <mat-footer-row
+        class="footer-row"
         *matFooterRowDef="['noData']"
         [ngClass]="{ hide: !(listData != null && listData.data.length === 0) }"
       ></mat-footer-row>
@@ -51,7 +52,7 @@
   </div>
 </div>
 <div id="actions-div">
-  <div class="content">
+  <div class="cud-div">
     <form>
       <mat-form-field>
         <input matInput placeholder="Description" />
@@ -90,7 +91,7 @@
     >
       Cancel
     </button>
-    <mat-divider></mat-divider>
+    <mat-divider id="divider"></mat-divider>
     <div id="info">
       <div *ngIf="!isSelected">
         To <strong>edit</strong> or <strong>delete</strong> an item, it must be

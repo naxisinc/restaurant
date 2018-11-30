@@ -45,14 +45,16 @@ body {
 .hide {
   display: none;
 }
-mat-footer-row mat-footer-cell {
+.footer-cell,
+.footer-row {
   justify-content: center;
   font-style: italic;
 }
 
 .search-div {
-  margin: 0.5rem;
+  padding: 0.5rem;
   text-align: right;
+  background: red;
 }
 .search-form-field {
   width: 50%;
@@ -61,37 +63,35 @@ mat-footer-row mat-footer-cell {
   background: white;
   border-radius: 5px;
 }
-.search-form-field::mat-form-field-underline {
+.search-div .mat-form-field-underline {
   display: none;
 }
-.search-form-field::mat-form-field-infix {
+.search-div .mat-form-field-infix {
   border-top: 0px;
 }
-.search-form-field::ng-deep .mat-form-field-wrapper {
+.search-div .mat-form-field-wrapper {
   padding-bottom: 0px;
 }
-.search-form-field::ng-deep .mat-form-field-suffix button {
+.search-div .mat-form-field-suffix button {
   height: 32px;
   width: 32px;
 }
-
 #grid-div {
   width: 60%;
-  overflow: hidden;
   float: left;
 }
 #actions-div {
   width: 40%;
   overflow: hidden;
 }
-.content {
+.cud-div {
   width: 90%;
   margin: 2rem auto;
 }
-.mat-form-field {
+.cud-div .mat-form-field {
   width: 70%;
 }
-button {
+.cud-div button {
   margin-top: 1rem;
   margin-right: 0.5rem;
 }
