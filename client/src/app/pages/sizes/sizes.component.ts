@@ -1,28 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
+import { FormControl, Validators } from '@angular/forms';
 import { SizesService } from 'src/app/services/sizes.service';
-import {
-  FormControl,
-  FormGroupDirective,
-  NgForm,
-  Validators
-} from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
-
-/** Error when invalid control is dirty, touched, or submitted. */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(
-      control &&
-      control.invalid &&
-      (control.dirty || control.touched || isSubmitted)
-    );
-  }
-}
+import { MyErrorStateMatcher } from '../../services/validator.service';
 
 @Component({
   selector: 'app-sizes',
@@ -54,12 +34,15 @@ export class SizesComponent implements OnInit {
   }
 
   getSizes() {
-    this.sizeService.getSizes().subscribe(res => {
-      let array = Object.keys(res).map(key => res[key]);
-      this.listData = new MatTableDataSource(array);
-      this.listData.sort = this.sort;
-      this.listData.paginator = this.paginator;
-    });
+    this.sizeService.getSizes().subscribe(
+      res => {
+        let array = Object.keys(res).map(key => res[key]);
+        this.listData = new MatTableDataSource(array);
+        this.listData.sort = this.sort;
+        this.listData.paginator = this.paginator;
+      },
+      err => {}
+    );
   }
 
   onSearchClear() {

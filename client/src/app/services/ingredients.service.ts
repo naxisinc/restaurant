@@ -12,23 +12,27 @@ export class IngredientsService {
   }
 
   postIngredient(ingredient) {
+    let payload = new FormData();
+    payload.append('description', ingredient.description);
+    payload.append('file', ingredient.file);
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       'x-auth': localStorage.getItem('x-auth')
     });
-    return this.http.post('http://localhost:3000/ingredients', ingredient, {
+    return this.http.post('http://localhost:3000/ingredients', payload, {
       headers
     });
   }
 
   patchIngredient(ingredient) {
+    let payload = new FormData();
+    payload.append('description', ingredient.description);
+    payload.append('file', ingredient.file);
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
       'x-auth': localStorage.getItem('x-auth')
     });
     return this.http.patch(
       'http://localhost:3000/ingredients/' + ingredient.id,
-      ingredient,
+      payload,
       {
         headers
       }

@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 // Ingredient Schema
 const IngredientSchema = new mongoose.Schema(
   {
-    img: {
-      type: mongoose.Schema.Types.ObjectId,
+    description: {
+      type: String,
       required: true
     },
-    description: {
+    img: {
       type: String,
       required: true
     }

@@ -68,7 +68,7 @@
           Size must be at least 3 characters long.
         </mat-error>
         <mat-error *ngIf="sizeFormControl.hasError('maxlength')">
-          Size is too long.
+          Size must have less that 20 characters.
         </mat-error>
       </mat-form-field>
     </form>
