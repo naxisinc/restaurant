@@ -46,9 +46,16 @@ body {
   display: none;
 }
 .footer-cell,
-.footer-row {
+.footer-row,
+.noData-div {
   justify-content: center;
   font-style: italic;
+}
+.noData-div {
+  justify-content: center;
+  font-style: italic;
+  padding: 15px;
+  text-align: center;
 }
 
 .search-div {

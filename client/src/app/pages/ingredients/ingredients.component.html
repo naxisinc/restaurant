@@ -6,7 +6,7 @@
         [(ngModel)]="searchKey"
         placeholder="Search..."
         autocomplete="off"
-        (keyup)="applyFilter()"
+        (keyup)="search($event.target.value)"
       />
       <button
         mat-button
@@ -21,17 +21,52 @@
     </mat-form-field>
   </div>
   <div class="mat-elevation-z8">
-    <mat-grid-list
-      *ngIf="listData['length']"
-      cols="3"
-      rowHeight="300px"
-      gutterSize="5px"
-    >
-      <mat-grid-tile *ngFor="let tile of listData">
-        <img src="{{ imgPath }}{{ tile.img }}" alt="" (click)="show(tile)" />
-      </mat-grid-tile>
-    </mat-grid-list>
-    <div *ngIf="!listData['length']">No Data</div>
+    <!--
+      <mat-grid-list
+        *ngIf="listData?.length > 0"
+        cols="3"
+        rowHeight="300px"
+        gutterSize="5px"
+      >
+        <mat-grid-tile *ngFor="let tile of listData">
+          <img src="{{ imgPath }}{{ tile.img }}" alt="" (click)="show(tile)" />
+          <mat-grid-tile-footer>{{ tile.description }}</mat-grid-tile-footer>
+        </mat-grid-tile>
+      </mat-grid-list>
+      <div class="noData-div" *ngIf="listData?.length === 0">No Data.</div>
+    -->
+
+    <mat-table [dataSource]="listData" matSort>
+      <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          ><h3>Sizes</h3></mat-header-cell
+        >
+        <mat-cell *matCellDef="let element" (click)="show(element)">{{
+          element.description
+        }}</mat-cell>
+      </ng-container>
+
+      <!--
+        <ng-container matColumnDef="noData">
+          <mat-footer-cell class="footer-cell" *matFooterCellDef colspan="6"
+            >No Data.</mat-footer-cell
+          >
+        </ng-container>
+      -->
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns">{{
+        row
+      }}</mat-row>
+
+      <!--
+        <mat-footer-row
+          class="footer-row"
+          *matFooterRowDef="['noData']"
+          [ngClass]=""
+        ></mat-footer-row>
+      -->
+    </mat-table>
 
     <mat-paginator
       [pageSizeOptions]="[5, 10, 25, 100]"

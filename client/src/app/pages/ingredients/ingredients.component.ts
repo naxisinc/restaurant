@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatPaginator } from '@angular/material';
+import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IngredientsService } from 'src/app/services/ingredients.service';
 import { MyErrorStateMatcher } from '../../services/validator.service';
@@ -15,7 +15,10 @@ export class IngredientsComponent implements OnInit {
   searchKey: string;
 
   imgPath: string = 'http://localhost:3000/ingredients/image/';
-  listData: Object;
+  // listData: any;
+  // listDataCopy: any;
+  listData: MatTableDataSource<any>;
+  displayedColumns: string[] = ['description'];
   isSelected: boolean = false;
   selected: Object;
   @ViewChild('fileInput') fileInput;
@@ -44,11 +47,29 @@ export class IngredientsComponent implements OnInit {
   getIngredients() {
     this.ingredientService.getIngredients().subscribe(
       res => {
-        this.listData = res;
-        console.log(this.listData['length']);
+        // this.listData = this.listDataCopy = res;
+
+        let array = Object.keys(res).map(key => res[key]);
+        this.listData = new MatTableDataSource(array);
+        this.listData.sort = this.sort;
+        this.listData.paginator = this.paginator;
       },
       err => {}
     );
+  }
+
+  search(searchValue) {
+    // Applying filters and updating data with the result
+    // this.listData = this.listDataCopy.filter(x =>
+    //   x.description.toLowerCase().includes(searchValue.toLowerCase())
+    // );
+    // initialize to page 1
+    // this.setPage(1);
+  }
+
+  onSearchClear() {
+    this.searchKey = '';
+    // this.listData = this.listDataCopy;
   }
 
   show(ingredient) {
