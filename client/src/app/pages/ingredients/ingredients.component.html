@@ -21,57 +21,79 @@
     </mat-form-field>
   </div>
   <div class="mat-elevation-z8">
-    <!--
-      <mat-grid-list
-        *ngIf="listData?.length > 0"
-        cols="3"
-        rowHeight="300px"
-        gutterSize="5px"
-      >
-        <mat-grid-tile *ngFor="let tile of listData">
-          <img src="{{ imgPath }}{{ tile.img }}" alt="" (click)="show(tile)" />
-          <mat-grid-tile-footer>{{ tile.description }}</mat-grid-tile-footer>
-        </mat-grid-tile>
-      </mat-grid-list>
-      <div class="noData-div" *ngIf="listData?.length === 0">No Data.</div>
-    -->
-
-    <mat-table [dataSource]="listData" matSort>
-      <ng-container matColumnDef="description">
-        <mat-header-cell *matHeaderCellDef mat-sort-header
-          ><h3>Sizes</h3></mat-header-cell
-        >
-        <mat-cell *matCellDef="let element" (click)="show(element)">{{
-          element.description
-        }}</mat-cell>
-      </ng-container>
-
-      <!--
-        <ng-container matColumnDef="noData">
-          <mat-footer-cell class="footer-cell" *matFooterCellDef colspan="6"
-            >No Data.</mat-footer-cell
-          >
-        </ng-container>
-      -->
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns">{{
-        row
-      }}</mat-row>
-
-      <!--
-        <mat-footer-row
-          class="footer-row"
-          *matFooterRowDef="['noData']"
-          [ngClass]=""
-        ></mat-footer-row>
-      -->
-    </mat-table>
+    <mat-grid-list
+      *ngIf="listData?.length > 0"
+      cols="3"
+      rowHeight="300px"
+      gutterSize="5px"
+    >
+      <mat-grid-tile *ngFor="let tile of listData">
+        <img src="{{ imgPath }}{{ tile.img }}" alt="" (click)="show(tile)" />
+        <mat-grid-tile-footer>{{ tile.description }}</mat-grid-tile-footer>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <div class="noData-div" *ngIf="listData?.length === 0">No Data.</div>
 
     <mat-paginator
-      [pageSizeOptions]="[5, 10, 25, 100]"
-      [pageSize]="5"
+      [length]="length"
+      [pageSizeOptions]="pageSizeOptions"
+      [pageSize]="pageSize"
+      (page)="pageEvent = paged($event)"
     ></mat-paginator>
+
+    <div *ngIf="pageEvent">
+      <h5>Page Change Event Properties</h5>
+      <div>List length: {{ pageEvent.length }}</div>
+      <div>Page size: {{ pageEvent.pageSize }}</div>
+      <div>Page index: {{ pageEvent.pageIndex }}</div>
+    </div>
+
+    <!-- pager -->
+    <!-- <div class="row">
+      <div id="pagination">
+        <ul
+          class="pagination pagination-circle pg-blue mb-0"
+          *ngIf="pager.pages && pager.pages.length"
+        >
+          <li
+            class="page-item"
+            [ngClass]="{ disabled: pager.currentPage === 1 }"
+          >
+            <a class="page-link" (click)="setPage(1)">First</a>
+          </li>
+          <li
+            class="page-item"
+            [ngClass]="{ disabled: pager.currentPage === 1 }"
+          >
+            <a class="page-link" (click)="setPage(pager.currentPage - 1)"
+              >Previous</a
+            >
+          </li>
+          <li
+            class="page-item"
+            *ngFor="let page of pager.pages"
+            [ngClass]="{ active: pager.currentPage === page }"
+          >
+            <a class="page-link" (click)="setPage(page)">{{ page }}</a>
+          </li>
+          <li
+            class="page-item"
+            [ngClass]="{ disabled: pager.currentPage === pager.totalPages }"
+          >
+            <a class="page-link" (click)="setPage(pager.currentPage + 1)"
+              >Next</a
+            >
+          </li>
+          <li
+            class="page-item"
+            [ngClass]="{ disabled: pager.currentPage === pager.totalPages }"
+          >
+            <a class="page-link" (click)="setPage(pager.totalPages)">Last</a>
+          </li>
+        </ul>
+      </div>
+    </div> -->
+    <!-- pager -->
   </div>
 </div>
 <div id="actions-div">

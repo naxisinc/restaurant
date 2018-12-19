@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatPaginator } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IngredientsService } from 'src/app/services/ingredients.service';
+import { PageEvent } from '@angular/material';
+import { IngredientsService } from '../../services/ingredients.service';
+import { PagerService } from '../../services/pager.service';
 import { MyErrorStateMatcher } from '../../services/validator.service';
 
 @Component({
@@ -10,15 +12,12 @@ import { MyErrorStateMatcher } from '../../services/validator.service';
   styleUrls: ['./ingredients.component.scss']
 })
 export class IngredientsComponent implements OnInit {
-  @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   searchKey: string;
 
   imgPath: string = 'http://localhost:3000/ingredients/image/';
-  // listData: any;
-  // listDataCopy: any;
-  listData: MatTableDataSource<any>;
-  displayedColumns: string[] = ['description'];
+  listData: any;
+  listDataCopy: any;
   isSelected: boolean = false;
   selected: Object;
   @ViewChild('fileInput') fileInput;
@@ -27,9 +26,22 @@ export class IngredientsComponent implements OnInit {
   IngredientForm: FormGroup;
   matcher = new MyErrorStateMatcher();
 
+  // Pagination Variables
+  pager: any = {}; // pager object
+  pagedItems: any[]; // paged items
+
+  // MatPaginator Inputs
+  length = 0;
+  pageSize = 5;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+
+  // MatPaginator Output
+  pageEvent: PageEvent;
+
   constructor(
     private ingredientService: IngredientsService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private pagerService: PagerService
   ) {
     this.IngredientForm = fb.group({
       description: [
@@ -42,38 +54,71 @@ export class IngredientsComponent implements OnInit {
 
   ngOnInit() {
     this.getIngredients();
+    // setTimeout(() => {
+    //   console.log(this.paginator.pageSize);
+    // }, 3000);
   }
 
   getIngredients() {
     this.ingredientService.getIngredients().subscribe(
       res => {
-        // this.listData = this.listDataCopy = res;
+        this.listData = this.listDataCopy = res;
 
-        let array = Object.keys(res).map(key => res[key]);
-        this.listData = new MatTableDataSource(array);
-        this.listData.sort = this.sort;
-        this.listData.paginator = this.paginator;
+        this.length = this.listDataCopy.length;
+
+        // initialize to page 1
+        // this.setPage(1);
       },
       err => {}
     );
   }
 
+  paged(event?: PageEvent) {
+    console.log(event.length);
+    // // get pager object from service
+    // this.pager = this.pagerService.getPager(
+    //   this.listData.length,
+    //   page,
+    //   this.paginator.pageSize
+    // );
+
+    // // get current page of items
+    // this.pagedItems = this.listData.slice(
+    //   this.pager.startIndex,
+    //   this.pager.endIndex + 1
+    // );
+  }
+
+  // setPage(page: number) {
+  //   // get pager object from service
+  //   this.pager = this.pagerService.getPager(
+  //     this.listData.length,
+  //     page,
+  //     this.paginator.pageSize
+  //   );
+
+  //   // get current page of items
+  //   this.pagedItems = this.listData.slice(
+  //     this.pager.startIndex,
+  //     this.pager.endIndex + 1
+  //   );
+  // }
+
   search(searchValue) {
     // Applying filters and updating data with the result
-    // this.listData = this.listDataCopy.filter(x =>
-    //   x.description.toLowerCase().includes(searchValue.toLowerCase())
-    // );
+    this.listData = this.listDataCopy.filter(x =>
+      x.description.toLowerCase().includes(searchValue.toLowerCase())
+    );
     // initialize to page 1
     // this.setPage(1);
   }
 
   onSearchClear() {
     this.searchKey = '';
-    // this.listData = this.listDataCopy;
+    this.listData = this.listDataCopy;
   }
 
   show(ingredient) {
-    // console.log(ingredient);
     this.selected = ingredient;
     this.IngredientForm.controls.description.patchValue(ingredient.description);
     this.isSelected = true;
@@ -91,7 +136,7 @@ export class IngredientsComponent implements OnInit {
         this.IngredientForm.reset();
       },
       error => {
-        console.log('Something is wrong');
+        console.log(`Error: ${error}`);
       }
     );
   }
@@ -102,7 +147,6 @@ export class IngredientsComponent implements OnInit {
       description: this.IngredientForm.controls.description.value,
       file: this.fileInput.nativeElement.files[0]
     };
-    // console.log(obj);
     this.ingredientService.patchIngredient(obj).subscribe(
       succ => {
         this.getIngredients();
