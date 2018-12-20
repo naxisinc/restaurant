@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class PagerService {
-  // totalItems  => cantidad de items a paginar
+  // totalItems  => length del array
   // currentPage => posicion de la pagina actual
   // pageSize    => cantidad de items por pagina
   getPager(totalItems: number, currentPage: number = 1, pageSize: number) {
@@ -69,4 +69,13 @@ export class PagerService {
       pages: pages
     };
   }
+
+  // slice(length: number, index: number, pageSize: number) {
+  //   const startIndex = 0;
+  //   const endIndex = pageSize;
+  //   return {
+  //     startIndex,
+  //     endIndex
+  //   };
+  // }
 }

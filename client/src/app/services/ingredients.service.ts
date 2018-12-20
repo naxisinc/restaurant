@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,22 @@ export class IngredientsService {
 
   getIngredients() {
     return this.http.get('http://localhost:3000/ingredients');
+  }
+
+  getSlicesOfIngredients(event) {
+    console.log(event);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'x-auth': localStorage.getItem('x-auth')
+    });
+    let params = new HttpParams()
+      .set('length', event.length)
+      .set('pageIndex', 'event.pageIndex')
+      .set('pageSize', 'event.pageSize');
+    return this.http.get('http://localhost:3000/ingredients', {
+      headers,
+      params
+    });
   }
 
   postIngredient(ingredient) {

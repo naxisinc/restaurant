@@ -54,39 +54,36 @@ export class IngredientsComponent implements OnInit {
 
   ngOnInit() {
     this.getIngredients();
-    // setTimeout(() => {
-    //   console.log(this.paginator.pageSize);
-    // }, 3000);
   }
 
   getIngredients() {
     this.ingredientService.getIngredients().subscribe(
       res => {
         this.listData = this.listDataCopy = res;
-
         this.length = this.listDataCopy.length;
-
-        // initialize to page 1
-        // this.setPage(1);
       },
-      err => {}
+      err => {
+        console.log('Something is wrong');
+      }
     );
   }
 
   paged(event?: PageEvent) {
-    console.log(event.length);
-    // // get pager object from service
-    // this.pager = this.pagerService.getPager(
-    //   this.listData.length,
-    //   page,
-    //   this.paginator.pageSize
-    // );
+    console.log(`Length: ${event.length}`);
+    console.log(`PageSize: ${event.pageSize}`);
+    console.log(`PageIndex: ${event.pageIndex}`);
+    // get pager object from service
+    this.pager = this.pagerService.getPager(
+      event.length,
+      event.pageIndex,
+      event.pageSize
+    );
 
-    // // get current page of items
-    // this.pagedItems = this.listData.slice(
-    //   this.pager.startIndex,
-    //   this.pager.endIndex + 1
-    // );
+    // get current page of items
+    this.pagedItems = this.listData.slice(
+      this.pager.startIndex,
+      this.pager.endIndex + 1
+    );
   }
 
   // setPage(page: number) {

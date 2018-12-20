@@ -30,6 +30,16 @@ router.get('/', async (req, res) => {
   }
 });
 
+// // GET /ingredients
+// router.get('/', async (req, res) => {
+//   try {
+//     // const ingredients = await Ingredient.find().lean();
+//     res.status(200).send(req.params);
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// });
+
 // GET /ingredients/id
 router.get('/:id', async (req, res) => {
   try {
