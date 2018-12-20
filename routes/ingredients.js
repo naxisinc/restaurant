@@ -23,22 +23,13 @@ router.post('/', authorized, upload().single('file'), async (req, res) => {
 // GET /ingredients
 router.get('/', async (req, res) => {
   try {
-    const ingredients = await Ingredient.find().lean();
+    // const ingredients = await Ingredient.find().lean();
+    const ingredients = await Ingredient.find();
     res.status(200).send(ingredients);
   } catch (e) {
     res.status(400).send(e);
   }
 });
-
-// // GET /ingredients
-// router.get('/', async (req, res) => {
-//   try {
-//     // const ingredients = await Ingredient.find().lean();
-//     res.status(200).send(req.params);
-//   } catch (e) {
-//     res.status(400).send(e);
-//   }
-// });
 
 // GET /ingredients/id
 router.get('/:id', async (req, res) => {

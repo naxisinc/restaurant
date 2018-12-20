@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material';
 import { PageEvent } from '@angular/material';
 import { IngredientsService } from '../../services/ingredients.service';
-import { PagerService } from '../../services/pager.service';
 import { MyErrorStateMatcher } from '../../services/validator.service';
 
 @Component({
@@ -12,12 +11,12 @@ import { MyErrorStateMatcher } from '../../services/validator.service';
   styleUrls: ['./ingredients.component.scss']
 })
 export class IngredientsComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
   searchKey: string;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   imgPath: string = 'http://localhost:3000/ingredients/image/';
-  listData: any;
-  listDataCopy: any;
+  listData: any; // show the requested array
+  listDataCopy: any; // keep the original array
   isSelected: boolean = false;
   selected: Object;
   @ViewChild('fileInput') fileInput;
@@ -26,22 +25,14 @@ export class IngredientsComponent implements OnInit {
   IngredientForm: FormGroup;
   matcher = new MyErrorStateMatcher();
 
-  // Pagination Variables
-  pager: any = {}; // pager object
-  pagedItems: any[]; // paged items
-
   // MatPaginator Inputs
   length = 0;
-  pageSize = 5;
-  pageSizeOptions: number[] = [5, 10, 25, 100];
-
-  // MatPaginator Output
-  pageEvent: PageEvent;
+  pageSize = 6;
+  pageSizeOptions: number[] = [6, 12, 24, 60];
 
   constructor(
     private ingredientService: IngredientsService,
-    private fb: FormBuilder,
-    private pagerService: PagerService
+    private fb: FormBuilder
   ) {
     this.IngredientForm = fb.group({
       description: [
@@ -59,8 +50,16 @@ export class IngredientsComponent implements OnInit {
   getIngredients() {
     this.ingredientService.getIngredients().subscribe(
       res => {
-        this.listData = this.listDataCopy = res;
+        this.listDataCopy = res;
         this.length = this.listDataCopy.length;
+        const event = {
+          previousPageIndex: 1,
+          pageIndex: 0,
+          pageSize: this.pageSize,
+          length: this.length
+        };
+        this.paged(event);
+        this.paginator.firstPage();
       },
       err => {
         console.log('Something is wrong');
@@ -69,45 +68,21 @@ export class IngredientsComponent implements OnInit {
   }
 
   paged(event?: PageEvent) {
-    console.log(`Length: ${event.length}`);
-    console.log(`PageSize: ${event.pageSize}`);
-    console.log(`PageIndex: ${event.pageIndex}`);
-    // get pager object from service
-    this.pager = this.pagerService.getPager(
-      event.length,
-      event.pageIndex,
-      event.pageSize
-    );
+    console.log(event);
+    const pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
 
-    // get current page of items
-    this.pagedItems = this.listData.slice(
-      this.pager.startIndex,
-      this.pager.endIndex + 1
-    );
+    const startIndex = pageIndex * this.pageSize;
+    const endIndex = pageIndex * this.pageSize + this.pageSize;
+
+    this.listData = this.listDataCopy.slice(startIndex, endIndex);
   }
-
-  // setPage(page: number) {
-  //   // get pager object from service
-  //   this.pager = this.pagerService.getPager(
-  //     this.listData.length,
-  //     page,
-  //     this.paginator.pageSize
-  //   );
-
-  //   // get current page of items
-  //   this.pagedItems = this.listData.slice(
-  //     this.pager.startIndex,
-  //     this.pager.endIndex + 1
-  //   );
-  // }
 
   search(searchValue) {
     // Applying filters and updating data with the result
     this.listData = this.listDataCopy.filter(x =>
       x.description.toLowerCase().includes(searchValue.toLowerCase())
     );
-    // initialize to page 1
-    // this.setPage(1);
   }
 
   onSearchClear() {
@@ -131,6 +106,7 @@ export class IngredientsComponent implements OnInit {
       succ => {
         this.getIngredients();
         this.IngredientForm.reset();
+        this.searchKey = '';
       },
       error => {
         console.log(`Error: ${error}`);
@@ -149,6 +125,7 @@ export class IngredientsComponent implements OnInit {
         this.getIngredients();
         this.IngredientForm.reset();
         this.isSelected = false;
+        this.searchKey = '';
       },
       error => {
         console.log('Something is wrong');
