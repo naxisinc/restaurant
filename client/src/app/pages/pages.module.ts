@@ -14,6 +14,7 @@ import { PlatesComponent } from './plates/plates.component';
 import { CommentsComponent } from './comments/comments.component';
 import { ChangePassComponent } from './users/change-pass/change-pass.component';
 import { RecoverPassComponent } from './users/recover-pass/recover-pass.component';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { RecoverPassComponent } from './users/recover-pass/recover-pass.componen
     MaterialModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ComponentsModule
   ]
 })
 export class PagesModule {}

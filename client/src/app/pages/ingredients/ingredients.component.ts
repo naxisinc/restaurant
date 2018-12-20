@@ -68,7 +68,7 @@ export class IngredientsComponent implements OnInit {
   }
 
   paged(event?: PageEvent) {
-    console.log(event);
+    // console.log(event);
     const pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
 

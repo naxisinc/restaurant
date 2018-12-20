@@ -4,34 +4,34 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class IngredientsService {
+export class PlatesService {
   constructor(private http: HttpClient) {}
 
-  getIngredients() {
-    return this.http.get('http://localhost:3000/ingredients');
+  getPlates() {
+    return this.http.get('http://localhost:3000/plates');
   }
 
-  postIngredient(ingredient) {
+  postPlate(plate) {
     let payload = new FormData();
-    payload.append('description', ingredient.description);
-    payload.append('file', ingredient.file);
+    payload.append('description', plate.description);
+    payload.append('file', plate.file);
     const headers = new HttpHeaders({
       'x-auth': localStorage.getItem('x-auth')
     });
-    return this.http.post('http://localhost:3000/ingredients', payload, {
+    return this.http.post('http://localhost:3000/plates', payload, {
       headers
     });
   }
 
-  patchIngredient(ingredient) {
+  patchPlate(plate) {
     let payload = new FormData();
-    payload.append('description', ingredient.description);
-    payload.append('file', ingredient.file);
+    payload.append('description', plate.description);
+    payload.append('file', plate.file);
     const headers = new HttpHeaders({
       'x-auth': localStorage.getItem('x-auth')
     });
     return this.http.patch(
-      'http://localhost:3000/ingredients/' + ingredient.id,
+      'http://localhost:3000/plates/' + plate.id,
       payload,
       {
         headers
@@ -39,11 +39,11 @@ export class IngredientsService {
     );
   }
 
-  deleteIngredient(id) {
+  deletePlate(id) {
     const headers = new HttpHeaders({
       'x-auth': localStorage.getItem('x-auth')
     });
-    return this.http.delete('http://localhost:3000/ingredients/' + id, {
+    return this.http.delete('http://localhost:3000/plates/' + id, {
       headers
     });
   }

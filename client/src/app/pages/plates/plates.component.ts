@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material';
+import { PageEvent } from '@angular/material';
+import { PlatesService } from '../../services/plates.service';
+import { MyErrorStateMatcher } from '../../services/validator.service';
 
 @Component({
   selector: 'app-plates',
@@ -6,10 +11,34 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./plates.component.scss']
 })
 export class PlatesComponent implements OnInit {
+  searchKey: string;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor() { }
+  imgPath: string = 'http://localhost:3000/plates/image/';
+  listData: any; // show the requested array
+  listDataCopy: any; // keep the original array
+  isSelected: boolean = false;
+  selected: Object;
+  @ViewChild('fileInput') fileInput;
 
-  ngOnInit() {
+  // Reactive Form and Matcher
+  PlateForm: FormGroup;
+  matcher = new MyErrorStateMatcher();
+
+  // MatPaginator Inputs
+  length = 0;
+  pageSize = 6;
+  pageSizeOptions: number[] = [6, 12, 24, 60];
+
+  constructor(private plateService: PlatesService, private fb: FormBuilder) {
+    this.PlateForm = fb.group({
+      description: [
+        '',
+        [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
+      ],
+      file: ['', [Validators.required]]
+    });
   }
 
+  ngOnInit() {}
 }
