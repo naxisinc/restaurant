@@ -7,11 +7,17 @@ import { MaterialModule } from '../material';
 import { FooterComponent } from './footer/footer.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { ChipsComponent } from './chips/chips.component';
+import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 
-const COMPONENTS = [FooterComponent, MainNavComponent, ChipsComponent];
+const COMPONENTS = [
+  FooterComponent,
+  MainNavComponent,
+  ChipsComponent,
+  AutocompleteComponent
+];
 
 @NgModule({
-  declarations: [COMPONENTS, ChipsComponent],
+  declarations: [COMPONENTS],
   imports: [
     CommonModule,
     MaterialModule,

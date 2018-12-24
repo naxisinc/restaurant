@@ -8,6 +8,7 @@ import {
 } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { IngredientsService } from '../../services/ingredients.service';
 
 /**
  * @title Chips Autocomplete
@@ -25,19 +26,35 @@ export class ChipsComponent {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   fruitCtrl = new FormControl();
   filteredFruits: Observable<string[]>;
-  fruits: string[] = ['Lemon'];
-  allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  // fruits: string[] = ['Lemon'];
+  fruits = [];
+  // allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  allFruits: string[];
+  // mias
+  allIngredients: any;
+  selectedIngredients: any;
 
   @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  constructor() {
-    this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-      startWith(null),
-      map((fruit: string | null) =>
-        fruit ? this._filter(fruit) : this.allFruits.slice()
-      )
+  constructor(private ingredientsService: IngredientsService) {
+    this.ingredientsService.getIngredients().subscribe(
+      res => {
+        this.allFruits = res.map(x => x.description);
+      },
+      err => {
+        console.log(err);
+      }
     );
+
+    setTimeout(() => {
+      this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
+        startWith(null),
+        map((fruit: string | null) =>
+          fruit ? this._filter(fruit) : this.allFruits.slice()
+        )
+      );
+    }, 1000);
   }
 
   add(event: MatChipInputEvent): void {
@@ -49,7 +66,9 @@ export class ChipsComponent {
 
       // Add our fruit
       if ((value || '').trim()) {
-        this.fruits.push(value.trim());
+        if (this.allFruits.includes(value)) {
+          this.fruits.push(value.trim());
+        }
       }
 
       // Reset the input value
