@@ -9,6 +9,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './users/login/login.component';
 import { UsersComponent } from './users/users.component';
 import { SizesComponent } from './sizes/sizes.component';
+import { CategoriesComponent } from './categories/categories.component';
 import { IngredientsComponent } from './ingredients/ingredients.component';
 import { PlatesComponent } from './plates/plates.component';
 import { CommentsComponent } from './comments/comments.component';
@@ -22,6 +23,7 @@ import { ComponentsModule } from '../components/components.module';
     LoginComponent,
     UsersComponent,
     SizesComponent,
+    CategoriesComponent,
     IngredientsComponent,
     PlatesComponent,
     CommentsComponent,

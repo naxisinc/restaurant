@@ -6,7 +6,7 @@
         [(ngModel)]="searchKey"
         placeholder="Search..."
         autocomplete="off"
-        (keyup)="search($event.target.value)"
+        (keyup)="applyFilter()"
       />
       <button
         mat-button
@@ -21,57 +21,63 @@
     </mat-form-field>
   </div>
   <div class="mat-elevation-z8">
-    <mat-grid-list
-      *ngIf="listData?.length > 0"
-      cols="3"
-      rowHeight="300px"
-      gutterSize="5px"
-    >
-      <mat-grid-tile *ngFor="let tile of listData">
-        <img src="{{ imgPath }}{{ tile.img }}" alt="" (click)="show(tile)" />
-        <mat-grid-tile-footer>{{ tile.description }}</mat-grid-tile-footer>
-      </mat-grid-tile>
-    </mat-grid-list>
-    <div class="noData-div" *ngIf="listData?.length === 0">No Data.</div>
-
+    <mat-table [dataSource]="listData" matSort>
+      <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          ><h3>Categorys</h3></mat-header-cell
+        >
+        <mat-cell *matCellDef="let element" (click)="show(element)">{{
+          element.description
+        }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="noData">
+        <mat-footer-cell class="footer-cell" *matFooterCellDef colspan="6"
+          >No Data.</mat-footer-cell
+        >
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns">{{
+        row
+      }}</mat-row>
+      <mat-footer-row
+        class="footer-row"
+        *matFooterRowDef="['noData']"
+        [ngClass]="{ hide: !(listData != null && listData.data.length === 0) }"
+      ></mat-footer-row>
+    </mat-table>
     <mat-paginator
-      [length]="length"
-      [pageSizeOptions]="pageSizeOptions"
-      [pageSize]="pageSize"
-      (page)="paged($event)"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      [pageSize]="5"
     ></mat-paginator>
   </div>
 </div>
 <div id="actions-div">
   <div class="cud-div">
-    <form [formGroup]="PlateForm" enctype="multipart/form-data">
+    <form>
       <mat-form-field>
         <input
           matInput
-          placeholder="Name of the dish"
-          formControlName="description"
+          placeholder="Category"
+          [formControl]="categoryFormControl"
           [errorStateMatcher]="matcher"
         />
-        <mat-error *ngIf="PlateForm.controls.description.hasError('required')"
-          >Description is <strong>required.</strong></mat-error
-        >
-        <mat-error *ngIf="PlateForm.controls.description.hasError('minlength')"
-          >The description must be at least 3 characters long.</mat-error
-        >
-        <mat-error *ngIf="PlateForm.controls.description.hasError('maxlength')"
-          >The description must have less that 50 characters.</mat-error
-        >
+        <mat-error *ngIf="categoryFormControl.hasError('required')">
+          Category is <strong>required.</strong>
+        </mat-error>
+        <mat-error *ngIf="categoryFormControl.hasError('minlength')">
+          Category must be at least 3 characters long.
+        </mat-error>
+        <mat-error *ngIf="categoryFormControl.hasError('maxlength')">
+          Category must have less that 20 characters.
+        </mat-error>
       </mat-form-field>
-      <input class="btn-file" type="file" #fileInput formControlName="file" />
-      <app-chips></app-chips>
-      <app-autocomplete></app-autocomplete>
     </form>
     <button
       mat-stroked-button
       color="primary"
       (click)="add()"
       *ngIf="!isSelected"
-      [disabled]="PlateForm.invalid"
+      [disabled]="categoryFormControl.invalid"
     >
       Add
     </button>
@@ -80,7 +86,7 @@
       color="primary"
       (click)="edit()"
       *ngIf="isSelected"
-      [disabled]="PlateForm.controls.description.invalid"
+      [disabled]="categoryFormControl.invalid"
     >
       Edit
     </button>

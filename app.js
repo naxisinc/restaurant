@@ -42,12 +42,14 @@ app.use(bodyParser.json());
 
 const users = require('./routes/users');
 const sizes = require('./routes/sizes');
+const categories = require('./routes/categories');
 const ingredients = require('./routes/ingredients');
 const comments = require('./routes/comments');
 const plates = require('./routes/plates');
 
 app.use('/users', users);
 app.use('/sizes', sizes);
+app.use('/categories', categories);
 app.use('/ingredients', ingredients);
 app.use('/comments', comments);
 app.use('/plates', plates);
