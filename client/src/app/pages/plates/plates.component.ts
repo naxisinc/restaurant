@@ -41,4 +41,8 @@ export class PlatesComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  displayCounter(count) {
+    console.log(count);
+  }
 }

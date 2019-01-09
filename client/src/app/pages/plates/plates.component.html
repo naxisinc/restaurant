@@ -64,7 +64,9 @@
       </mat-form-field>
       <input class="btn-file" type="file" #fileInput formControlName="file" />
       <app-chips></app-chips>
-      <app-autocomplete></app-autocomplete>
+      <app-autocomplete
+        (autoFormControl)="displayCounter($event)"
+      ></app-autocomplete>
     </form>
     <button
       mat-stroked-button
