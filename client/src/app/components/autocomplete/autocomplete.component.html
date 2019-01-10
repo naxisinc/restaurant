@@ -1,21 +1,10 @@
-<mat-form-field class="example-full-width">
-  <input
-    type="text"
-    placeholder="Choose a category"
-    aria-label="Number"
-    matInput
-    [formControl]="autoFormControl"
-    [matAutocomplete]="auto"
-    [errorStateMatcher]="matcher"
-  />
-  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+<mat-form-field class="example-full-width" [formGroup]="parentForm">
+  <mat-select placeholder="Choose a category" formControlName="category">
     <mat-option *ngFor="let option of options" [value]="option">
       {{ option.description }}
     </mat-option>
-  </mat-autocomplete>
-  <mat-error *ngIf="autoFormControl.hasError('required')">
+  </mat-select>
+  <mat-error *ngIf="parentForm.controls.category.hasError('required')">
     Category is <strong>required</strong>
   </mat-error>
 </mat-form-field>
-<button mat-button (click)="valueChanged()">Click me!</button>
-<button mat-button (click)="isMatcher()">Matcher?</button>

@@ -1,22 +1,16 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { CategoriesService } from '../../services/categories.service';
-import { MyErrorStateMatcher } from '../../services/validator.service';
+import { Component, OnInit, Input } from "@angular/core";
+import { FormControl } from "@angular/forms";
+import { CategoriesService } from "../../services/categories.service";
 
 @Component({
-  selector: 'app-autocomplete',
-  templateUrl: './autocomplete.component.html',
-  styleUrls: ['./autocomplete.component.scss']
+  selector: "app-autocomplete",
+  templateUrl: "./autocomplete.component.html",
+  styleUrls: ["./autocomplete.component.scss"]
 })
 export class AutocompleteComponent implements OnInit {
   options: any;
   categoryId: string;
-  @Output() valueChange = new EventEmitter();
-  counter = 0;
-
-  // Reactive Form and Matcher
-  autoFormControl = new FormControl('', [Validators.required]);
-  matcher = new MyErrorStateMatcher();
+  @Input() parentForm: FormControl;
 
   constructor(private categoriesService: CategoriesService) {
     this.categoriesService.getCategories().subscribe(
@@ -30,23 +24,5 @@ export class AutocompleteComponent implements OnInit {
     );
   }
 
-  valueChanged() {
-    this.counter++;
-    this.valueChange.emit(this.counter);
-  }
-
-  isMatcher() {
-    if (this.autoFormControl.valid) {
-      console.log('Valid Form');
-    } else {
-      console.log('Invalid Form');
-    }
-  }
-
   ngOnInit() {}
-
-  displayFn(obj) {
-    this.categoryId = obj ? obj._id : null;
-    return obj ? obj.description : undefined;
-  }
 }

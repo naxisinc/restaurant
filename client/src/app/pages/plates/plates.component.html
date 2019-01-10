@@ -44,7 +44,7 @@
 </div>
 <div id="actions-div">
   <div class="cud-div">
-    <form [formGroup]="PlateForm" enctype="multipart/form-data">
+    <form [formGroup]="parentForm" enctype="multipart/form-data">
       <mat-form-field>
         <input
           matInput
@@ -52,28 +52,26 @@
           formControlName="description"
           [errorStateMatcher]="matcher"
         />
-        <mat-error *ngIf="PlateForm.controls.description.hasError('required')"
+        <mat-error *ngIf="parentForm.controls.description.hasError('required')"
           >Description is <strong>required.</strong></mat-error
         >
-        <mat-error *ngIf="PlateForm.controls.description.hasError('minlength')"
+        <mat-error *ngIf="parentForm.controls.description.hasError('minlength')"
           >The description must be at least 3 characters long.</mat-error
         >
-        <mat-error *ngIf="PlateForm.controls.description.hasError('maxlength')"
+        <mat-error *ngIf="parentForm.controls.description.hasError('maxlength')"
           >The description must have less that 50 characters.</mat-error
         >
       </mat-form-field>
       <input class="btn-file" type="file" #fileInput formControlName="file" />
-      <app-chips></app-chips>
-      <app-autocomplete
-        (autoFormControl)="displayCounter($event)"
-      ></app-autocomplete>
+      <app-chips (ingredients)="gettingIngredients($event)"></app-chips>
+      <app-autocomplete [parentForm]="parentForm"></app-autocomplete>
     </form>
     <button
       mat-stroked-button
       color="primary"
       (click)="add()"
       *ngIf="!isSelected"
-      [disabled]="PlateForm.invalid"
+      [disabled]="parentForm.invalid"
     >
       Add
     </button>
@@ -82,7 +80,7 @@
       color="primary"
       (click)="edit()"
       *ngIf="isSelected"
-      [disabled]="PlateForm.controls.description.invalid"
+      [disabled]="parentForm.controls.description.invalid"
     >
       Edit
     </button>
