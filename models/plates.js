@@ -9,6 +9,10 @@ const PlateSchema = new mongoose.Schema(
         required: true
       }
     ],
+    _category: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true
+    },
     averagerate: {
       type: Number,
       required: true,
@@ -19,10 +23,6 @@ const PlateSchema = new mongoose.Schema(
       required: true
     },
     description: {
-      type: String,
-      required: true
-    },
-    category: {
       type: String,
       required: true
     }

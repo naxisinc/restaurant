@@ -13,8 +13,10 @@ export class PlatesService {
 
   postPlate(plate) {
     let payload = new FormData();
-    payload.append('description', plate.description);
+    payload.append('_ingredients', plate.ingredients);
+    payload.append('_category', plate.category);
     payload.append('file', plate.file);
+    payload.append('description', plate.description);
     const headers = new HttpHeaders({
       'x-auth': localStorage.getItem('x-auth')
     });

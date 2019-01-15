@@ -15,7 +15,8 @@ import {
   MatGridListModule,
   MatChipsModule,
   MatAutocompleteModule,
-  MatSelectModule
+  MatSelectModule,
+  MatTabsModule
 } from '@angular/material';
 
 const MODULES = [
@@ -34,7 +35,8 @@ const MODULES = [
   MatGridListModule,
   MatChipsModule,
   MatAutocompleteModule,
-  MatSelectModule
+  MatSelectModule,
+  MatTabsModule
 ];
 
 @NgModule({

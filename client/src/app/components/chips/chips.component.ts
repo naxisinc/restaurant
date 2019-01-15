@@ -1,28 +1,28 @@
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   Component,
   ElementRef,
   ViewChild,
   Output,
   EventEmitter
-} from "@angular/core";
-import { FormControl } from "@angular/forms";
+} from '@angular/core';
+import { FormControl } from '@angular/forms';
 import {
   MatAutocompleteSelectedEvent,
   MatChipInputEvent,
   MatAutocomplete
-} from "@angular/material";
-import { Observable } from "rxjs";
-import { map, startWith } from "rxjs/operators";
-import { IngredientsService } from "../../services/ingredients.service";
+} from '@angular/material';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { IngredientsService } from '../../services/ingredients.service';
 
 /**
  * @title Chips Autocomplete
  */
 @Component({
-  selector: "app-chips",
-  templateUrl: "chips.component.html",
-  styleUrls: ["chips.component.scss"]
+  selector: 'app-chips',
+  templateUrl: 'chips.component.html',
+  styleUrls: ['chips.component.scss']
 })
 export class ChipsComponent {
   visible = true;
@@ -36,14 +36,16 @@ export class ChipsComponent {
   allFruits: string[];
   // Exporting the list of ingredients
   @Output() ingredients = new EventEmitter();
+  Ingredients: any;
 
-  @ViewChild("fruitInput")
+  @ViewChild('fruitInput')
   fruitInput: ElementRef<HTMLInputElement>;
-  @ViewChild("auto") matAutocomplete: MatAutocomplete;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor(private ingredientsService: IngredientsService) {
     this.ingredientsService.getIngredients().subscribe(
       res => {
+        this.Ingredients = res;
         this.allFruits = res.map(x => x.description);
       },
       err => {
@@ -69,7 +71,7 @@ export class ChipsComponent {
       const value = event.value;
 
       // Add our fruit
-      if ((value || "").trim()) {
+      if ((value || '').trim()) {
         if (this.allFruits.includes(value)) {
           this.fruits.push(value.trim());
         }
@@ -77,7 +79,7 @@ export class ChipsComponent {
 
       // Reset the input value
       if (input) {
-        input.value = "";
+        input.value = '';
       }
 
       this.fruitCtrl.setValue(null);
@@ -94,11 +96,15 @@ export class ChipsComponent {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.fruits.push(event.option.viewValue);
-    this.fruitInput.nativeElement.value = "";
+    this.fruitInput.nativeElement.value = '';
     this.fruitCtrl.setValue(null);
 
     // Emit the event for parent component
-    this.ingredients.emit(this.fruits);
+    let arrAux = [];
+    this.fruits.forEach(element => {
+      arrAux.push(this.Ingredients.find(x => x.description === element)._id);
+    });
+    this.ingredients.emit(arrAux);
   }
 
   private _filter(value: string): string[] {

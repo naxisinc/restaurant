@@ -1,25 +1,27 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { MatPaginator } from "@angular/material";
-import { PlatesService } from "../../services/plates.service";
-import { MyErrorStateMatcher } from "../../services/validator.service";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material';
+import { PlatesService } from '../../services/plates.service';
+import { SizesService } from '../../services/sizes.service';
+import { MyErrorStateMatcher } from '../../services/validator.service';
 
 @Component({
-  selector: "app-plates",
-  templateUrl: "./plates.component.html",
-  styleUrls: ["./plates.component.scss"]
+  selector: 'app-plates',
+  templateUrl: './plates.component.html',
+  styleUrls: ['./plates.component.scss']
 })
 export class PlatesComponent implements OnInit {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  imgPath: string = "http://localhost:3000/plates/image/";
+  imgPath: string = 'http://localhost:3000/plates/image/';
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
   isSelected: boolean = false;
   selected: Object;
-  @ViewChild("fileInput") fileInput;
-  listOfIngredients: string[];
+  @ViewChild('fileInput') fileInput;
+  ingredientsId: string[];
+  sizes: any;
 
   // Reactive Form and Matcher
   parentForm: FormGroup;
@@ -30,32 +32,52 @@ export class PlatesComponent implements OnInit {
   pageSize = 6;
   pageSizeOptions: number[] = [6, 12, 24, 60];
 
-  constructor(private plateService: PlatesService, private fb: FormBuilder) {
+  constructor(
+    private plateService: PlatesService,
+    private sizesService: SizesService,
+    private fb: FormBuilder
+  ) {
     this.parentForm = fb.group({
       description: [
-        "",
+        '',
         [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
       ],
-      file: ["", [Validators.required]],
-      ingredients: ["", [Validators.required]],
-      category: ["", [Validators.required]]
+      file: ['', [Validators.required]],
+      category: ['', [Validators.required]]
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.sizesService.getSizes().subscribe(
+      res => {
+        this.sizes = res;
+        console.log(this.sizes);
+      },
+      err => {
+        //
+      }
+    );
+  }
 
   gettingIngredients(list) {
-    this.listOfIngredients = list;
-    console.log(this.listOfIngredients);
+    this.ingredientsId = list;
   }
 
   add() {
     let obj = {
       description: this.parentForm.controls.description.value,
       file: this.fileInput.nativeElement.files[0],
-      ingredients: this.parentForm.controls.ingredients.value,
-      category: this.parentForm.controls.category.value
+      _ingredients: this.ingredientsId,
+      category: this.parentForm.controls.category.value._id
     };
-    console.log(obj);
+    // console.log(obj);
+    this.plateService.postPlate(obj).subscribe(
+      res => {
+        //
+      },
+      err => {
+        //
+      }
+    );
   }
 }

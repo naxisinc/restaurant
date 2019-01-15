@@ -11,12 +11,12 @@ const { gfs, upload } = require('../middleware/filestorage');
 router.post('/', authorized, upload().single('file'), async (req, res) => {
   try {
     const newplate = new Plate({
-      // _ingredients: req.body._ingredients,
-      _ingredients: [
-        '5bf03ec2f9b32605502f7b78',
-        '5bf03f07f9b32605502f7b7b',
-        '5bf03f16f9b32605502f7b7e'
-      ],
+      // _ingredients: [
+      //   '5bf03ec2f9b32605502f7b78',
+      //   '5bf03f07f9b32605502f7b7b',
+      //   '5bf03f16f9b32605502f7b7e'
+      // ],
+      _ingredients: req.body._ingredients,
       img: req.file.id,
       description: req.body.description,
       category: req.body.category

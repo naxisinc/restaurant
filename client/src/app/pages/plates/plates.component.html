@@ -65,13 +65,38 @@
       <input class="btn-file" type="file" #fileInput formControlName="file" />
       <app-chips (ingredients)="gettingIngredients($event)"></app-chips>
       <app-autocomplete [parentForm]="parentForm"></app-autocomplete>
+
+      <mat-list *ngIf="sizes.length > 0">
+        <mat-list-item>Details of the dishes</mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-tab-group animationDuration="0ms">
+          <mat-tab *ngFor="let size of sizes" label="{{ size.description }}">
+            <mat-form-field class="" style="margin-top:1rem;">
+              <span matPrefix>$ &nbsp;</span>
+              <input matInput placeholder="Price" />
+            </mat-form-field>
+            <mat-form-field class="">
+              <input matInput placeholder="Calories" />
+              <span matSuffix>cal</span>
+            </mat-form-field>
+            <mat-form-field class="">
+              <input matInput placeholder="Total Fat" />
+              <span matSuffix>g</span>
+            </mat-form-field>
+            <mat-form-field class="">
+              <input matInput placeholder="Total Carbs" />
+              <span matSuffix>g</span>
+            </mat-form-field>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-list>
     </form>
     <button
       mat-stroked-button
       color="primary"
       (click)="add()"
       *ngIf="!isSelected"
-      [disabled]="parentForm.invalid"
+      [disabled]="!parentForm.valid"
     >
       Add
     </button>
