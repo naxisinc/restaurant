@@ -1,25 +1,25 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatPaginator } from '@angular/material';
-import { PlatesService } from '../../services/plates.service';
-import { SizesService } from '../../services/sizes.service';
-import { MyErrorStateMatcher } from '../../services/validator.service';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { MatPaginator } from "@angular/material";
+import { PlatesService } from "../../services/plates.service";
+import { SizesService } from "../../services/sizes.service";
+import { MyErrorStateMatcher } from "../../services/validator.service";
 
 @Component({
-  selector: 'app-plates',
-  templateUrl: './plates.component.html',
-  styleUrls: ['./plates.component.scss']
+  selector: "app-plates",
+  templateUrl: "./plates.component.html",
+  styleUrls: ["./plates.component.scss"]
 })
 export class PlatesComponent implements OnInit {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  imgPath: string = 'http://localhost:3000/plates/image/';
+  imgPath: string = "http://localhost:3000/plates/image/";
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
   isSelected: boolean = false;
   selected: Object;
-  @ViewChild('fileInput') fileInput;
+  @ViewChild("fileInput") fileInput;
   ingredientsId: string[];
   sizes: any;
 
@@ -37,27 +37,26 @@ export class PlatesComponent implements OnInit {
     private sizesService: SizesService,
     private fb: FormBuilder
   ) {
-    this.parentForm = fb.group({
-      description: [
-        '',
-        [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
-      ],
-      file: ['', [Validators.required]],
-      category: ['', [Validators.required]]
-    });
-  }
-
-  ngOnInit() {
     this.sizesService.getSizes().subscribe(
       res => {
         this.sizes = res;
-        console.log(this.sizes);
       },
       err => {
         //
       }
     );
+
+    this.parentForm = fb.group({
+      description: [
+        "",
+        [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
+      ],
+      file: ["", [Validators.required]],
+      category: ["", [Validators.required]]
+    });
   }
+
+  ngOnInit() {}
 
   gettingIngredients(list) {
     this.ingredientsId = list;

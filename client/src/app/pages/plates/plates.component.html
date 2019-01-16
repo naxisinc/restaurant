@@ -66,13 +66,16 @@
       <app-chips (ingredients)="gettingIngredients($event)"></app-chips>
       <app-autocomplete [parentForm]="parentForm"></app-autocomplete>
 
-      <mat-list *ngIf="sizes.length > 0">
+      <mat-list *ngIf="sizes?.length > 0">
         <mat-list-item>Details of the dishes</mat-list-item>
         <mat-divider></mat-divider>
         <mat-tab-group animationDuration="0ms">
-          <mat-tab *ngFor="let size of sizes" label="{{ size.description }}">
+          <mat-tab
+            *ngFor="let size of sizes; let i = index"
+            label="{{ size.description }}"
+          >
             <mat-form-field class="" style="margin-top:1rem;">
-              <span matPrefix>$ &nbsp;</span>
+              <span matPrefix>${{ i }} &nbsp;</span>
               <input matInput placeholder="Price" />
             </mat-form-field>
             <mat-form-field class="">
