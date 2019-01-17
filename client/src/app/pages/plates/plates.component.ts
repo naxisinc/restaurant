@@ -1,25 +1,25 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { MatPaginator } from "@angular/material";
-import { PlatesService } from "../../services/plates.service";
-import { SizesService } from "../../services/sizes.service";
-import { MyErrorStateMatcher } from "../../services/validator.service";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { MatPaginator } from '@angular/material';
+import { PlatesService } from '../../services/plates.service';
+import { SizesService } from '../../services/sizes.service';
+import { MyErrorStateMatcher } from '../../services/validator.service';
 
 @Component({
-  selector: "app-plates",
-  templateUrl: "./plates.component.html",
-  styleUrls: ["./plates.component.scss"]
+  selector: 'app-plates',
+  templateUrl: './plates.component.html',
+  styleUrls: ['./plates.component.scss']
 })
 export class PlatesComponent implements OnInit {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  imgPath: string = "http://localhost:3000/plates/image/";
+  imgPath: string = 'http://localhost:3000/plates/image/';
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
   isSelected: boolean = false;
   selected: Object;
-  @ViewChild("fileInput") fileInput;
+  @ViewChild('fileInput') fileInput;
   ingredientsId: string[];
   sizes: any;
 
@@ -46,17 +46,44 @@ export class PlatesComponent implements OnInit {
       }
     );
 
-    this.parentForm = fb.group({
+    this.parentForm = this.fb.group({
       description: [
-        "",
+        '',
         [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
       ],
-      file: ["", [Validators.required]],
-      category: ["", [Validators.required]]
+      file: ['', [Validators.required]],
+      category: ['', [Validators.required]],
+      sizeDetails: this.fb.array([])
     });
   }
 
-  ngOnInit() {}
+  get detailsOfSize() {
+    return this.parentForm.get('sizeDetails') as FormArray;
+  }
+
+  createItem(): FormGroup {
+    return this.fb.group({
+      price: '',
+      calories: '',
+      totalfat: '',
+      totalcarbs: ''
+    });
+  }
+
+  ngOnInit() {
+    setTimeout(() => {
+      this.sizes.forEach(size => {
+        this.detailsOfSize.push(this.createItem());
+      });
+    }, 1000);
+    // for (let i = 0; i < this.sizes.length; i++) {
+    //   this.detailsOfSize.push(this.createItem());
+    // }
+  }
+
+  showForm() {
+    console.log(this.parentForm.controls);
+  }
 
   gettingIngredients(list) {
     this.ingredientsId = list;

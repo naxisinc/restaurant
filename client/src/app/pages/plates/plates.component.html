@@ -41,6 +41,7 @@
       (page)="paged($event)"
     ></mat-paginator>
   </div>
+  <app-formarray></app-formarray>
 </div>
 <div id="actions-div">
   <div class="cud-div">
@@ -70,30 +71,48 @@
         <mat-list-item>Details of the dishes</mat-list-item>
         <mat-divider></mat-divider>
         <mat-tab-group animationDuration="0ms">
-          <mat-tab
-            *ngFor="let size of sizes; let i = index"
-            label="{{ size.description }}"
-          >
-            <mat-form-field class="" style="margin-top:1rem;">
-              <span matPrefix>${{ i }} &nbsp;</span>
-              <input matInput placeholder="Price" />
-            </mat-form-field>
-            <mat-form-field class="">
-              <input matInput placeholder="Calories" />
-              <span matSuffix>cal</span>
-            </mat-form-field>
-            <mat-form-field class="">
-              <input matInput placeholder="Total Fat" />
-              <span matSuffix>g</span>
-            </mat-form-field>
-            <mat-form-field class="">
-              <input matInput placeholder="Total Carbs" />
-              <span matSuffix>g</span>
-            </mat-form-field>
-          </mat-tab>
+          <div formArrayName="sizeDetails">
+            <mat-tab
+              *ngFor="let size of sizes; let i = index"
+              label="{{ size.description }}"
+            >
+              <div [formGroupName]="i">
+                <!-- <mat-form-field class="" style="margin-top:1rem;">
+                  <span matPrefix>${{ i }} &nbsp;</span>
+                  <input matInput placeholder="Price" formControlName="price" />
+                </mat-form-field>
+                <mat-form-field class="">
+                  <input
+                    matInput
+                    placeholder="Calories"
+                    formControlName="calories"
+                  />
+                  <span matSuffix>cal</span>
+                </mat-form-field>
+                <mat-form-field class="">
+                  <input
+                    matInput
+                    placeholder="Total Fat"
+                    formControlName="totalfat"
+                  />
+                  <span matSuffix>g</span>
+                </mat-form-field>
+                <mat-form-field class="">
+                  <input
+                    matInput
+                    placeholder="Total Carbs"
+                    formControlName="totalcarbs"
+                  />
+                  <span matSuffix>g</span>
+                </mat-form-field> -->
+                {{ i + 1 }}
+              </div>
+            </mat-tab>
+          </div>
         </mat-tab-group>
       </mat-list>
     </form>
+    <button (click)="showForm()">Add Alias</button>
     <button
       mat-stroked-button
       color="primary"
