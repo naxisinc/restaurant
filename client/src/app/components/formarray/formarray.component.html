@@ -1,7 +1,7 @@
 <form [formGroup]="profileForm">
   <div formArrayName="aliases">
     <h3>Aliases</h3>
-    <button (click)="showForm()">Add Alias</button>
+    <button (click)="addAlias()">Add Alias</button>
 
     <div *ngFor="let address of aliases.controls; let i = index">
       <!-- The repeated alias template -->

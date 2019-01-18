@@ -27,6 +27,7 @@ export class FormarrayComponent implements OnInit {
 
   addAlias() {
     this.aliases.push(this.fb.control(''));
+    console.log(this.aliases.controls);
   }
 
   ngOnInit() {}

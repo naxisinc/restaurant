@@ -25,6 +25,7 @@ export class PlatesComponent implements OnInit {
 
   // Reactive Form and Matcher
   parentForm: FormGroup;
+  items: FormArray;
   matcher = new MyErrorStateMatcher();
 
   // MatPaginator Inputs
@@ -53,13 +54,13 @@ export class PlatesComponent implements OnInit {
       ],
       file: ['', [Validators.required]],
       category: ['', [Validators.required]],
-      sizeDetails: this.fb.array([])
+      items: this.fb.array([])
     });
   }
 
-  get detailsOfSize() {
-    return this.parentForm.get('sizeDetails') as FormArray;
-  }
+  // get sizeDetails() {
+  //   return this.parentForm.get('sizeDetails') as FormArray;
+  // }
 
   createItem(): FormGroup {
     return this.fb.group({
@@ -71,18 +72,18 @@ export class PlatesComponent implements OnInit {
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.sizes.forEach(size => {
-        this.detailsOfSize.push(this.createItem());
-      });
-    }, 1000);
-    // for (let i = 0; i < this.sizes.length; i++) {
-    //   this.detailsOfSize.push(this.createItem());
-    // }
+    // setTimeout(() => {
+    //   this.sizes.forEach(() => {
+    // this.items = this.parentForm.get('items') as FormArray;
+    // this.items.push(this.createItem());
+    //   });
+    // }, 1000);
+    // console.log(this.parentForm.get('items'));
   }
 
-  showForm() {
-    console.log(this.parentForm.controls);
+  addItem(): void {
+    this.items = this.parentForm.get('items') as FormArray;
+    this.items.push(this.createItem());
   }
 
   gettingIngredients(list) {

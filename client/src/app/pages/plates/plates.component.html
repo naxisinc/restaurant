@@ -70,15 +70,32 @@
       <mat-list *ngIf="sizes?.length > 0">
         <mat-list-item>Details of the dishes</mat-list-item>
         <mat-divider></mat-divider>
-        <mat-tab-group animationDuration="0ms">
-          <div formArrayName="sizeDetails">
+        <div
+          formArrayName="items"
+          *ngFor="let item of parentForm.get('items').controls; let i = index"
+        >
+          <div [formGroupName]="i">
+            <input formControlName="price" placeholder="Price" />
+            <input formControlName="calories" placeholder="Calories" />
+            <input formControlName="totalfat" placeholder="Fat" />
+            <input formControlName="totalcarbs" placeholder="Carbs" />
+          </div>
+
+          Chosen name:
+          {{ parentForm.controls.items.controls[i].controls.price.value }}
+        </div>
+        <!-- <mat-tab-group animationDuration="0ms">
+          <div formArrayName="items">
             <mat-tab
-              *ngFor="let size of sizes; let i = index"
-              label="{{ size.description }}"
+              *ngFor="
+                let item of parentForm.get('items').controls;
+                let i = index
+              "
+              label="{{ item }}"
             >
               <div [formGroupName]="i">
-                <!-- <mat-form-field class="" style="margin-top:1rem;">
-                  <span matPrefix>${{ i }} &nbsp;</span>
+                <mat-form-field class="" style="margin-top:1rem;">
+                  <span matPrefix>$ &nbsp;</span>
                   <input matInput placeholder="Price" formControlName="price" />
                 </mat-form-field>
                 <mat-form-field class="">
@@ -104,15 +121,14 @@
                     formControlName="totalcarbs"
                   />
                   <span matSuffix>g</span>
-                </mat-form-field> -->
-                {{ i + 1 }}
+                </mat-form-field>
               </div>
             </mat-tab>
           </div>
-        </mat-tab-group>
+        </mat-tab-group> -->
       </mat-list>
     </form>
-    <button (click)="showForm()">Add Alias</button>
+    <button (click)="addItem()">Add Item</button>
     <button
       mat-stroked-button
       color="primary"
