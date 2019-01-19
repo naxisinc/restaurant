@@ -41,7 +41,6 @@
       (page)="paged($event)"
     ></mat-paginator>
   </div>
-  <app-formarray></app-formarray>
 </div>
 <div id="actions-div">
   <div class="cud-div">
@@ -70,7 +69,7 @@
       <mat-list *ngIf="sizes?.length > 0">
         <mat-list-item>Details of the dishes</mat-list-item>
         <mat-divider></mat-divider>
-        <div
+        <!-- <div
           formArrayName="items"
           *ngFor="let item of parentForm.get('items').controls; let i = index"
         >
@@ -83,22 +82,26 @@
 
           Chosen name:
           {{ parentForm.controls.items.controls[i].controls.price.value }}
-        </div>
-        <!-- <mat-tab-group animationDuration="0ms">
-          <div formArrayName="items">
+        </div> -->
+        <div formArrayName="items">
+          <mat-tab-group
+            animationDuration="0ms"
+            backgroundColor="accent"
+            dynamicHeight
+          >
             <mat-tab
               *ngFor="
                 let item of parentForm.get('items').controls;
                 let i = index
               "
-              label="{{ item }}"
+              label="{{ item.value.description }}"
             >
               <div [formGroupName]="i">
-                <mat-form-field class="" style="margin-top:1rem;">
+                <mat-form-field class="fullwidth" style="margin-top:1rem;">
                   <span matPrefix>$ &nbsp;</span>
                   <input matInput placeholder="Price" formControlName="price" />
                 </mat-form-field>
-                <mat-form-field class="">
+                <mat-form-field class="fullwidth">
                   <input
                     matInput
                     placeholder="Calories"
@@ -106,7 +109,7 @@
                   />
                   <span matSuffix>cal</span>
                 </mat-form-field>
-                <mat-form-field class="">
+                <mat-form-field class="fullwidth">
                   <input
                     matInput
                     placeholder="Total Fat"
@@ -114,7 +117,7 @@
                   />
                   <span matSuffix>g</span>
                 </mat-form-field>
-                <mat-form-field class="">
+                <mat-form-field class="fullwidth">
                   <input
                     matInput
                     placeholder="Total Carbs"
@@ -124,11 +127,10 @@
                 </mat-form-field>
               </div>
             </mat-tab>
-          </div>
-        </mat-tab-group> -->
+          </mat-tab-group>
+        </div>
       </mat-list>
     </form>
-    <button (click)="addItem()">Add Item</button>
     <button
       mat-stroked-button
       color="primary"

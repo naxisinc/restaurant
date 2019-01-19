@@ -58,12 +58,10 @@ export class PlatesComponent implements OnInit {
     });
   }
 
-  // get sizeDetails() {
-  //   return this.parentForm.get('sizeDetails') as FormArray;
-  // }
-
-  createItem(): FormGroup {
+  createItem(id, description): FormGroup {
     return this.fb.group({
+      _size: id,
+      description: description,
       price: '',
       calories: '',
       totalfat: '',
@@ -72,18 +70,12 @@ export class PlatesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // setTimeout(() => {
-    //   this.sizes.forEach(() => {
-    // this.items = this.parentForm.get('items') as FormArray;
-    // this.items.push(this.createItem());
-    //   });
-    // }, 1000);
-    // console.log(this.parentForm.get('items'));
-  }
-
-  addItem(): void {
-    this.items = this.parentForm.get('items') as FormArray;
-    this.items.push(this.createItem());
+    setTimeout(() => {
+      this.sizes.forEach(size => {
+        this.items = this.parentForm.get('items') as FormArray;
+        this.items.push(this.createItem(size._id, size.description));
+      });
+    }, 1000);
   }
 
   gettingIngredients(list) {
@@ -91,13 +83,20 @@ export class PlatesComponent implements OnInit {
   }
 
   add() {
+    let sizeDetailsArray = [];
+    this.parentForm.get('items')['controls'].forEach(size => {
+      sizeDetailsArray.push(size.value);
+    });
+
     let obj = {
       description: this.parentForm.controls.description.value,
       file: this.fileInput.nativeElement.files[0],
       _ingredients: this.ingredientsId,
-      category: this.parentForm.controls.category.value._id
+      category: this.parentForm.controls.category.value._id,
+      sizeDetails: sizeDetailsArray
     };
-    // console.log(obj);
+
+    console.log(obj);
     this.plateService.postPlate(obj).subscribe(
       res => {
         //
