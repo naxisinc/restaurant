@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatPaginator } from '@angular/material';
-import { PageEvent } from '@angular/material';
+import { MatPaginator, PageEvent } from '@angular/material';
 import { IngredientsService } from '../../services/ingredients.service';
 import { MyErrorStateMatcher } from '../../services/validator.service';
 
@@ -14,7 +13,7 @@ export class IngredientsComponent implements OnInit {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  imgPath: string = 'http://localhost:3000/ingredients/image/';
+  imgPath: string = 'http://localhost:3000/images/';
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
   isSelected: boolean = false;

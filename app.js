@@ -46,6 +46,7 @@ const categories = require('./routes/categories');
 const ingredients = require('./routes/ingredients');
 const comments = require('./routes/comments');
 const plates = require('./routes/plates');
+const images = require('./routes/images');
 
 app.use('/users', users);
 app.use('/sizes', sizes);
@@ -53,6 +54,7 @@ app.use('/categories', categories);
 app.use('/ingredients', ingredients);
 app.use('/comments', comments);
 app.use('/plates', plates);
+app.use('/images', images);
 
 // Start serve
 app.listen(port, () => {

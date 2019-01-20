@@ -23,12 +23,38 @@
   <div class="mat-elevation-z8">
     <mat-grid-list
       *ngIf="listData?.length > 0"
-      cols="3"
-      rowHeight="300px"
-      gutterSize="5px"
+      cols="1"
+      rowHeight="400px"
+      gutterSize="2px"
     >
       <mat-grid-tile *ngFor="let tile of listData">
+        <!-- <mat-grid-tile-header>{{ tile.averagerate }}</mat-grid-tile-header> -->
         <img src="{{ imgPath }}{{ tile.img }}" alt="" (click)="show(tile)" />
+        <mat-chip-list *ngFor="let ingredient of tile._ingredients">
+          <mat-chip>{{ ingredient.description }}</mat-chip>
+        </mat-chip-list>
+        <div *ngIf="tile.details?.length > 0">
+          <mat-tab-group
+            class="stretch-tabs"
+            animationDuration="0ms"
+            backgroundColor="accent"
+            dynamicHeight
+          >
+            <mat-tab
+              *ngFor="let tab of tile.details"
+              label="{{ tab._size.description }}"
+            >
+              <mat-list>
+                <mat-list-item> Price: {{ tab.price }} </mat-list-item>
+                <mat-list-item> Calories: {{ tab.calories }}g</mat-list-item>
+                <mat-list-item> Total Fat: {{ tab.totalfat }}g </mat-list-item>
+                <mat-list-item>
+                  Total Carbs: {{ tab.totalcarbs }}g
+                </mat-list-item>
+              </mat-list>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
         <mat-grid-tile-footer>{{ tile.description }}</mat-grid-tile-footer>
       </mat-grid-tile>
     </mat-grid-list>
@@ -69,20 +95,6 @@
       <mat-list *ngIf="sizes?.length > 0">
         <mat-list-item>Details of the dishes</mat-list-item>
         <mat-divider></mat-divider>
-        <!-- <div
-          formArrayName="items"
-          *ngFor="let item of parentForm.get('items').controls; let i = index"
-        >
-          <div [formGroupName]="i">
-            <input formControlName="price" placeholder="Price" />
-            <input formControlName="calories" placeholder="Calories" />
-            <input formControlName="totalfat" placeholder="Fat" />
-            <input formControlName="totalcarbs" placeholder="Carbs" />
-          </div>
-
-          Chosen name:
-          {{ parentForm.controls.items.controls[i].controls.price.value }}
-        </div> -->
         <div formArrayName="items">
           <mat-tab-group
             animationDuration="0ms"

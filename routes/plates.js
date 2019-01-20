@@ -3,71 +3,30 @@ const router = express.Router();
 const { ObjectID } = require('mongodb');
 
 const Plate = require('../models/plates');
+const Ingredient = require('../models/ingredients');
 const SizePlate = require('../models/sizeplate');
+const Size = require('../models/sizes');
 const { authorized } = require('../middleware/authorized');
 const { gfs, upload } = require('../middleware/filestorage');
 
 // POST /plates
 router.post('/', authorized, upload().single('file'), async (req, res) => {
   try {
-    // const newplate = new Plate({
-    //   // _ingredients: [
-    //   //   '5bf03ec2f9b32605502f7b78',
-    //   //   '5bf03f07f9b32605502f7b7b',
-    //   //   '5bf03f16f9b32605502f7b7e'
-    //   // ],
-    //   _ingredients: req.body._ingredients,
-    //   img: req.file.id,
-    //   description: req.body.description,
-    //   category: req.body.category
-    // });
-    // const plate = await newplate.save();
+    const newplate = new Plate({
+      _ingredients: JSON.parse(req.body._ingredients),
+      _category: req.body._category,
+      img: req.file.filename,
+      description: req.body.description
+    });
+    const plate = await newplate.save();
 
-    // const size_details = [
-    //   {
-    //     _size: '5be473a0b24aee4178bf96c4', //kids
-    //     _plate: plate._id,
-    //     price: '9.99',
-    //     calories: '50cal.',
-    //     totalfat: '4g',
-    //     totalcarbs: '6g'
-    //   },
-    //   {
-    //     _size: '5be473cab24aee4178bf96c5', //small
-    //     _plate: plate._id,
-    //     price: '12.99',
-    //     calories: '150cal.',
-    //     totalfat: '6g',
-    //     totalcarbs: '8g'
-    //   },
-    //   {
-    //     _size: '5be473d9b24aee4178bf96c6', //medium
-    //     _plate: plate._id,
-    //     price: '14.99',
-    //     calories: '200cal.',
-    //     totalfat: '8g',
-    //     totalcarbs: '10g'
-    //   },
-    //   {
-    //     _size: '5be473e1b24aee4178bf96c7', //large
-    //     _plate: plate._id,
-    //     price: '16.99',
-    //     calories: '250cal.',
-    //     totalfat: '10g',
-    //     totalcarbs: '12g'
-    //   }
-    // ];
-
-    // console.log(req.body.details[0]);
-    let size_details = JSON.parse(req.body.details);
-    console.log(size_details.length);
-    // for (let i = 0; i < size_details.length; i++) {
-    // const element = size_details[i];
-    // const item = new SizePlate(element);
-    // await item.save();
-    // }
-
-    res.status(200).send(size_details);
+    let details = JSON.parse(req.body.details);
+    for (let i = 0; i < details.length; i++) {
+      details[i]._plate = plate._id;
+      const item = new SizePlate(details[i]);
+      await item.save();
+    }
+    res.status(200).send(plate);
   } catch (e) {
     res.status(400).send(e);
   }
@@ -76,7 +35,20 @@ router.post('/', authorized, upload().single('file'), async (req, res) => {
 // GET /plates
 router.get('/', async (req, res) => {
   try {
-    const plates = await Plate.find();
+    const plates = await Plate.find().lean();
+    for (let i = 0; i < plates.length; i++) {
+      let ingredients = plates[i]._ingredients;
+      for (let j = 0; j < ingredients.length; j++) {
+        plates[i]._ingredients[j] = await Ingredient.findOne({
+          _id: ingredients[j]
+        });
+      }
+      let details = await SizePlate.find({ _plate: plates[i]._id }).lean();
+      for (let k = 0; k < details.length; k++) {
+        details[k]._size = await Size.findOne({ _id: details[k]._size });
+      }
+      plates[i].details = details;
+    }
     res.status(200).send(plates);
   } catch (e) {
     res.status(400).send(e);

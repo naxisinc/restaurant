@@ -44,24 +44,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// @route GET /image/:filename
-// @desc Display Image
-router.get('/image/:filename', (req, res) => {
-  gfs().files.findOne({ filename: req.params.filename }, (err, file) => {
-    // Check if file
-    if (!file || file.length === 0) return res.status(404).send();
-
-    // Check if image
-    if (file.contentType === 'image/jpeg' || file.contentType === 'image/png') {
-      // Reasd output to browser
-      const readstream = gfs().createReadStream(file.filename);
-      readstream.pipe(res);
-    } else {
-      res.status(404).send();
-    }
-  });
-});
-
 // PATCH /ingredients/id
 router.patch('/:id', authorized, upload().single('file'), async (req, res) => {
   try {

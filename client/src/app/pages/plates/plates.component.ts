@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { MatPaginator } from '@angular/material';
+import { MatPaginator, PageEvent } from '@angular/material';
 import { PlatesService } from '../../services/plates.service';
 import { SizesService } from '../../services/sizes.service';
 import { MyErrorStateMatcher } from '../../services/validator.service';
@@ -14,7 +14,7 @@ export class PlatesComponent implements OnInit {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  imgPath: string = 'http://localhost:3000/plates/image/';
+  imgPath: string = 'http://localhost:3000/images/';
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
   isSelected: boolean = false;
@@ -76,15 +76,54 @@ export class PlatesComponent implements OnInit {
         this.items.push(this.createItem(size._id, size.description));
       });
     }, 1000);
+
+    // call the plates
+    this.getPlates();
+    setTimeout(() => {
+      this.listData.forEach(element => {
+        console.log(element);
+      });
+    }, 1000);
   }
 
   gettingIngredients(list) {
     this.ingredientsId = list;
   }
 
+  getPlates() {
+    this.plateService.getPlates().subscribe(
+      res => {
+        this.listDataCopy = res;
+        this.length = this.listDataCopy.length;
+        const event = {
+          previousPageIndex: 1,
+          pageIndex: 0,
+          pageSize: this.pageSize,
+          length: this.length
+        };
+        this.paged(event);
+        this.paginator.firstPage();
+      },
+      err => {
+        console.log('Something is wrong');
+      }
+    );
+  }
+
+  paged(event?: PageEvent) {
+    const pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    const startIndex = pageIndex * this.pageSize;
+    const endIndex = pageIndex * this.pageSize + this.pageSize;
+
+    this.listData = this.listDataCopy.slice(startIndex, endIndex);
+  }
+
   add() {
     let sizeDetailsArray = [];
     this.parentForm.get('items')['controls'].forEach(size => {
+      delete size.value.description;
       sizeDetailsArray.push(size.value);
     });
 
@@ -96,10 +135,11 @@ export class PlatesComponent implements OnInit {
       sizeDetails: sizeDetailsArray
     };
 
-    console.log(obj);
     this.plateService.postPlate(obj).subscribe(
       res => {
-        //
+        this.getPlates();
+        this.parentForm.reset();
+        this.searchKey = '';
       },
       err => {
         //
