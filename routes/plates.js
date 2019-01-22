@@ -6,6 +6,7 @@ const Plate = require('../models/plates');
 const Ingredient = require('../models/ingredients');
 const SizePlate = require('../models/sizeplate');
 const Size = require('../models/sizes');
+const Category = require('../models/categories');
 const { authorized } = require('../middleware/authorized');
 const { gfs, upload } = require('../middleware/filestorage');
 
@@ -43,11 +44,18 @@ router.get('/', async (req, res) => {
           _id: ingredients[j]
         });
       }
+
+      // Getting details of the size
       let details = await SizePlate.find({ _plate: plates[i]._id }).lean();
       for (let k = 0; k < details.length; k++) {
         details[k]._size = await Size.findOne({ _id: details[k]._size });
       }
       plates[i].details = details;
+
+      // Getting Category
+      let category = await Category.find({ _id: plates[i]._category });
+      delete plates[i]._category;
+      plates[i]._category = category[0];
     }
     res.status(200).send(plates);
   } catch (e) {

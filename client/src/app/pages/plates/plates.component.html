@@ -33,8 +33,9 @@
         <mat-chip-list *ngFor="let ingredient of tile._ingredients">
           <mat-chip>{{ ingredient.description }}</mat-chip>
         </mat-chip-list>
+        <div>Category: {{ tile._category.description }}</div>
         <div *ngIf="tile.details?.length > 0">
-          <mat-tab-group
+          <!-- <mat-tab-group
             class="stretch-tabs"
             animationDuration="0ms"
             backgroundColor="accent"
@@ -53,8 +54,33 @@
                 </mat-list-item>
               </mat-list>
             </mat-tab>
-          </mat-tab-group>
+          </mat-tab-group> -->
+          <table style="width:30%">
+            <tr>
+              <th></th>
+              <th *ngFor="let header of tile.details">
+                {{ header._size.description }}
+              </th>
+            </tr>
+            <tr>
+              <td class="dts">Price:</td>
+              <td *ngFor="let row of tile.details">{{ row.price }}</td>
+            </tr>
+            <tr>
+              <td class="dts">Calories:</td>
+              <td *ngFor="let row of tile.details">{{ row.calories }}g</td>
+            </tr>
+            <tr>
+              <td class="dts">Total Fat:</td>
+              <td *ngFor="let row of tile.details">{{ row.totalfat }}g</td>
+            </tr>
+            <tr>
+              <td class="dts">Total Carbs:</td>
+              <td *ngFor="let row of tile.details">{{ row.totalcarbs }}g</td>
+            </tr>
+          </table>
         </div>
+
         <mat-grid-tile-footer>{{ tile.description }}</mat-grid-tile-footer>
       </mat-grid-tile>
     </mat-grid-list>
