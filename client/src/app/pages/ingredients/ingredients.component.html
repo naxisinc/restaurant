@@ -27,8 +27,12 @@
       rowHeight="300px"
       gutterSize="5px"
     >
-      <mat-grid-tile *ngFor="let tile of listData">
-        <img src="{{ imgPath }}{{ tile.img }}" alt="" (click)="show(tile)" />
+      <mat-grid-tile
+        *ngFor="let tile of listData"
+        (click)="show(tile)"
+        class="pointer"
+      >
+        <img src="{{ imgPath }}{{ tile.img }}" alt="" />
         <mat-grid-tile-footer>{{ tile.description }}</mat-grid-tile-footer>
       </mat-grid-tile>
     </mat-grid-list>

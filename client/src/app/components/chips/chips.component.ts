@@ -4,7 +4,8 @@ import {
   ElementRef,
   ViewChild,
   Output,
-  EventEmitter
+  EventEmitter,
+  Input
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import {
@@ -32,7 +33,7 @@ export class ChipsComponent {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   fruitCtrl = new FormControl();
   filteredFruits: Observable<string[]>;
-  fruits = [];
+  @Input() fruits = [];
   allFruits: string[];
   // Exporting the list of ingredients
   @Output() ingredients = new EventEmitter();
@@ -98,6 +99,8 @@ export class ChipsComponent {
     this.fruits.push(event.option.viewValue);
     this.fruitInput.nativeElement.value = "";
     this.fruitCtrl.setValue(null);
+
+    // console.log(this.fruits);
 
     // Emit the event for parent component
     let arrAux = [];

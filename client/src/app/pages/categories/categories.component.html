@@ -26,9 +26,12 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header
           ><h3>Categorys</h3></mat-header-cell
         >
-        <mat-cell *matCellDef="let element" (click)="show(element)">{{
-          element.description
-        }}</mat-cell>
+        <mat-cell
+          *matCellDef="let element"
+          (click)="show(element)"
+          class="pointer"
+          >{{ element.description }}</mat-cell
+        >
       </ng-container>
       <ng-container matColumnDef="noData">
         <mat-footer-cell class="footer-cell" *matFooterCellDef colspan="6"

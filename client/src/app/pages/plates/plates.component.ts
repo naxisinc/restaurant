@@ -1,27 +1,29 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { MatPaginator, PageEvent } from '@angular/material';
-import { PlatesService } from '../../services/plates.service';
-import { SizesService } from '../../services/sizes.service';
-import { MyErrorStateMatcher } from '../../services/validator.service';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { FormGroup, FormBuilder, Validators, FormArray } from "@angular/forms";
+import { MatPaginator, PageEvent } from "@angular/material";
+import { PlatesService } from "../../services/plates.service";
+import { SizesService } from "../../services/sizes.service";
+import { MyErrorStateMatcher } from "../../services/validator.service";
 
 @Component({
-  selector: 'app-plates',
-  templateUrl: './plates.component.html',
-  styleUrls: ['./plates.component.scss']
+  selector: "app-plates",
+  templateUrl: "./plates.component.html",
+  styleUrls: ["./plates.component.scss"]
 })
 export class PlatesComponent implements OnInit {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  imgPath: string = 'http://localhost:3000/images/';
+  imgPath: string = "http://localhost:3000/images/";
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
   isSelected: boolean = false;
   selected: Object;
-  @ViewChild('fileInput') fileInput;
+  @ViewChild("fileInput") fileInput;
   ingredientsId: string[];
   sizes: any;
+  setIngredients = [];
+  // breakpoint: any;
 
   // Reactive Form and Matcher
   parentForm: FormGroup;
@@ -49,11 +51,11 @@ export class PlatesComponent implements OnInit {
 
     this.parentForm = this.fb.group({
       description: [
-        '',
+        "",
         [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
       ],
-      file: ['', [Validators.required]],
-      category: ['', [Validators.required]],
+      file: ["", [Validators.required]],
+      category: ["", [Validators.required]],
       items: this.fb.array([])
     });
   }
@@ -62,17 +64,17 @@ export class PlatesComponent implements OnInit {
     return this.fb.group({
       _size: id,
       description: description,
-      price: '',
-      calories: '',
-      totalfat: '',
-      totalcarbs: ''
+      price: "",
+      calories: "",
+      totalfat: "",
+      totalcarbs: ""
     });
   }
 
   ngOnInit() {
     setTimeout(() => {
       this.sizes.forEach(size => {
-        this.items = this.parentForm.get('items') as FormArray;
+        this.items = this.parentForm.get("items") as FormArray;
         this.items.push(this.createItem(size._id, size.description));
       });
     }, 1000);
@@ -84,9 +86,17 @@ export class PlatesComponent implements OnInit {
         console.log(element);
       });
     }, 1000);
+
+    // this.breakpoint = window.innerWidth <= 1400 ? 1 : 6;
   }
 
+  // Taken from https://stackoverflow.com/questions/48493652/angular-5-mat-grid-list-responsive?rq=1
+  // onResize(event) {
+  //   this.breakpoint = event.target.innerWidth <= 1400 ? 1 : 6;
+  // }
+
   gettingIngredients(list) {
+    // console.log(list);
     this.ingredientsId = list;
   }
 
@@ -105,7 +115,7 @@ export class PlatesComponent implements OnInit {
         this.paginator.firstPage();
       },
       err => {
-        console.log('Something is wrong');
+        console.log("Something is wrong");
       }
     );
   }
@@ -120,9 +130,23 @@ export class PlatesComponent implements OnInit {
     this.listData = this.listDataCopy.slice(startIndex, endIndex);
   }
 
+  show(dish) {
+    this.parentForm.controls.description.patchValue(dish.description);
+    console.log(dish);
+    if (!this.isSelected || this.selected["_id"] !== dish._id) {
+      this.setIngredients = [];
+      dish._ingredients.forEach(ingredient => {
+        this.setIngredients.push(ingredient.description);
+      });
+    }
+    this.parentForm.controls.category.patchValue(dish._category.description);
+    this.selected = dish;
+    this.isSelected = true;
+  }
+
   add() {
     let sizeDetailsArray = [];
-    this.parentForm.get('items')['controls'].forEach(size => {
+    this.parentForm.get("items")["controls"].forEach(size => {
       delete size.value.description;
       sizeDetailsArray.push(size.value);
     });
@@ -139,7 +163,7 @@ export class PlatesComponent implements OnInit {
       res => {
         this.getPlates();
         this.parentForm.reset();
-        this.searchKey = '';
+        this.searchKey = "";
       },
       err => {
         //

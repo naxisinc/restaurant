@@ -1,15 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { CategoriesService } from '../../services/categories.service';
+import { Component, OnInit, Input } from "@angular/core";
+import { FormControl } from "@angular/forms";
+import { CategoriesService } from "../../services/categories.service";
 
 @Component({
-  selector: 'app-autocomplete',
-  templateUrl: './autocomplete.component.html',
-  styleUrls: ['./autocomplete.component.scss']
+  selector: "app-autocomplete",
+  templateUrl: "./autocomplete.component.html",
+  styleUrls: ["./autocomplete.component.scss"]
 })
 export class AutocompleteComponent implements OnInit {
   options: any;
   categoryId: string;
+  selected: any;
   @Input() parentForm: FormControl;
 
   constructor(private categoriesService: CategoriesService) {

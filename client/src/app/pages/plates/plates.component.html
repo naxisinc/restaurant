@@ -22,12 +22,16 @@
   </div>
   <div class="mat-elevation-z8">
     <mat-grid-list
+      rowHeight="300px"
       *ngIf="listData?.length > 0"
       cols="1"
-      rowHeight="400px"
       gutterSize="2px"
     >
-      <mat-grid-tile *ngFor="let tile of listData">
+      <mat-grid-tile
+        *ngFor="let tile of listData"
+        (click)="show(tile)"
+        class="pointer"
+      >
         <!-- <mat-grid-tile-header>{{ tile.averagerate }}</mat-grid-tile-header> -->
         <img src="{{ imgPath }}{{ tile.img }}" alt="" (click)="show(tile)" />
         <mat-chip-list *ngFor="let ingredient of tile._ingredients">
@@ -115,7 +119,10 @@
         >
       </mat-form-field>
       <input class="btn-file" type="file" #fileInput formControlName="file" />
-      <app-chips (ingredients)="gettingIngredients($event)"></app-chips>
+      <app-chips
+        (ingredients)="gettingIngredients($event)"
+        [fruits]="setIngredients"
+      ></app-chips>
       <app-autocomplete [parentForm]="parentForm"></app-autocomplete>
 
       <mat-list *ngIf="sizes?.length > 0">
