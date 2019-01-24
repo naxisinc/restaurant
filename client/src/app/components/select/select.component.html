@@ -1,9 +1,5 @@
 <mat-form-field class="example-full-width" [formGroup]="parentForm">
-  <mat-select
-    [(value)]="selected"
-    placeholder="Choose a category"
-    formControlName="category"
-  >
+  <mat-select [(value)]="categorySelected" placeholder="Choose a category">
     <mat-option *ngFor="let option of options" [value]="option">
       {{ option.description }}
     </mat-option>
@@ -12,3 +8,8 @@
     Category is <strong>required</strong>
   </mat-error>
 </mat-form-field>
+{{ categorySelected }} <button (click)="showSelected()">show</button>
+
+<!-- <mat-form-field class="example-full-width" [formGroup]="parentForm">
+  <input matInput placeholder="Favorite food" formControlName="category" />
+</mat-form-field> -->

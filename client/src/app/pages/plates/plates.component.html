@@ -123,7 +123,10 @@
         (ingredients)="gettingIngredients($event)"
         [fruits]="setIngredients"
       ></app-chips>
-      <app-autocomplete [parentForm]="parentForm"></app-autocomplete>
+      <app-select
+        [parentForm]="parentForm"
+        [categorySelected]="setCategory"
+      ></app-select>
 
       <mat-list *ngIf="sizes?.length > 0">
         <mat-list-item>Details of the dishes</mat-list-item>
