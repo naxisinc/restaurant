@@ -1,17 +1,16 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { FormControl } from "@angular/forms";
-import { CategoriesService } from "../../services/categories.service";
+import { Component, OnInit, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
-  selector: "app-select",
-  templateUrl: "./select.component.html",
-  styleUrls: ["./select.component.scss"]
+  selector: 'app-select',
+  templateUrl: './select.component.html',
+  styleUrls: ['./select.component.scss']
 })
 export class SelectComponent implements OnInit {
   options: any;
-  categoryId: string;
   @Input() parentForm: FormControl;
-  @Input() categorySelected: Object;
+  @Input() categorySelected: Object = null;
 
   constructor(private categoriesService: CategoriesService) {
     this.categoriesService.getCategories().subscribe(
@@ -25,8 +24,8 @@ export class SelectComponent implements OnInit {
     );
   }
 
-  showSelected() {
-    console.log(this.categorySelected);
+  compareFn(optionOne, optionTwo): boolean {
+    return optionOne._id === optionTwo._id;
   }
 
   ngOnInit() {}
