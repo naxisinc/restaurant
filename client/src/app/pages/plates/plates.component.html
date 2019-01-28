@@ -33,7 +33,12 @@
         class="pointer"
       >
         <!-- <mat-grid-tile-header>{{ tile.averagerate }}</mat-grid-tile-header> -->
-        <img src="{{ imgPath }}{{ tile.img }}" alt="" (click)="show(tile)" />
+        <img
+          src="{{ imgPath }}{{ tile.img }}"
+          alt=""
+          (click)="show(tile)"
+          width="300"
+        />
         <mat-chip-list *ngFor="let ingredient of tile._ingredients">
           <mat-chip>{{ ingredient.description }}</mat-chip>
         </mat-chip-list>
@@ -123,10 +128,7 @@
         (ingredients)="gettingIngredients($event)"
         [fruits]="setIngredients"
       ></app-chips>
-      <app-select
-        [parentForm]="parentForm"
-        [categorySelected]="setCategory"
-      ></app-select>
+      <app-select [parentForm]="parentForm"></app-select>
 
       <mat-list *ngIf="sizes?.length > 0">
         <mat-list-item>Details of the dishes</mat-list-item>

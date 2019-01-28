@@ -14,7 +14,7 @@ export class PlatesService {
   postPlate(plate) {
     let payload = new FormData();
     payload.append('_ingredients', JSON.stringify(plate._ingredients));
-    payload.append('_category', plate.category);
+    payload.append('_category', plate._category);
     payload.append('file', plate.file);
     payload.append('description', plate.description);
     payload.append('details', JSON.stringify(plate.sizeDetails));
@@ -30,6 +30,9 @@ export class PlatesService {
     let payload = new FormData();
     payload.append('description', plate.description);
     payload.append('file', plate.file);
+    payload.append('_ingredients', JSON.stringify(plate._ingredients));
+    payload.append('_category', plate._category);
+    payload.append('details', JSON.stringify(plate.sizeDetails));
     const headers = new HttpHeaders({
       'x-auth': localStorage.getItem('x-auth')
     });

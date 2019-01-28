@@ -10,7 +10,6 @@ import { CategoriesService } from '../../services/categories.service';
 export class SelectComponent implements OnInit {
   options: any;
   @Input() parentForm: FormControl;
-  @Input() categorySelected: Object = null;
 
   constructor(private categoriesService: CategoriesService) {
     this.categoriesService.getCategories().subscribe(
@@ -25,7 +24,9 @@ export class SelectComponent implements OnInit {
   }
 
   compareFn(optionOne, optionTwo): boolean {
-    return optionOne._id === optionTwo._id;
+    if (optionOne && optionTwo) {
+      return optionOne._id === optionTwo._id;
+    }
   }
 
   ngOnInit() {}

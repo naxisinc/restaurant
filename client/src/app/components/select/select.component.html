@@ -1,8 +1,8 @@
 <mat-form-field class="example-full-width" [formGroup]="parentForm">
   <mat-select
     [compareWith]="compareFn"
-    [(value)]="categorySelected"
     placeholder="Choose a category"
+    formControlName="category"
   >
     <mat-option [value]="option" *ngFor="let option of options">
       {{ option.description }}

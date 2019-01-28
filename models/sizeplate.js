@@ -11,22 +11,10 @@ const SizePlateSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true
     },
-    price: {
-      type: Number,
-      required: true
-    },
-    calories: {
-      type: String,
-      required: true
-    },
-    totalfat: {
-      type: String,
-      required: true
-    },
-    totalcarbs: {
-      type: String,
-      required: true
-    }
+    price: Number,
+    calories: String,
+    totalfat: String,
+    totalcarbs: String
   },
   {
     versionKey: false // esto es para evitar el campo __v q tanto problema dio en las busquedas

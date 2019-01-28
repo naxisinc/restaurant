@@ -83,18 +83,22 @@ router.patch('/:id', authorized, upload().single('file'), async (req, res) => {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const plate = {
-      _ingredients: req.body._ingredients,
-      description: req.body.description,
-      category: req.body.category
+      _ingredients: JSON.parse(req.body._ingredients),
+      _category: req.body._category,
+      description: req.body.description
     };
     if (req.file) {
-      plate.img = req.file.id;
+      plate.img = req.file.filename;
       const current = await Plate.findById(id);
       await gfs().remove({ _id: current.img, root: 'uploads' });
     }
     const updated = await Plate.findByIdAndUpdate(id, plate, {
       new: true
     });
+    let details = JSON.parse(req.body.details);
+    for (let i = 0; i < details.length; i++) {
+      await SizePlate.findOneAndUpdate({ _plate: id }, details[i]);
+    }
     if (!updated) return res.status(404).send();
     res.status(200).send(updated);
   } catch (e) {
@@ -108,8 +112,9 @@ router.delete('/:id', authorized, async (req, res) => {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const plate = await Plate.findByIdAndRemove(id);
-    await gfs().remove({ _id: plate.img, root: 'uploads' });
     if (!plate) return res.status(404).send();
+    await gfs().remove({ _id: plate.img, root: 'uploads' });
+    await SizePlate.deleteMany({ _plate: id });
     res.status(200).send(plate);
   } catch (e) {
     res.status(400).send(e);

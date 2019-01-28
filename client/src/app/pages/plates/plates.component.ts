@@ -20,11 +20,11 @@ export class PlatesComponent implements OnInit {
   isSelected: boolean = false;
   selected: Object;
   @ViewChild('fileInput') fileInput;
-  ingredientsId: string[];
+  // Save the array of ingredients coming from child component
+  ingredientsId = [];
   sizes: any;
+  // Set the Ingredients in the child component
   setIngredients = [];
-  setCategory: Object;
-  // breakpoint: any;
 
   // Reactive Form and Matcher
   parentForm: FormGroup;
@@ -87,14 +87,7 @@ export class PlatesComponent implements OnInit {
     //     console.log(element);
     //   });
     // }, 1000);
-
-    // this.breakpoint = window.innerWidth <= 1400 ? 1 : 6;
   }
-
-  // Taken from https://stackoverflow.com/questions/48493652/angular-5-mat-grid-list-responsive?rq=1
-  // onResize(event) {
-  //   this.breakpoint = event.target.innerWidth <= 1400 ? 1 : 6;
-  // }
 
   gettingIngredients(list) {
     // console.log(list);
@@ -131,44 +124,135 @@ export class PlatesComponent implements OnInit {
     this.listData = this.listDataCopy.slice(startIndex, endIndex);
   }
 
+  clearForm() {
+    this.parentForm.controls.description.reset();
+    this.parentForm.controls.file.reset();
+    this.setIngredients = [];
+    this.parentForm.controls.category.reset();
+    this.parentForm.get('items')['controls'].forEach(size => {
+      size.patchValue({
+        price: '',
+        calories: '',
+        totalfat: '',
+        totalcarbs: ''
+      });
+    });
+    this.ingredientsId = []; // claening ingredients previously selected
+  }
+
   show(dish) {
-    this.parentForm.controls.description.patchValue(dish.description);
-    // console.log(dish);
+    // Patch values in the form
+    this.parentForm.patchValue({
+      description: dish.description,
+      category: dish._category,
+      items: dish.details
+    });
+
+    // Ingredients
     if (!this.isSelected || this.selected['_id'] !== dish._id) {
       this.setIngredients = [];
       dish._ingredients.forEach(ingredient => {
         this.setIngredients.push(ingredient.description);
+        this.ingredientsId.push(ingredient._id); // update the listener array
       });
     }
-    this.setCategory = dish._category;
+
+    // Updating variables
     this.selected = dish;
     this.isSelected = true;
   }
 
-  add() {
+  getFormValues() {
     let sizeDetailsArray = [];
     this.parentForm.get('items')['controls'].forEach(size => {
-      delete size.value.description;
       sizeDetailsArray.push(size.value);
     });
 
     let obj = {
+      id: this.selected ? this.selected['_id'] : '',
       description: this.parentForm.controls.description.value,
       file: this.fileInput.nativeElement.files[0],
       _ingredients: this.ingredientsId,
-      category: this.parentForm.controls.category.value._id,
+      _category: this.parentForm.controls.category.value._id,
       sizeDetails: sizeDetailsArray
     };
 
-    this.plateService.postPlate(obj).subscribe(
+    return obj;
+  }
+
+  add() {
+    // let sizeDetailsArray = [];
+    // this.parentForm.get('items')['controls'].forEach(size => {
+    //   sizeDetailsArray.push(size.value);
+    // });
+
+    // let obj = {
+    //   description: this.parentForm.controls.description.value,
+    //   file: this.fileInput.nativeElement.files[0],
+    //   _ingredients: this.ingredientsId,
+    //   _category: this.parentForm.controls.category.value._id,
+    //   sizeDetails: sizeDetailsArray
+    // };
+    let data = this.getFormValues();
+    console.log(data);
+    this.plateService.postPlate(data).subscribe(
       res => {
         this.getPlates();
-        this.parentForm.reset();
+        this.clearForm();
         this.searchKey = '';
       },
       err => {
         //
       }
     );
+  }
+
+  edit() {
+    // let sizeDetailsArray = [];
+    // this.parentForm.get('items')['controls'].forEach(size => {
+    //   sizeDetailsArray.push(size.value);
+    // });
+
+    // let obj = {
+    //   id: this.selected['_id'],
+    //   description: this.parentForm.controls.description.value,
+    //   file: this.fileInput.nativeElement.files[0],
+    //   _ingredients: this.ingredientsId,
+    //   _category: this.parentForm.controls.category.value._id,
+    //   sizeDetails: sizeDetailsArray
+    // };
+
+    let data = this.getFormValues();
+    console.log(data);
+    this.plateService.patchPlate(data).subscribe(
+      succ => {
+        this.getPlates();
+        this.clearForm();
+        this.isSelected = false;
+        this.searchKey = '';
+      },
+      error => {
+        console.log('Something is wrong');
+      }
+    );
+  }
+
+  delete() {
+    this.plateService.deletePlate(this.selected['_id']).subscribe(
+      succ => {
+        this.getPlates();
+        this.clearForm();
+        this.isSelected = false;
+      },
+      error => {
+        console.log('Something is wrong');
+      }
+    );
+  }
+
+  cancel() {
+    this.clearForm();
+    this.isSelected = false;
+    this.selected = null;
   }
 }

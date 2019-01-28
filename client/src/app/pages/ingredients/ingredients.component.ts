@@ -119,17 +119,18 @@ export class IngredientsComponent implements OnInit {
       description: this.IngredientForm.controls.description.value,
       file: this.fileInput.nativeElement.files[0]
     };
-    this.ingredientService.patchIngredient(obj).subscribe(
-      succ => {
-        this.getIngredients();
-        this.IngredientForm.reset();
-        this.isSelected = false;
-        this.searchKey = '';
-      },
-      error => {
-        console.log('Something is wrong');
-      }
-    );
+    console.log(obj);
+    // this.ingredientService.patchIngredient(obj).subscribe(
+    //   succ => {
+    //     this.getIngredients();
+    //     this.IngredientForm.reset();
+    //     this.isSelected = false;
+    //     this.searchKey = '';
+    //   },
+    //   error => {
+    //     console.log('Something is wrong');
+    //   }
+    // );
   }
 
   delete() {

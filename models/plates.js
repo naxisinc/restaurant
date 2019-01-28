@@ -5,8 +5,8 @@ const PlateSchema = new mongoose.Schema(
   {
     _ingredients: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
+        type: mongoose.Schema.Types.ObjectId
+        // required: true
       }
     ],
     _category: {
