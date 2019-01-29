@@ -1,25 +1,25 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { FormGroup, FormBuilder, Validators, FormArray } from "@angular/forms";
-import { MatPaginator, PageEvent } from "@angular/material";
-import { PlatesService } from "../../services/plates.service";
-import { SizesService } from "../../services/sizes.service";
-import { MyErrorStateMatcher } from "../../services/validator.service";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { MatPaginator, PageEvent } from '@angular/material';
+import { PlatesService } from '../../services/plates.service';
+import { SizesService } from '../../services/sizes.service';
+import { MyErrorStateMatcher } from '../../services/validator.service';
 
 @Component({
-  selector: "app-plates",
-  templateUrl: "./plates.component.html",
-  styleUrls: ["./plates.component.scss"]
+  selector: 'app-plates',
+  templateUrl: './plates.component.html',
+  styleUrls: ['./plates.component.scss']
 })
 export class PlatesComponent implements OnInit {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  imgPath: string = "http://localhost:3000/images/";
+  imgPath: string = 'http://localhost:3000/images/';
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
   isSelected: boolean = false;
   selected: Object;
-  @ViewChild("fileInput") fileInput;
+  @ViewChild('fileInput') fileInput;
   // Save the array of ingredients coming from child component
   ingredientsId = [];
   sizes: any;
@@ -52,11 +52,11 @@ export class PlatesComponent implements OnInit {
 
     this.parentForm = this.fb.group({
       description: [
-        "",
+        '',
         [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
       ],
-      file: ["", [Validators.required]],
-      category: ["", [Validators.required]],
+      file: ['', [Validators.required]],
+      category: ['', [Validators.required]],
       items: this.fb.array([])
     });
   }
@@ -65,32 +65,34 @@ export class PlatesComponent implements OnInit {
     return this.fb.group({
       _size: id,
       description: description,
-      price: "",
-      calories: "",
-      totalfat: "",
-      totalcarbs: ""
+      price: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9]*.[0-9]{2}$')]
+      ],
+      calories: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      totalfat: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      totalcarbs: ['', [Validators.required, Validators.pattern('^[0-9]+$')]]
     });
   }
 
   ngOnInit() {
     setTimeout(() => {
+      // This's necessary cause sizes is a Observable result
       this.sizes.forEach(size => {
-        this.items = this.parentForm.get("items") as FormArray;
+        this.items = this.parentForm.get('items') as FormArray;
         this.items.push(this.createItem(size._id, size.description));
       });
-    }, 1000);
-
+    }, 500);
     // call the plates
     this.getPlates();
     // setTimeout(() => {
-    //   this.listData.forEach(element => {
-    //     console.log(element);
+    //   this.parentForm.get('items')['controls'].forEach(element => {
+    //     console.log(element.controls);
     //   });
     // }, 1000);
   }
 
   gettingIngredients(list) {
-    // console.log(list);
     this.ingredientsId = list;
   }
 
@@ -109,7 +111,7 @@ export class PlatesComponent implements OnInit {
         this.paginator.firstPage();
       },
       err => {
-        console.log("Something is wrong");
+        console.log('Something is wrong');
       }
     );
   }
@@ -129,12 +131,12 @@ export class PlatesComponent implements OnInit {
     this.parentForm.controls.file.reset();
     this.setIngredients = [];
     this.parentForm.controls.category.reset();
-    this.parentForm.get("items")["controls"].forEach(size => {
+    this.parentForm.get('items')['controls'].forEach(size => {
       size.patchValue({
-        price: "",
-        calories: "",
-        totalfat: "",
-        totalcarbs: ""
+        price: '',
+        calories: '',
+        totalfat: '',
+        totalcarbs: ''
       });
     });
     this.ingredientsId = []; // claening ingredients previously selected
@@ -147,16 +149,14 @@ export class PlatesComponent implements OnInit {
       category: dish._category,
       items: dish.details
     });
-
     // Ingredients
-    if (!this.isSelected || this.selected["_id"] !== dish._id) {
+    if (!this.isSelected || this.selected['_id'] !== dish._id) {
       this.setIngredients = [];
       dish._ingredients.forEach(ingredient => {
         this.setIngredients.push(ingredient.description);
         this.ingredientsId.push(ingredient._id); // update the listener array
       });
     }
-
     // Updating variables
     this.selected = dish;
     this.isSelected = true;
@@ -164,30 +164,27 @@ export class PlatesComponent implements OnInit {
 
   getFormValues() {
     let sizeDetailsArray = [];
-    this.parentForm.get("items")["controls"].forEach(size => {
+    this.parentForm.get('items')['controls'].forEach(size => {
       sizeDetailsArray.push(size.value);
     });
-
     let obj = {
-      id: this.isSelected ? this.selected["_id"] : "undefined",
+      id: this.isSelected ? this.selected['_id'] : 'undefined',
       description: this.parentForm.controls.description.value,
       file: this.fileInput.nativeElement.files[0],
       _ingredients: this.ingredientsId,
       _category: this.parentForm.controls.category.value._id,
       sizeDetails: sizeDetailsArray
     };
-
     return obj;
   }
 
   add() {
     let data = this.getFormValues();
-    console.log(data);
     this.plateService.postPlate(data).subscribe(
       res => {
         this.getPlates();
         this.clearForm();
-        this.searchKey = "";
+        this.searchKey = '';
       },
       err => {
         //
@@ -202,23 +199,23 @@ export class PlatesComponent implements OnInit {
         this.getPlates();
         this.clearForm();
         this.isSelected = false;
-        this.searchKey = "";
+        this.searchKey = '';
       },
       error => {
-        console.log("Something is wrong");
+        console.log('Something is wrong');
       }
     );
   }
 
   delete() {
-    this.plateService.deletePlate(this.selected["_id"]).subscribe(
+    this.plateService.deletePlate(this.selected['_id']).subscribe(
       succ => {
         this.getPlates();
         this.clearForm();
         this.isSelected = false;
       },
       error => {
-        console.log("Something is wrong");
+        console.log('Something is wrong');
       }
     );
   }

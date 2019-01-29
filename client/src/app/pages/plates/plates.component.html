@@ -149,31 +149,67 @@
               <div [formGroupName]="i">
                 <mat-form-field class="fullwidth" style="margin-top:1rem;">
                   <span matPrefix>$ &nbsp;</span>
-                  <input matInput placeholder="Price" formControlName="price" />
+                  <input
+                    required
+                    matInput
+                    placeholder="Price"
+                    formControlName="price"
+                  />
+                  <mat-error *ngIf="item.controls.price.hasError('required')"
+                    >Price is <strong>required</strong></mat-error
+                  >
+                  <mat-error *ngIf="item.controls.price.hasError('pattern')"
+                    >The price must be an integer number in this format
+                    <strong>(xx.xx)</strong>.</mat-error
+                  >
                 </mat-form-field>
                 <mat-form-field class="fullwidth">
                   <input
+                    type="number"
+                    required
                     matInput
                     placeholder="Calories"
                     formControlName="calories"
                   />
                   <span matSuffix>cal</span>
+                  <mat-error *ngIf="item.controls.calories.hasError('required')"
+                    >Calories are <strong>required</strong></mat-error
+                  >
+                  <mat-error *ngIf="item.controls.calories.hasError('pattern')"
+                    >The calories must be an integer number.</mat-error
+                  >
                 </mat-form-field>
                 <mat-form-field class="fullwidth">
                   <input
+                    type="number"
+                    required
                     matInput
                     placeholder="Total Fat"
                     formControlName="totalfat"
                   />
                   <span matSuffix>g</span>
+                  <mat-error *ngIf="item.controls.calories.hasError('required')"
+                    >Total Fat is <strong>required</strong></mat-error
+                  >
+                  <mat-error *ngIf="item.controls.calories.hasError('pattern')"
+                    >The Total Fat must be an integer number.</mat-error
+                  >
                 </mat-form-field>
                 <mat-form-field class="fullwidth">
                   <input
+                    type="number"
+                    required
                     matInput
                     placeholder="Total Carbs"
                     formControlName="totalcarbs"
                   />
                   <span matSuffix>g</span>
+                  <mat-error *ngIf="item.controls.calories.hasError('required')"
+                    >Total Carbs is <strong>required</strong></mat-error
+                  >
+                  <mat-error *ngIf="item.controls.calories.hasError('pattern')"
+                    >The Total Carbs must be an integer number.</mat-error
+                  >
                 </mat-form-field>
               </div>
             </mat-tab>
