@@ -1,17 +1,17 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { ObjectID } = require("mongodb");
+const { ObjectID } = require('mongodb');
 
-const Plate = require("../models/plates");
-const Ingredient = require("../models/ingredients");
-const SizePlate = require("../models/sizeplate");
-const Size = require("../models/sizes");
-const Category = require("../models/categories");
-const { authorized } = require("../middleware/authorized");
-const { gfs, upload } = require("../middleware/filestorage");
+const Plate = require('../models/plates');
+const Ingredient = require('../models/ingredients');
+const SizePlate = require('../models/sizeplate');
+const Size = require('../models/sizes');
+const Category = require('../models/categories');
+const { authorized } = require('../middleware/authorized');
+const { gfs, upload } = require('../middleware/filestorage');
 
 // POST /plates
-router.post("/", authorized, upload().single("file"), async (req, res) => {
+router.post('/', authorized, upload().single('file'), async (req, res) => {
   try {
     const newplate = new Plate({
       _ingredients: JSON.parse(req.body._ingredients),
@@ -34,7 +34,7 @@ router.post("/", authorized, upload().single("file"), async (req, res) => {
 });
 
 // GET /plates
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const plates = await Plate.find().lean();
     for (let i = 0; i < plates.length; i++) {
@@ -47,6 +47,7 @@ router.get("/", async (req, res) => {
 
       // Getting details of the size
       let details = await SizePlate.find({ _plate: plates[i]._id }).lean();
+      console.log(details);
       for (let k = 0; k < details.length; k++) {
         details[k]._size = await Size.findOne({ _id: details[k]._size });
       }
@@ -64,7 +65,7 @@ router.get("/", async (req, res) => {
 });
 
 // GET /plates/id
-router.get("/:id", async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
@@ -78,7 +79,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // PATCH /plates/id
-router.patch("/:id", authorized, upload().single("file"), async (req, res) => {
+router.patch('/:id', authorized, upload().single('file'), async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
@@ -90,7 +91,7 @@ router.patch("/:id", authorized, upload().single("file"), async (req, res) => {
     if (req.file) {
       plate.img = req.file.filename;
       const current = await Plate.findById(id);
-      await gfs().remove({ _id: current.img, root: "uploads" });
+      await gfs().remove({ _id: current.img, root: 'uploads' });
     }
     const updated = await Plate.findByIdAndUpdate(id, plate, {
       new: true
@@ -118,13 +119,13 @@ router.patch("/:id", authorized, upload().single("file"), async (req, res) => {
 });
 
 // DELETE /plates/id
-router.delete("/:id", authorized, async (req, res) => {
+router.delete('/:id', authorized, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const plate = await Plate.findByIdAndRemove(id);
     if (!plate) return res.status(404).send();
-    await gfs().remove({ _id: plate.img, root: "uploads" });
+    await gfs().remove({ _id: plate.img, root: 'uploads' });
     await SizePlate.deleteMany({ _plate: id });
     res.status(200).send(plate);
   } catch (e) {

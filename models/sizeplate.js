@@ -13,7 +13,8 @@ const SizePlateSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      required: true
+      get: getPrice,
+      set: setPrice
     },
     calories: {
       type: Number,
@@ -34,14 +35,15 @@ const SizePlateSchema = new mongoose.Schema(
 );
 
 // Getter
-SizePlateSchema.path('price').get(num => {
-  return (num / 100).toFixed(2);
-});
+function getPrice(num) {
+  // return (num / 100).toFixed(2);
+  return num / 1000;
+}
 
 // Setter
-SizePlateSchema.path('price').set(num => {
+function setPrice(num) {
   return num * 100;
-});
+}
 
 const SizePlate = (module.exports = mongoose.model(
   'SizePlate',
