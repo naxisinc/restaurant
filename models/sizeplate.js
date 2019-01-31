@@ -12,9 +12,8 @@ const SizePlateSchema = new mongoose.Schema(
       required: true
     },
     price: {
-      type: Number,
-      get: getPrice,
-      set: setPrice
+      type: String,
+      required: true
     },
     calories: {
       type: Number,
@@ -33,17 +32,6 @@ const SizePlateSchema = new mongoose.Schema(
     versionKey: false // esto es para evitar el campo __v q tanto problema dio en las busquedas
   }
 );
-
-// Getter
-function getPrice(num) {
-  // return (num / 100).toFixed(2);
-  return num / 1000;
-}
-
-// Setter
-function setPrice(num) {
-  return num * 100;
-}
 
 const SizePlate = (module.exports = mongoose.model(
   'SizePlate',

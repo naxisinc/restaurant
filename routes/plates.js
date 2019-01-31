@@ -47,7 +47,6 @@ router.get('/', async (req, res) => {
 
       // Getting details of the size
       let details = await SizePlate.find({ _plate: plates[i]._id }).lean();
-      console.log(details);
       for (let k = 0; k < details.length; k++) {
         details[k]._size = await Size.findOne({ _id: details[k]._size });
       }
