@@ -127,18 +127,30 @@ export class PlatesComponent implements OnInit {
   }
 
   clearForm() {
-    this.parentForm.controls.description.reset();
-    this.parentForm.controls.file.reset();
-    this.setIngredients = [];
-    this.parentForm.controls.category.reset();
-    this.parentForm.get('items')['controls'].forEach(size => {
-      size.patchValue({
-        price: '',
-        calories: '',
-        totalfat: '',
-        totalcarbs: ''
-      });
+    this.parentForm.reset();
+    this.sizes.forEach(size => {
+      let _id = size._id;
+      let description = size.description;
+      this.parentForm.controls.items[
+        'controls'
+      ][0].controls.description.patchValue(description);
+      this.parentForm.controls.items['controls'][0].controls._size.patchValue(
+        size._id
+      );
     });
+    console.log(this.parentForm.controls['items']['controls'][0].controls);
+    // this.parentForm.controls.description.reset();
+    // this.parentForm.controls.file.reset();
+    this.setIngredients = [];
+    // this.parentForm.controls.category.reset();
+    // this.parentForm.get('items')['controls'].forEach(size => {
+    //   size.patchValue({
+    //     price: '',
+    //     calories: '',
+    //     totalfat: '',
+    //     totalcarbs: ''
+    //   });
+    // });
     this.ingredientsId = []; // claening ingredients previously selected
   }
 
