@@ -1,10 +1,27 @@
 <div id="grid-div">
-  <div class="search-div">
+  <!-- <div class="search-div">
+    <mat-form-field class="filter-form-field" floatLabel="never">
+      <mat-select placeholder="Pokemon" [formControl]="pokemonControl">
+        <mat-option>-- None --</mat-option>
+        <mat-optgroup
+          *ngFor="let group of pokemonGroups"
+          [label]="group.name"
+          [disabled]="group.disabled"
+        >
+          <mat-option
+            *ngFor="let pokemon of group.pokemon"
+            [value]="pokemon.value"
+          >
+            {{ pokemon.viewValue }}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
     <mat-form-field class="search-form-field" floatLabel="never">
       <input
         matInput
         [(ngModel)]="searchKey"
-        placeholder="Search..."
+        placeholder="Search by dish name ..."
         autocomplete="off"
         (keyup)="search($event.target.value)"
       />
@@ -19,7 +36,49 @@
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
-  </div>
+  </div> -->
+  <mat-grid-list cols="2" rowHeight="3rem">
+    <mat-grid-tile style="background:papayawhip;"
+      ><mat-form-field class="" floatLabel="never">
+        <mat-select placeholder="Pokemon" [formControl]="pokemonControl">
+          <mat-option>-- None --</mat-option>
+          <mat-optgroup
+            *ngFor="let group of pokemonGroups"
+            [label]="group.name"
+            [disabled]="group.disabled"
+          >
+            <mat-option
+              *ngFor="let pokemon of group.pokemon"
+              [value]="pokemon._id"
+            >
+              {{ pokemon.description }}
+            </mat-option>
+          </mat-optgroup>
+        </mat-select>
+      </mat-form-field></mat-grid-tile
+    >
+    <mat-grid-tile style="background:skyblue;"
+      ><mat-form-field class="" floatLabel="never">
+        <input
+          matInput
+          [(ngModel)]="searchKey"
+          placeholder="Search by dish name ..."
+          autocomplete="off"
+          (keyup)="search($event.target.value)"
+        />
+        <button
+          mat-button
+          matSuffix
+          mat-icon-button
+          arial-label="Clear"
+          *ngIf="searchKey"
+          (click)="onSearchClear()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field></mat-grid-tile
+    >
+  </mat-grid-list>
   <div class="mat-elevation-z8">
     <mat-grid-list
       rowHeight="300px"
@@ -31,6 +90,7 @@
         *ngFor="let tile of listData"
         (click)="show(tile)"
         class="pointer"
+        style="background:yellowgreen;"
       >
         <!-- <mat-grid-tile-header>{{ tile.averagerate }}</mat-grid-tile-header> -->
         <img
@@ -188,10 +248,10 @@
                     formControlName="totalfat"
                   />
                   <span matSuffix>g</span>
-                  <mat-error *ngIf="item.controls.calories.hasError('required')"
+                  <mat-error *ngIf="item.controls.totalfat.hasError('required')"
                     >Total Fat is <strong>required</strong></mat-error
                   >
-                  <mat-error *ngIf="item.controls.calories.hasError('pattern')"
+                  <mat-error *ngIf="item.controls.totalfat.hasError('pattern')"
                     >The Total Fat must be an integer number.</mat-error
                   >
                 </mat-form-field>
@@ -204,10 +264,12 @@
                     formControlName="totalcarbs"
                   />
                   <span matSuffix>g</span>
-                  <mat-error *ngIf="item.controls.calories.hasError('required')"
+                  <mat-error
+                    *ngIf="item.controls.totalcarbs.hasError('required')"
                     >Total Carbs is <strong>required</strong></mat-error
                   >
-                  <mat-error *ngIf="item.controls.calories.hasError('pattern')"
+                  <mat-error
+                    *ngIf="item.controls.totalcarbs.hasError('pattern')"
                     >The Total Carbs must be an integer number.</mat-error
                   >
                 </mat-form-field>
