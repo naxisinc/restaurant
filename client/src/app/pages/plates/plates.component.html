@@ -3,7 +3,7 @@
     <mat-grid-list
       [cols]="breakpoint"
       rowHeight="3rem"
-      (window:resize)="onResize($event)"
+      (window:resize)="onResize($event.target)"
     >
       <mat-grid-tile [colspan]="filtercolspan" style="background:papayawhip;"
         ><mat-form-field id="filter" floatLabel="never">

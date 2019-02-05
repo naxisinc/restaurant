@@ -1,32 +1,32 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from "@angular/core";
 import {
   FormControl,
   FormGroup,
   FormBuilder,
   Validators,
   FormArray
-} from '@angular/forms';
-import { MatPaginator, PageEvent } from '@angular/material';
-import { PlatesService } from '../../services/plates.service';
-import { SizesService } from '../../services/sizes.service';
-import { CategoriesService } from '../../services/categories.service';
-import { MyErrorStateMatcher } from '../../services/validator.service';
+} from "@angular/forms";
+import { MatPaginator, PageEvent } from "@angular/material";
+import { PlatesService } from "../../services/plates.service";
+import { SizesService } from "../../services/sizes.service";
+import { CategoriesService } from "../../services/categories.service";
+import { MyErrorStateMatcher } from "../../services/validator.service";
 
 @Component({
-  selector: 'app-plates',
-  templateUrl: './plates.component.html',
-  styleUrls: ['./plates.component.scss']
+  selector: "app-plates",
+  templateUrl: "./plates.component.html",
+  styleUrls: ["./plates.component.scss"]
 })
 export class PlatesComponent implements OnInit {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  imgPath: string = 'http://localhost:3000/images/';
+  imgPath: string = "http://localhost:3000/images/";
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
   isSelected: boolean = false;
   selected: Object;
-  @ViewChild('fileInput') fileInput;
+  @ViewChild("fileInput") fileInput;
   // Save the array of ingredients coming from child component
   ingredientsId = [];
   sizes: any;
@@ -71,7 +71,7 @@ export class PlatesComponent implements OnInit {
       res => {
         this.sortbyGroups = [
           {
-            name: 'Categories', // Group name
+            name: "Categories", // Group name
             categories: res
           }
         ];
@@ -83,11 +83,11 @@ export class PlatesComponent implements OnInit {
 
     this.parentForm = this.fb.group({
       description: [
-        '',
+        "",
         [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
       ],
-      file: ['', [Validators.required]],
-      category: ['', [Validators.required]],
+      file: ["", [Validators.required]],
+      category: ["", [Validators.required]],
       items: this.fb.array([])
     });
   }
@@ -97,12 +97,12 @@ export class PlatesComponent implements OnInit {
       _size: id,
       description: description,
       price: [
-        '',
-        [Validators.required, Validators.pattern('^[0-9]*.[0-9]{2}$')]
+        "",
+        [Validators.required, Validators.pattern("^[0-9]*.[0-9]{2}$")]
       ],
-      calories: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      totalfat: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      totalcarbs: ['', [Validators.required, Validators.pattern('^[0-9]+$')]]
+      calories: ["", [Validators.required, Validators.pattern("^[0-9]+$")]],
+      totalfat: ["", [Validators.required, Validators.pattern("^[0-9]+$")]],
+      totalcarbs: ["", [Validators.required, Validators.pattern("^[0-9]+$")]]
     });
   }
 
@@ -110,14 +110,14 @@ export class PlatesComponent implements OnInit {
     setTimeout(() => {
       // This's necessary cause sizes is a Observable result
       this.sizes.forEach(size => {
-        this.items = this.parentForm.get('items') as FormArray;
+        this.items = this.parentForm.get("items") as FormArray;
         this.items.push(this.createItem(size._id, size.description));
       });
     }, 500);
     // Getting plates
     this.getPlates();
-    this.breakpoint = window.innerWidth <= 375 ? 1 : 3;
-    this.filtercolspan = window.innerWidth <= 667 ? 1 : 2;
+    // Formatting the toolbar
+    this.onResize(window);
   }
 
   gettingIngredients(list) {
@@ -139,7 +139,7 @@ export class PlatesComponent implements OnInit {
         this.paginator.firstPage();
       },
       err => {
-        console.log('Something is wrong');
+        console.log("Something is wrong");
       }
     );
   }
@@ -155,18 +155,26 @@ export class PlatesComponent implements OnInit {
   }
 
   onResize(event) {
-    this.breakpoint = event.target.innerWidth <= 375 ? 1 : 3;
-    this.filtercolspan = event.target.innerWidth <= 667 ? 1 : 2;
+    let windowSize = event.innerWidth;
+    if (windowSize <= 375) {
+      this.breakpoint = this.filtercolspan = 1;
+    } else if (windowSize > 375 && windowSize <= 1024) {
+      this.breakpoint = 2;
+      this.filtercolspan = 1;
+    } else {
+      this.breakpoint = 3;
+      this.filtercolspan = 2;
+    }
   }
 
   sortby(filterId) {
-    this.searchKey = ''; // limpiando la busqueda
+    this.searchKey = ""; // limpiando la busqueda
     if (filterId.length !== 24) {
       this.listData = this.listDataCopy.sort((val1, val2) => {
-        if (filterId === 'rating') {
+        if (filterId === "rating") {
           return val2.averagerate - val1.averagerate; // descending
           // return val1.averagerate - val2.averagerate; // ascending
-        } else if (filterId === 'l2h' || filterId === 'h2l') {
+        } else if (filterId === "l2h" || filterId === "h2l") {
           let dishes = this.listDataCopy;
           for (let i = 0; i < dishes.length; i++) {
             let avgPriceSum: number = 0;
@@ -175,11 +183,11 @@ export class PlatesComponent implements OnInit {
               avgPriceSum += JSON.parse(details[j].price);
             }
             avgPriceSum = JSON.parse(avgPriceSum.toFixed(2));
-            dishes[i]['avgPrice'] = JSON.parse(
+            dishes[i]["avgPrice"] = JSON.parse(
               (avgPriceSum / details.length).toFixed(2)
             );
           }
-          if (filterId === 'l2h') {
+          if (filterId === "l2h") {
             return val1.avgPrice - val2.avgPrice; // ascending
           } else {
             return val2.avgPrice - val1.avgPrice; // descending
@@ -202,17 +210,17 @@ export class PlatesComponent implements OnInit {
   }
 
   onSearchClear() {
-    this.searchKey = '';
+    this.searchKey = "";
     this.listData = this.listDataCopy;
   }
 
   clearForm() {
     this.parentForm.reset();
     this.sizes.forEach((size, index) => {
-      this.parentForm.controls.items['controls'][
+      this.parentForm.controls.items["controls"][
         index
       ].controls.description.patchValue(size.description);
-      this.parentForm.controls.items['controls'][
+      this.parentForm.controls.items["controls"][
         index
       ].controls._size.patchValue(size._id);
     });
@@ -228,7 +236,7 @@ export class PlatesComponent implements OnInit {
       items: dish.details
     });
     // Ingredients
-    if (!this.isSelected || this.selected['_id'] !== dish._id) {
+    if (!this.isSelected || this.selected["_id"] !== dish._id) {
       this.setIngredients = [];
       dish._ingredients.forEach(ingredient => {
         this.setIngredients.push(ingredient.description);
@@ -242,11 +250,11 @@ export class PlatesComponent implements OnInit {
 
   getFormValues() {
     let sizeDetailsArray = [];
-    this.parentForm.get('items')['controls'].forEach(size => {
+    this.parentForm.get("items")["controls"].forEach(size => {
       sizeDetailsArray.push(size.value);
     });
     let obj = {
-      id: this.isSelected ? this.selected['_id'] : 'undefined',
+      id: this.isSelected ? this.selected["_id"] : "undefined",
       description: this.parentForm.controls.description.value,
       file: this.fileInput.nativeElement.files[0],
       _ingredients: this.ingredientsId,
@@ -262,7 +270,7 @@ export class PlatesComponent implements OnInit {
       res => {
         this.getPlates();
         this.clearForm();
-        this.searchKey = '';
+        this.searchKey = "";
       },
       err => {
         //
@@ -277,23 +285,23 @@ export class PlatesComponent implements OnInit {
         this.getPlates();
         this.clearForm();
         this.isSelected = false;
-        this.searchKey = '';
+        this.searchKey = "";
       },
       error => {
-        console.log('Something is wrong');
+        console.log("Something is wrong");
       }
     );
   }
 
   delete() {
-    this.plateService.deletePlate(this.selected['_id']).subscribe(
+    this.plateService.deletePlate(this.selected["_id"]).subscribe(
       succ => {
         this.getPlates();
         this.clearForm();
         this.isSelected = false;
       },
       error => {
-        console.log('Something is wrong');
+        console.log("Something is wrong");
       }
     );
   }
