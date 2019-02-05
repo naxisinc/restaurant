@@ -32,6 +32,8 @@ export class PlatesComponent implements OnInit {
   sizes: any;
   // Set the Ingredients in the child component
   setIngredients = [];
+  // Toolbar breakpoint
+  breakpoint: any;
 
   // Reactive Form and Matcher
   parentForm: FormGroup;
@@ -43,9 +45,10 @@ export class PlatesComponent implements OnInit {
   pageSize = 6;
   pageSizeOptions: number[] = [6, 12, 24, 60];
 
-  //==============
+  // Filter (Sort by)
   filter = new FormControl();
   sortbyGroups: any;
+  filtercolspan: number;
 
   constructor(
     private plateService: PlatesService,
@@ -111,13 +114,10 @@ export class PlatesComponent implements OnInit {
         this.items.push(this.createItem(size._id, size.description));
       });
     }, 500);
-    // call the plates
+    // Getting plates
     this.getPlates();
-    // setTimeout(() => {
-    //   this.parentForm.get('items')['controls'].forEach(element => {
-    //     console.log(element.controls);
-    //   });
-    // }, 1000);
+    this.breakpoint = window.innerWidth <= 375 ? 1 : 3;
+    this.filtercolspan = window.innerWidth <= 667 ? 1 : 2;
   }
 
   gettingIngredients(list) {
@@ -152,6 +152,11 @@ export class PlatesComponent implements OnInit {
     const endIndex = pageIndex * this.pageSize + this.pageSize;
 
     this.listData = this.listDataCopy.slice(startIndex, endIndex);
+  }
+
+  onResize(event) {
+    this.breakpoint = event.target.innerWidth <= 375 ? 1 : 3;
+    this.filtercolspan = event.target.innerWidth <= 667 ? 1 : 2;
   }
 
   sortby(filterId) {

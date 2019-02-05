@@ -7,7 +7,7 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="!(isHandset$ | async)"
   >
-    <mat-toolbar class="mat-elevation-z3" color="primary">Menu</mat-toolbar>
+    <mat-toolbar class="" color="primary">Menu</mat-toolbar>
     <mat-nav-list *ngIf="!admin">
       <a mat-list-item routerLink="/">Link 1</a>
       <a mat-list-item routerLink="/">Link 2</a>

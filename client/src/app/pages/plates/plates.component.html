@@ -1,46 +1,12 @@
 <div style="margin-top:.5rem;">
   <div id="grid-div">
-    <!-- <div class="search-div">
-      <mat-form-field class="filter-form-field" floatLabel="never">
-        <mat-select placeholder="Pokemon" [formControl]="pokemonControl">
-          <mat-option>-- None --</mat-option>
-          <mat-optgroup
-            *ngFor="let group of sortbyGroups"
-            [label]="group.name"
-            [disabled]="group.disabled"
-          >
-            <mat-option
-              *ngFor="let pokemon of group.pokemon"
-              [value]="pokemon.value"
-            >
-              {{ pokemon.viewValue }}
-            </mat-option>
-          </mat-optgroup>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="search-form-field" floatLabel="never">
-        <input
-          matInput
-          [(ngModel)]="searchKey"
-          placeholder="Search by dish name ..."
-          autocomplete="off"
-          (keyup)="search($event.target.value)"
-        />
-        <button
-          mat-button
-          matSuffix
-          mat-icon-button
-          arial-label="Clear"
-          *ngIf="searchKey"
-          (click)="onSearchClear()"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-    </div> -->
-    <mat-grid-list cols="2" rowHeight="4rem">
-      <mat-grid-tile style="background:papayawhip;"
-        ><mat-form-field class="" floatLabel="never">
+    <mat-grid-list
+      [cols]="breakpoint"
+      rowHeight="3rem"
+      (window:resize)="onResize($event)"
+    >
+      <mat-grid-tile [colspan]="filtercolspan" style="background:papayawhip;"
+        ><mat-form-field id="filter" floatLabel="never">
           <mat-select
             [formControl]="filter"
             placeholder="Sort by"
@@ -64,29 +30,30 @@
           </mat-select>
         </mat-form-field></mat-grid-tile
       >
-      <mat-grid-tile style="background:skyblue;"
-        ><mat-form-field class="" floatLabel="never">
-          <input
-            matInput
-            [(ngModel)]="searchKey"
-            placeholder="Search by dish name ..."
-            autocomplete="off"
-            (keyup)="search($event.target.value)"
-          />
-          <button
-            mat-button
-            matSuffix
-            mat-icon-button
-            arial-label="Clear"
-            *ngIf="searchKey"
-            (click)="onSearchClear()"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-form-field></mat-grid-tile
-      >
+      <mat-grid-tile style="background:skyblue;">
+        <div class="search-div">
+          <mat-form-field class="search-form-field" floatLabel="never">
+            <input
+              matInput
+              [(ngModel)]="searchKey"
+              placeholder="Search by dish name ..."
+              autocomplete="off"
+              (keyup)="search($event.target.value)"
+            />
+            <button
+              mat-button
+              matSuffix
+              mat-icon-button
+              arial-label="Clear"
+              *ngIf="searchKey"
+              (click)="onSearchClear()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </mat-grid-tile>
     </mat-grid-list>
-    <!-- <div class="mat-elevation-z8"> -->
     <div class="">
       <mat-grid-list
         rowHeight="300px"
