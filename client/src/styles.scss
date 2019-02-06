@@ -12,16 +12,10 @@ body {
 
 // @Media (max) apply <= value
 @media (max-width: 768px) {
-  .container {
-    width: 750px;
-  }
 }
 @media (max-width: 992px) {
-  .container {
-    width: 970px;
-  }
 }
-@media (max-width: 1200px) {
+@media (max-width: 1024px) {
   #filter {
     padding-left: 0 !important;
   }
@@ -76,18 +70,17 @@ body {
 }
 
 #filter {
-  padding-left: 15rem;
+  width: 150px;
+  padding-left: 30vw;
 }
 .search-div {
+  width: 100%;
   padding: 0.5rem;
-  background: red;
 }
 .search-form-field {
   width: 100%;
-  // padding-left: 1rem;
   background: white;
-  border-radius: 5px;
-  text-align: right;
+  border-radius: 50px;
 }
 .search-div .mat-form-field-underline {
   display: none;
@@ -96,6 +89,7 @@ body {
   border-top: 0px;
 }
 .search-div .mat-form-field-wrapper {
+  padding-left: 1rem;
   padding-bottom: 0px;
 }
 .search-div .mat-form-field-suffix button {
@@ -103,11 +97,11 @@ body {
   width: 32px;
 }
 #grid-div {
-  width: 60%;
+  width: 70%;
   float: left;
 }
 #actions-div {
-  width: 40%;
+  width: 30%;
   overflow: hidden;
 }
 .cud-div {
@@ -115,18 +109,15 @@ body {
   margin: 1rem auto;
 }
 .cud-div .mat-form-field {
-  width: 70%;
+  width: 100%;
 }
 .cud-div button {
   margin-top: 1rem;
   margin-right: 0.5rem;
 }
+
 #divider {
   margin: 1rem 0;
-}
-
-.fullwidth {
-  width: 100% !important;
 }
 
 .pointer {

@@ -1,11 +1,11 @@
 <div style="margin-top:.5rem;">
   <div id="grid-div">
     <mat-grid-list
-      [cols]="breakpoint"
+      [cols]="breakpointToolbar"
       rowHeight="3rem"
       (window:resize)="onResize($event.target)"
     >
-      <mat-grid-tile [colspan]="filtercolspan" style="background:papayawhip;"
+      <mat-grid-tile [colspan]="filtercolspan"
         ><mat-form-field id="filter" floatLabel="never">
           <mat-select
             [formControl]="filter"
@@ -30,7 +30,7 @@
           </mat-select>
         </mat-form-field></mat-grid-tile
       >
-      <mat-grid-tile style="background:skyblue;">
+      <mat-grid-tile>
         <div class="search-div">
           <mat-form-field class="search-form-field" floatLabel="never">
             <input
@@ -54,20 +54,21 @@
         </div>
       </mat-grid-tile>
     </mat-grid-list>
-    <div class="">
+    <div *ngIf="listData?.length > 0">
       <mat-grid-list
+        *ngFor="let grid of listData"
+        [cols]="breakpointContent"
         rowHeight="300px"
-        *ngIf="listData?.length > 0"
-        cols="1"
-        gutterSize="2px"
+        style="background:yellowgreen;"
       >
-        <mat-grid-tile
-          *ngFor="let tile of listData"
+        <mat-grid-tile>pic</mat-grid-tile>
+        <mat-grid-tile>info</mat-grid-tile>
+        <mat-grid-tile>table</mat-grid-tile>
+        <!-- <mat-grid-tile          
           (click)="show(tile)"
           class="pointer"
           style="background:yellowgreen;"
         >
-          <!-- <mat-grid-tile-header>{{ tile.averagerate }}</mat-grid-tile-header> -->
           <img
             src="{{ imgPath }}{{ tile.img }}"
             alt=""
@@ -80,26 +81,6 @@
           <div>Category: {{ tile._category.description }}</div>
           <div>Rating: {{ tile.averagerate }}</div>
           <div *ngIf="tile.details?.length > 0">
-            <!-- <mat-tab-group
-              class="stretch-tabs"
-              animationDuration="0ms"
-              backgroundColor="accent"
-              dynamicHeight
-            >
-              <mat-tab
-                *ngFor="let tab of tile.details"
-                label="{{ tab._size.description }}"
-              >
-                <mat-list>
-                  <mat-list-item> Price: {{ tab.price }} </mat-list-item>
-                  <mat-list-item> Calories: {{ tab.calories }}g</mat-list-item>
-                  <mat-list-item> Total Fat: {{ tab.totalfat }}g </mat-list-item>
-                  <mat-list-item>
-                    Total Carbs: {{ tab.totalcarbs }}g
-                  </mat-list-item>
-                </mat-list>
-              </mat-tab>
-            </mat-tab-group> -->
             <table style="width:30%">
               <tr>
                 <th></th>
@@ -125,19 +106,17 @@
               </tr>
             </table>
           </div>
-
           <mat-grid-tile-footer>{{ tile.description }}</mat-grid-tile-footer>
-        </mat-grid-tile>
+        </mat-grid-tile> -->
       </mat-grid-list>
-      <div class="noData-div" *ngIf="listData?.length === 0">No Data.</div>
-
-      <mat-paginator
-        [length]="length"
-        [pageSizeOptions]="pageSizeOptions"
-        [pageSize]="pageSize"
-        (page)="paged($event)"
-      ></mat-paginator>
     </div>
+    <div class="noData-div" *ngIf="listData?.length === 0">No Data.</div>
+    <mat-paginator
+      [length]="length"
+      [pageSizeOptions]="pageSizeOptions"
+      [pageSize]="pageSize"
+      (page)="paged($event)"
+    ></mat-paginator>
   </div>
   <div id="actions-div">
     <div class="cud-div">
@@ -186,7 +165,7 @@
                 label="{{ item.value.description }}"
               >
                 <div [formGroupName]="i">
-                  <mat-form-field class="fullwidth" style="margin-top:1rem;">
+                  <mat-form-field style="margin-top:1rem;">
                     <span matPrefix>$ &nbsp;</span>
                     <input
                       required
@@ -202,7 +181,7 @@
                       <strong>(xx.xx)</strong>.</mat-error
                     >
                   </mat-form-field>
-                  <mat-form-field class="fullwidth">
+                  <mat-form-field>
                     <input
                       type="number"
                       required
@@ -220,7 +199,7 @@
                       >The calories must be an integer number.</mat-error
                     >
                   </mat-form-field>
-                  <mat-form-field class="fullwidth">
+                  <mat-form-field>
                     <input
                       type="number"
                       required
@@ -238,7 +217,7 @@
                       >The Total Fat must be an integer number.</mat-error
                     >
                   </mat-form-field>
-                  <mat-form-field class="fullwidth">
+                  <mat-form-field>
                     <input
                       type="number"
                       required
