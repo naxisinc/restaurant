@@ -5,11 +5,10 @@
 mat-grid-list {
   background: rgb(231, 231, 231);
 }
-.fullwidth {
-  width: 100%;
-}
-.stretch-tabs {
-  max-width: 100%;
+.mat-subheader {
+  display: block;
+  text-align: center;
+  font-size: 1.2rem;
 }
 
 th,

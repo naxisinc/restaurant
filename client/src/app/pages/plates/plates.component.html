@@ -59,11 +59,35 @@
         *ngFor="let grid of listData"
         [cols]="breakpointContent"
         rowHeight="300px"
+        gutterSize="0px"
+        (click)="show(grid)"
+        class="pointer"
         style="background:yellowgreen;"
       >
-        <mat-grid-tile>pic</mat-grid-tile>
-        <mat-grid-tile>info</mat-grid-tile>
-        <mat-grid-tile>table</mat-grid-tile>
+        <mat-grid-tile style="background:rgb(50, 122, 205);">
+          <img src="{{ imgPath }}{{ grid.img }}" alt="" width="300" />
+          <mat-grid-tile-footer>{{ grid.description }}</mat-grid-tile-footer>
+        </mat-grid-tile>
+        <mat-grid-tile style="background:rgb(156, 50, 205);">
+          <mat-list>
+            <mat-list-item>
+              Category: {{ grid._category.description }}
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <div id="subHeader" matSubheader>Ingredients</div>
+            <mat-list-item>
+              <mat-chip-list *ngFor="let ingredient of grid._ingredients">
+                <mat-chip matLine>{{ ingredient.description }}</mat-chip>&nbsp;
+              </mat-chip-list>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>Item 3</mat-list-item>
+          </mat-list>
+          <mat-grid-tile-footer></mat-grid-tile-footer>
+        </mat-grid-tile>
+        <mat-grid-tile style="background:rgb(205, 169, 50);">
+          <mat-grid-tile-footer></mat-grid-tile-footer>
+        </mat-grid-tile>
         <!-- <mat-grid-tile          
           (click)="show(tile)"
           class="pointer"
