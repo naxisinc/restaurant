@@ -77,11 +77,19 @@
             <div id="subHeader" matSubheader>Ingredients</div>
             <mat-list-item>
               <mat-chip-list *ngFor="let ingredient of grid._ingredients">
-                <mat-chip matLine>{{ ingredient.description }}</mat-chip>&nbsp;
+                <mat-chip matLine>{{ ingredient.description }}</mat-chip
+                >&nbsp;
               </mat-chip-list>
             </mat-list-item>
             <mat-divider></mat-divider>
-            <mat-list-item>Item 3</mat-list-item>
+            <mat-list-item>
+              <star-rating
+                [starType]="'svg'"
+                [rating]="grid.averagerate"
+                [showHalfStars]="true"
+                [readOnly]="true"
+              ></star-rating>
+            </mat-list-item>
           </mat-list>
           <mat-grid-tile-footer></mat-grid-tile-footer>
         </mat-grid-tile>
