@@ -12,10 +12,23 @@ mat-grid-list {
   font-size: 1.2rem;
 }
 
+#gridCenterCol .mat-list-item {
+  color: white;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
 th,
 td {
-  text-align: center;
+  text-align: left;
+  padding: 8px;
 }
-.dts {
-  text-align: right !important;
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
