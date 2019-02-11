@@ -1,10 +1,27 @@
+@import "../../../scss/_variables.scss";
+
 .btn-file {
   margin: 1rem 0;
 }
-
-mat-grid-list {
-  background: rgb(231, 231, 231);
+#grid-toolbar {
+  border-bottom: 1px solid rgb(228, 228, 228);
 }
+#grid-data {
+  margin: 1px 0;
+  border-bottom: 1px solid rgb(228, 228, 228);
+}
+
+#grid-data:hover {
+  background: $accent;
+}
+
+#chip {
+  background: $warn;
+  border-radius: 20px;
+  padding: 0.5rem;
+  margin-right: 5px;
+}
+
 .mat-subheader {
   height: 40px;
   display: block;
@@ -12,23 +29,18 @@ mat-grid-list {
   font-size: 1.2rem;
 }
 
-#gridCenterCol .mat-list-item {
-  color: white;
-}
-
 table {
-  border-collapse: collapse;
   border-spacing: 0;
   width: 100%;
-  border: 1px solid #ddd;
 }
-
 th,
 td {
   text-align: left;
   padding: 8px;
 }
-
-tr:nth-child(even) {
-  background-color: #f2f2f2;
+// tr:nth-child(even) {
+//   background-color: #dadada;
+// }
+th {
+  border-bottom: 1px solid rgb(228, 228, 228);
 }

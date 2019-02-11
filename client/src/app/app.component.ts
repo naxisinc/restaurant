@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   template: `
-    <app-main-nav><router-outlet></router-outlet></app-main-nav>
+    <section class="mat-typography">
+      <app-main-nav><router-outlet></router-outlet></app-main-nav>
+    </section>
   `,
-  styleUrls: ['./app.component.scss']
+  styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
-  title = 'client';
+  title = "client";
 }

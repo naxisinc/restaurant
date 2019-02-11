@@ -1,6 +1,7 @@
 <div style="margin-top:.5rem;">
   <div id="grid-div">
-    <mat-grid-list [cols]="breakpointToolbar"
+    <mat-grid-list id="grid-toolbar"
+      [cols]="breakpointToolbar"
       rowHeight="3rem"
       (window:resize)="onResize($event.target)">
       <mat-grid-tile [colspan]="filtercolspan">
@@ -45,20 +46,24 @@
       </mat-grid-tile>
     </mat-grid-list>
     <div *ngIf="listData?.length > 0">
-      <mat-grid-list *ngFor="let grid of listData"
+      <mat-grid-list id="grid-data"
+        *ngFor="let grid of listData"
         [cols]="breakpointContent"
         rowHeight="300px"
         gutterSize="0px"
         (click)="show(grid)"
-        class="pointer"
-        style="background:yellowgreen;">
-        <mat-grid-tile style="background:rgb(50, 122, 205);">
-          <img src="{{ imgPath }}{{ grid.img }}"
-            alt=""
-            width="300" />
-          <mat-grid-tile-footer>{{ grid.description }}</mat-grid-tile-footer>
+        class="pointer">
+        <mat-grid-tile>
+          <mat-card class="example-card">
+            <img mat-card-image
+              src="{{ imgPath }}{{ grid.img }}">
+            <mat-card-content>
+              <p>{{grid.description}}</p>
+            </mat-card-content>
+          </mat-card>
         </mat-grid-tile>
-        <mat-grid-tile style="background:rgb(156, 50, 205);">
+        <!-- <mat-grid-tile style="background:rgb(156, 50, 205);"> -->
+        <mat-grid-tile>
           <mat-list id="gridCenterCol">
             <mat-list-item>
               Category: {{ grid._category.description }}
@@ -67,9 +72,8 @@
             <div id="subHeader"
               matSubheader>Ingredients</div>
             <mat-list-item>
-              <mat-chip-list *ngFor="let ingredient of grid._ingredients">
-                <mat-chip matLine>{{ ingredient.description }}</mat-chip>&nbsp;
-              </mat-chip-list>
+              <div id="chip"
+                *ngFor="let ingredient of grid._ingredients">{{ ingredient.description }}</div>
             </mat-list-item>
             <mat-divider></mat-divider>
             <mat-list-item>
@@ -79,12 +83,12 @@
                 [readOnly]="true"
                 staticColor="ok">
               </star-rating>
-              <span>({{grid.averagerate}})</span>
+              <a routerLink="/comments">({{grid.averagerate}})</a>
             </mat-list-item>
           </mat-list>
-          <mat-grid-tile-footer></mat-grid-tile-footer>
         </mat-grid-tile>
-        <mat-grid-tile style="background:rgb(205, 169, 50);">
+        <!-- <mat-grid-tile style="background:rgb(205, 169, 50);"> -->
+        <mat-grid-tile>
           <div style="overflow-x:auto;">
             <table style="width:30%">
               <tr>
@@ -94,69 +98,24 @@
                 </th>
               </tr>
               <tr>
-                <td class="dts">Price:</td>
+                <td>Price:</td>
                 <td *ngFor="let row of grid.details">{{ row.price }}</td>
               </tr>
               <tr>
-                <td class="dts">Calories:</td>
+                <td>Calories:</td>
                 <td *ngFor="let row of grid.details">{{ row.calories }}g</td>
               </tr>
               <tr>
-                <td class="dts">Total Fat:</td>
+                <td>Total Fat:</td>
                 <td *ngFor="let row of grid.details">{{ row.totalfat }}g</td>
               </tr>
               <tr>
-                <td class="dts">Total Carbs:</td>
+                <td>Total Carbs:</td>
                 <td *ngFor="let row of grid.details">{{ row.totalcarbs }}g</td>
               </tr>
             </table>
           </div>
-          <mat-grid-tile-footer></mat-grid-tile-footer>
         </mat-grid-tile>
-        <!-- <mat-grid-tile          
-          (click)="show(tile)"
-          class="pointer"
-          style="background:yellowgreen;"
-        >
-          <img
-            src="{{ imgPath }}{{ tile.img }}"
-            alt=""
-            (click)="show(tile)"
-            width="300"
-          />
-          <mat-chip-list *ngFor="let ingredient of tile._ingredients">
-            <mat-chip>{{ ingredient.description }}</mat-chip>
-          </mat-chip-list>
-          <div>Category: {{ tile._category.description }}</div>
-          <div>Rating: {{ tile.averagerate }}</div>
-          <div *ngIf="tile.details?.length > 0">
-            <table style="width:30%">
-              <tr>
-                <th></th>
-                <th *ngFor="let header of tile.details">
-                  {{ header._size.description }}
-                </th>
-              </tr>
-              <tr>
-                <td class="dts">Price:</td>
-                <td *ngFor="let row of tile.details">{{ row.price }}</td>
-              </tr>
-              <tr>
-                <td class="dts">Calories:</td>
-                <td *ngFor="let row of tile.details">{{ row.calories }}g</td>
-              </tr>
-              <tr>
-                <td class="dts">Total Fat:</td>
-                <td *ngFor="let row of tile.details">{{ row.totalfat }}g</td>
-              </tr>
-              <tr>
-                <td class="dts">Total Carbs:</td>
-                <td *ngFor="let row of tile.details">{{ row.totalcarbs }}g</td>
-              </tr>
-            </table>
-          </div>
-          <mat-grid-tile-footer>{{ tile.description }}</mat-grid-tile-footer>
-        </mat-grid-tile> -->
       </mat-grid-list>
     </div>
     <div class="noData-div"
