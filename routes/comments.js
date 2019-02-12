@@ -1,14 +1,14 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const _ = require('lodash');
-const { ObjectID } = require('mongodb');
+const _ = require("lodash");
+const { ObjectID } = require("mongodb");
 
-const Comment = require('../models/comments');
-const Plate = require('../models/plates');
-const { authenticate } = require('../middleware/authenticate');
+const Comment = require("../models/comments");
+const Plate = require("../models/plates");
+const { authenticate } = require("../middleware/authenticate");
 
 // POST /comments
-router.post('/', authenticate, async (req, res) => {
+router.post("/", authenticate, async (req, res) => {
   try {
     const plateId = req.body._plate;
     const comment_rate = req.body.rate;
@@ -27,7 +27,7 @@ router.post('/', authenticate, async (req, res) => {
 });
 
 // GET /comments
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const comments = await Comment.find();
     res.status(200).send(comments);
@@ -36,25 +36,39 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /comments/id
-router.get('/:id', async (req, res) => {
+// // GET /comments/id
+// router.get("/:id", async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     if (!ObjectID.isValid(id)) return res.status(404).send();
+//     const comment = await Comment.findById(id);
+//     if (!comment) return res.status(404).send();
+//     res.status(200).send(comment);
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// });
+
+// GET /comments/_plate
+// @desc Get comments by plateId
+router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const comment = await Comment.findById(id);
-    if (!comment) return res.status(404).send();
-    res.status(200).send(comment);
+    const comments = await Comment.find({ _plate: id });
+    if (!comments) return res.status(404).send();
+    res.status(200).send(comments);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
 // PATCH /comments/id
-router.patch('/:id', authenticate, async (req, res) => {
+router.patch("/:id", authenticate, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const body = _.pick(req.body, ['comment', 'rate']);
+    const body = _.pick(req.body, ["comment", "rate"]);
     const wholecomment = await Comment.findById(id);
     if (parseInt(body.rate) !== wholecomment.rate) {
       await updatingPlateAvg(wholecomment._plate, parseInt(body.rate));
@@ -72,7 +86,7 @@ router.patch('/:id', authenticate, async (req, res) => {
 });
 
 // DELETE /comments/id
-router.delete('/:id', authenticate, async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
@@ -86,8 +100,8 @@ router.delete('/:id', authenticate, async (req, res) => {
       { $match: { _plate: comment._plate } },
       {
         $group: {
-          _id: '$_plate',
-          avg: { $avg: '$rate' }
+          _id: "$_plate",
+          avg: { $avg: "$rate" }
         }
       }
     ]);
@@ -111,7 +125,7 @@ router.delete('/:id', authenticate, async (req, res) => {
 async function updatingPlateAvg(plateId, rate) {
   try {
     const plate = await Plate.findOne({ _id: plateId }, { averagerate: 1 });
-    const avg = ((plate.averagerate + rate) / 2).toFixed(2);
+    const avg = ((plate.averagerate + rate) / 2).toFixed(1);
     await Plate.findOneAndUpdate(
       { _id: plateId },
       { $set: { averagerate: avg } }

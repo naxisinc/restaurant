@@ -83,7 +83,10 @@
                 [readOnly]="true"
                 staticColor="ok">
               </star-rating>
-              <a routerLink="/comments">({{grid.averagerate}})</a>
+              <a routerLink="/comments"
+                (click)="seeComments(grid._id)"
+                matTooltip="See comments"
+                matTooltipPosition="after">({{grid.averagerate}})</a>
             </mat-list-item>
           </mat-list>
         </mat-grid-tile>
@@ -134,7 +137,8 @@
             placeholder="Name of the dish"
             formControlName="description"
             [errorStateMatcher]="matcher" />
-          <mat-error *ngIf="parentForm.controls.description.hasError('required')">Description is <strong>required.</strong></mat-error>
+          <mat-error *ngIf="parentForm.controls.description.hasError('required')">Description is
+            <strong>required.</strong></mat-error>
           <mat-error *ngIf="parentForm.controls.description.hasError('minlength')">The description must be at
             least 3 characters long.</mat-error>
           <mat-error *ngIf="parentForm.controls.description.hasError('maxlength')">The description must have
@@ -167,7 +171,8 @@
                       matInput
                       placeholder="Price"
                       formControlName="price" />
-                    <mat-error *ngIf="item.controls.price.hasError('required')">Price is <strong>required</strong></mat-error>
+                    <mat-error *ngIf="item.controls.price.hasError('required')">Price is
+                      <strong>required</strong></mat-error>
                     <mat-error *ngIf="item.controls.price.hasError('pattern')">The price must be an integer
                       number in this format
                       <strong>(xx.xx)</strong>.</mat-error>
@@ -179,7 +184,8 @@
                       placeholder="Calories"
                       formControlName="calories" />
                     <span matSuffix>cal</span>
-                    <mat-error *ngIf="item.controls.calories.hasError('required')">Calories are <strong>required</strong></mat-error>
+                    <mat-error *ngIf="item.controls.calories.hasError('required')">Calories are
+                      <strong>required</strong></mat-error>
                     <mat-error *ngIf="item.controls.calories.hasError('pattern')">The calories must be an
                       integer number.</mat-error>
                   </mat-form-field>
@@ -190,7 +196,8 @@
                       placeholder="Total Fat"
                       formControlName="totalfat" />
                     <span matSuffix>g</span>
-                    <mat-error *ngIf="item.controls.totalfat.hasError('required')">Total Fat is <strong>required</strong></mat-error>
+                    <mat-error *ngIf="item.controls.totalfat.hasError('required')">Total Fat is
+                      <strong>required</strong></mat-error>
                     <mat-error *ngIf="item.controls.totalfat.hasError('pattern')">The Total Fat must be an
                       integer number.</mat-error>
                   </mat-form-field>
@@ -201,7 +208,8 @@
                       placeholder="Total Carbs"
                       formControlName="totalcarbs" />
                     <span matSuffix>g</span>
-                    <mat-error *ngIf="item.controls.totalcarbs.hasError('required')">Total Carbs is <strong>required</strong></mat-error>
+                    <mat-error *ngIf="item.controls.totalcarbs.hasError('required')">Total Carbs is
+                      <strong>required</strong></mat-error>
                     <mat-error *ngIf="item.controls.totalcarbs.hasError('pattern')">The Total Carbs must be
                       an integer number.</mat-error>
                   </mat-form-field>

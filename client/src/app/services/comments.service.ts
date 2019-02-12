@@ -1,16 +1,21 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Injectable({
   providedIn: "root"
 })
 export class CommentsService {
-  private messageSource = new BehaviorSubject("default message");
-  currentMessage = this.messageSource.asObservable();
+  private messageSource = new BehaviorSubject(null);
+  currentPlate = this.messageSource.asObservable();
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  changeMessage(message: string) {
-    this.messageSource.next(message);
+  changePlate(plateId: string) {
+    this.messageSource.next(plateId);
+  }
+
+  getCommentByPlateId(plateId) {
+    return this.http.get("http://localhost:3000/comments/" + plateId);
   }
 }

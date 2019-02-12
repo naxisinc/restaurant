@@ -1,42 +1,48 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav
-    #drawer
+  <mat-sidenav #drawer
     class="sidenav"
     fixedInViewport="true"
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="!(isHandset$ | async)"
-  >
-    <mat-toolbar class="" color="primary">Menu</mat-toolbar>
+    [opened]="!(isHandset$ | async)">
+    <mat-toolbar class=""
+      color="primary">Menu</mat-toolbar>
     <mat-nav-list *ngIf="!admin">
-      <a mat-list-item routerLink="/">Link 1</a>
-      <a mat-list-item routerLink="/">Link 2</a>
-      <a mat-list-item routerLink="/">Link 3</a>
+      <a mat-list-item
+        routerLink="/">Link 1</a>
+      <a mat-list-item
+        routerLink="/">Link 2</a>
+      <a mat-list-item
+        routerLink="/">Link 3</a>
     </mat-nav-list>
     <mat-nav-list *ngIf="admin">
-      <a mat-list-item routerLink="/sizes">Sizes</a>
-      <a mat-list-item routerLink="/categories">Categories</a>
-      <a mat-list-item routerLink="/ingredients">Ingredients</a>
-      <a mat-list-item routerLink="/plates">Dishes</a>
-      <a mat-list-item routerLink="/comments">Comments</a>
+      <a mat-list-item
+        routerLink="/sizes">Sizes</a>
+      <a mat-list-item
+        routerLink="/categories">Categories</a>
+      <a mat-list-item
+        routerLink="/ingredients">Ingredients</a>
+      <a mat-list-item
+        routerLink="/plates">Dishes</a>
       <mat-divider></mat-divider>
-      <a mat-list-item routerLink="/users">Users</a>
+      <a mat-list-item
+        routerLink="/users">Users</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar class="mat-elevation-z3" color="primary">
-      <button
-        type="button"
+    <mat-toolbar class="mat-elevation-z3"
+      color="primary">
+      <button type="button"
         aria-label="Toggle sidenav"
         mat-icon-button
         (click)="drawer.toggle()"
-        *ngIf="(isHandset$ | async)"
-      >
+        *ngIf="(isHandset$ | async)">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span> <a routerLink="/home">My restaurant</a> </span>
       <span class="spacer"></span>
-      <button mat-icon-button routerLink="/login">
+      <button mat-icon-button
+        routerLink="/login">
         <mat-icon>account_circle</mat-icon>
         <!-- <span>Login</span> -->
       </button>

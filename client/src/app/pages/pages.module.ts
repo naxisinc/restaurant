@@ -17,7 +17,6 @@ import { CommentsComponent } from "./comments/comments.component";
 import { ChangePassComponent } from "./users/change-pass/change-pass.component";
 import { RecoverPassComponent } from "./users/recover-pass/recover-pass.component";
 import { ComponentsModule } from "../components/components.module";
-import { ParentComponent } from './parent/parent.component';
 
 @NgModule({
   declarations: [
@@ -30,8 +29,7 @@ import { ParentComponent } from './parent/parent.component';
     PlatesComponent,
     CommentsComponent,
     ChangePassComponent,
-    RecoverPassComponent,
-    ParentComponent
+    RecoverPassComponent
   ],
   imports: [
     CommonModule,

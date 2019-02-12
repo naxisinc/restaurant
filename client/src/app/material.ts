@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { LayoutModule } from '@angular/cdk/layout';
+import { NgModule } from "@angular/core";
+import { LayoutModule } from "@angular/cdk/layout";
 import {
   MatButtonModule,
   MatCheckboxModule,
@@ -17,8 +17,9 @@ import {
   MatAutocompleteModule,
   MatSelectModule,
   MatTabsModule,
-  MatCardModule
-} from '@angular/material';
+  MatCardModule,
+  MatTooltipModule
+} from "@angular/material";
 
 const MODULES = [
   LayoutModule,
@@ -38,7 +39,8 @@ const MODULES = [
   MatAutocompleteModule,
   MatSelectModule,
   MatTabsModule,
-  MatCardModule
+  MatCardModule,
+  MatTooltipModule
 ];
 
 @NgModule({

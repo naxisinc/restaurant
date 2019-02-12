@@ -11,6 +11,7 @@ import { PlatesService } from "../../services/plates.service";
 import { SizesService } from "../../services/sizes.service";
 import { CategoriesService } from "../../services/categories.service";
 import { MyErrorStateMatcher } from "../../services/validator.service";
+import { CommentsService } from "../../services/comments.service";
 
 @Component({
   selector: "app-plates",
@@ -55,6 +56,7 @@ export class PlatesComponent implements OnInit {
     private plateService: PlatesService,
     private sizesService: SizesService,
     private categoriesService: CategoriesService,
+    private commentsService: CommentsService,
     private fb: FormBuilder
   ) {
     // Get sizes
@@ -322,5 +324,9 @@ export class PlatesComponent implements OnInit {
     this.clearForm();
     this.isSelected = false;
     this.selected = null;
+  }
+
+  seeComments(plateId) {
+    this.commentsService.changePlate(plateId);
   }
 }

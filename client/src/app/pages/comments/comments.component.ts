@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { CommentsService } from "../../services/comments.service";
+import { first } from "rxjs/operators";
 
 @Component({
   selector: "app-comments",
@@ -7,15 +9,30 @@ import { CommentsService } from "../../services/comments.service";
   styleUrls: ["./comments.component.scss"]
 })
 export class CommentsComponent implements OnInit {
-  message: string;
+  comments: Object;
 
-  constructor(private data: CommentsService) {}
+  constructor(
+    private commentsService: CommentsService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.data.currentMessage.subscribe(message => (this.message = message));
-  }
-
-  newMessage() {
-    this.data.changeMessage("Hello from Sibling");
+    // .pipe(first()) only get the value once and then automatically unsubscribe.
+    // If I remove that, the method is called multiple times
+    this.commentsService.currentPlate.pipe(first()).subscribe(plateId => {
+      if (!plateId) {
+        this.router.navigate(["/"]); // redirect home
+      } else {
+        this.commentsService.getCommentByPlateId(plateId).subscribe(
+          succ => {
+            this.comments = succ;
+            // console.log(this.comments);
+          },
+          err => {
+            //
+          }
+        );
+      }
+    });
   }
 }
