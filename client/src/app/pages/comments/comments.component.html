@@ -1,13 +1,23 @@
 <mat-list>
   <mat-list-item *ngFor="let comment of comments">
     <img matListAvatar
-      src=""
+      src="../../../assets/images/avatars/images.jpg"
       alt="">
+    <div matLine>
+      <star-rating [starType]="'svg'"
+        [rating]="comment.rate"
+        showHalfStars="true"
+        readOnly="true"
+        staticColor="ok">
+      </star-rating>
+    </div>
     <h3 matLine> {{comment._creator}} </h3>
+    <h2 matLine>
+      <span> {{comment.created_at | date}} </span>
+    </h2>
     <p matLine>
-      <span> {{comment.rate}} </span>
-      <span> {{comment.created_at}} </span>
-      <span class="demo-2"> -- {{comment.comment}} </span>
+      <span> {{comment.comment}} </span>
     </p>
+    <mat-divider></mat-divider>
   </mat-list-item>
 </mat-list>

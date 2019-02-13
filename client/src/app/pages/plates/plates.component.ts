@@ -327,6 +327,6 @@ export class PlatesComponent implements OnInit {
   }
 
   seeComments(plateId) {
-    this.commentsService.changePlate(plateId);
+    localStorage.setItem("plate", plateId);
   }
 }
