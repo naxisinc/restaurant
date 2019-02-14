@@ -8,12 +8,14 @@ import { FooterComponent } from "./footer/footer.component";
 import { MainNavComponent } from "./main-nav/main-nav.component";
 import { ChipsComponent } from "./chips/chips.component";
 import { SelectComponent } from "./select/select.component";
+import { DialogsComponent } from "./dialogs/dialogs.component";
 
 const COMPONENTS = [
   FooterComponent,
   MainNavComponent,
   ChipsComponent,
-  SelectComponent
+  SelectComponent,
+  DialogsComponent
 ];
 
 @NgModule({
@@ -25,6 +27,7 @@ const COMPONENTS = [
     FormsModule,
     ReactiveFormsModule
   ],
-  exports: [COMPONENTS]
+  exports: [COMPONENTS],
+  entryComponents: [DialogsComponent] // para importar el componente dentro de otro component
 })
 export class ComponentsModule {}

@@ -7,7 +7,7 @@ import { StarRatingModule } from "angular-star-rating";
 import { PagesRoutingModule } from "./pages-routing.module";
 import { MaterialModule } from "../material";
 import { HomeComponent } from "./home/home.component";
-import { LoginComponent } from "./users/login/login.component";
+// import { LoginComponent } from "./users/login/login.component";
 import { UsersComponent } from "./users/users.component";
 import { SizesComponent } from "./sizes/sizes.component";
 import { CategoriesComponent } from "./categories/categories.component";
@@ -21,7 +21,7 @@ import { ComponentsModule } from "../components/components.module";
 @NgModule({
   declarations: [
     HomeComponent,
-    LoginComponent,
+    // LoginComponent,
     UsersComponent,
     SizesComponent,
     CategoriesComponent,

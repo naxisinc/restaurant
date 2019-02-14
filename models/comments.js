@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Comment Schema
 const CommentSchema = new mongoose.Schema(
@@ -16,7 +16,15 @@ const CommentSchema = new mongoose.Schema(
       required: true,
       default: Date.now
     },
+    headline: {
+      type: String,
+      trim: true
+    },
     comment: {
+      type: String,
+      trim: true
+    },
+    reply: {
       type: String,
       trim: true
     },
@@ -31,4 +39,4 @@ const CommentSchema = new mongoose.Schema(
   }
 );
 
-const Comment = (module.exports = mongoose.model('Comment', CommentSchema));
+const Comment = (module.exports = mongoose.model("Comment", CommentSchema));

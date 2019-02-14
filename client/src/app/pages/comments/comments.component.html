@@ -1,8 +1,9 @@
 <mat-list>
-  <mat-list-item *ngFor="let comment of comments">
+  <mat-list-item *ngFor="let comment of comments; let i = index">
     <img matListAvatar
       src="../../../assets/images/avatars/images.jpg"
       alt="">
+
     <div matLine>
       <star-rating [starType]="'svg'"
         [rating]="comment.rate"
@@ -11,13 +12,36 @@
         staticColor="ok">
       </star-rating>
     </div>
+
     <h3 matLine> {{comment._creator}} </h3>
+
     <h2 matLine>
       <span> {{comment.created_at | date}} </span>
     </h2>
+
     <p matLine>
       <span> {{comment.comment}} </span>
     </p>
+
+    <mat-form-field matLine
+      *ngIf="reply[i]">
+      <textarea matInput
+        placeholder="Leave a reply"></textarea>
+    </mat-form-field>
+
+    <div *ngIf="reply[i]"
+      matLine>
+      <button mat-button>Post reply</button>
+    </div>
+
+    <div *ngIf="!reply[i]"
+      matLine>
+      <button mat-button
+        (click)="replyFn(i)">Reply</button>
+      <button mat-button
+        (click)="openDialog()">Delete</button>
+    </div>
+
     <mat-divider></mat-divider>
   </mat-list-item>
 </mat-list>

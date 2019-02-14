@@ -1,6 +1,9 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { CommentsService } from "../../services/comments.service";
+import { DialogsComponent } from "../../components/dialogs/dialogs.component";
+import { SubjectService } from "src/app/services/subject.service";
 
 @Component({
   selector: "app-comments",
@@ -9,10 +12,13 @@ import { CommentsService } from "../../services/comments.service";
 })
 export class CommentsComponent implements OnInit, OnDestroy {
   comments: Object;
+  reply: Boolean[] = [false];
 
   constructor(
     private commentsService: CommentsService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
+    private subject: SubjectService
   ) {}
 
   ngOnInit() {
@@ -23,13 +29,28 @@ export class CommentsComponent implements OnInit, OnDestroy {
       this.commentsService.getCommentByPlateId(plateId).subscribe(
         succ => {
           this.comments = succ;
-          // console.log(this.comments);
         },
         err => {
           //
         }
       );
     }
+  }
+
+  replyFn(index) {
+    this.reply = [false];
+    this.reply[index] = !this.reply[index];
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogsComponent, {
+      width: "250px",
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log("The dialog was closed");
+    });
   }
 
   ngOnDestroy() {
