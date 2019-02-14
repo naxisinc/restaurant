@@ -125,7 +125,8 @@ router.delete("/:id", authenticate, async (req, res) => {
 async function updatingPlateAvg(plateId, rate) {
   try {
     const plate = await Plate.findOne({ _id: plateId }, { averagerate: 1 });
-    const avg = ((plate.averagerate + rate) / 2).toFixed(1);
+    const avgrate = plate.averagerate !== 0 ? plate.averagerate : rate;
+    const avg = ((avgrate + rate) / 2).toFixed(1);
     await Plate.findOneAndUpdate(
       { _id: plateId },
       { $set: { averagerate: avg } }

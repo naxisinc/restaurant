@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Plate Schema
 const PlateSchema = new mongoose.Schema(
@@ -16,7 +16,7 @@ const PlateSchema = new mongoose.Schema(
     averagerate: {
       type: Number,
       required: true,
-      default: 1
+      default: 0
     },
     img: {
       type: String,
@@ -32,4 +32,4 @@ const PlateSchema = new mongoose.Schema(
   }
 );
 
-const Plate = (module.exports = mongoose.model('Plate', PlateSchema));
+const Plate = (module.exports = mongoose.model("Plate", PlateSchema));

@@ -31,7 +31,7 @@ const CommentSchema = new mongoose.Schema(
     rate: {
       type: Number,
       required: true,
-      default: 1
+      default: 0
     }
   },
   {

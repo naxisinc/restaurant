@@ -123,14 +123,6 @@ export class PlatesComponent implements OnInit {
     this.onResize(window);
   }
 
-  // onClick(event) {
-  //   console.log(event);
-  // }
-
-  // onRatingChange(event) {
-  //   console.log(event);
-  // }
-
   gettingIngredients(list) {
     this.ingredientsId = list;
   }
@@ -139,7 +131,6 @@ export class PlatesComponent implements OnInit {
     this.plateService.getPlates().subscribe(
       res => {
         this.listDataCopy = res;
-        console.log(this.listDataCopy);
         this.length = this.listDataCopy.length;
         const event = {
           previousPageIndex: 1,
