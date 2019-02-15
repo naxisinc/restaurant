@@ -10,7 +10,7 @@ export class SubjectService {
 
   constructor() {}
 
-  changeDeletePetitioner(petitioner: string) {
+  changeDeletePetitioner(petitioner: object) {
     this.deleteMsg.next(petitioner);
   }
 }

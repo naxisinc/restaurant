@@ -13,6 +13,7 @@ import { SubjectService } from "src/app/services/subject.service";
 export class CommentsComponent implements OnInit, OnDestroy {
   comments: Object;
   reply: Boolean[] = [false];
+  response: string; // store the admin reply text
 
   constructor(
     private commentsService: CommentsService,
@@ -22,6 +23,10 @@ export class CommentsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.getComments();
+  }
+
+  getComments() {
     let plateId = localStorage.getItem("plate");
     if (!plateId) {
       this.router.navigate(["/"]); // redirect home
@@ -38,19 +43,43 @@ export class CommentsComponent implements OnInit, OnDestroy {
   }
 
   replyFn(index) {
+    this.response = "";
     this.reply = [false];
-    this.reply[index] = !this.reply[index];
+    this.reply[index] = true;
   }
 
-  openDialog(): void {
+  openDialog(_id): void {
+    // update the petitioner in the service
+    let petitioner = {
+      name: "post",
+      id: _id
+    };
+    this.subject.changeDeletePetitioner(petitioner);
+
     const dialogRef = this.dialog.open(DialogsComponent, {
       width: "250px",
       data: {}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log("The dialog was closed");
+      if (result) {
+        this.commentsService.deleteComment(result).subscribe(
+          succ => {
+            this.getComments();
+          },
+          err => {
+            //
+          }
+        );
+      } else {
+        // console.log("Cancel button was pushed");
+      }
     });
+  }
+
+  postingReply(commentId) {
+    console.log(this.response);
+    console.log(commentId);
   }
 
   ngOnDestroy() {
