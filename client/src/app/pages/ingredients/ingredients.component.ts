@@ -1,24 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatPaginator, PageEvent } from '@angular/material';
-import { IngredientsService } from '../../services/ingredients.service';
-import { MyErrorStateMatcher } from '../../services/validator.service';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { MatPaginator, PageEvent } from "@angular/material";
+import { IngredientsService } from "../../services/ingredients.service";
+import { MyErrorStateMatcher } from "../../services/validator.service";
 
 @Component({
-  selector: 'app-ingredients',
-  templateUrl: './ingredients.component.html',
-  styleUrls: ['./ingredients.component.scss']
+  selector: "app-ingredients",
+  templateUrl: "./ingredients.component.html",
+  styleUrls: ["./ingredients.component.scss"]
 })
 export class IngredientsComponent implements OnInit {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  imgPath: string = 'http://localhost:3000/images/';
+  imgPath: string = "http://localhost:3000/images/";
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
   isSelected: boolean = false;
   selected: Object;
-  @ViewChild('fileInput') fileInput;
+  @ViewChild("fileInput") fileInput;
 
   // Reactive Form and Matcher
   IngredientForm: FormGroup;
@@ -35,10 +35,10 @@ export class IngredientsComponent implements OnInit {
   ) {
     this.IngredientForm = fb.group({
       description: [
-        '',
+        "",
         [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
       ],
-      file: ['', [Validators.required]]
+      file: ["", [Validators.required]]
     });
   }
 
@@ -61,7 +61,7 @@ export class IngredientsComponent implements OnInit {
         this.paginator.firstPage();
       },
       err => {
-        console.log('Something is wrong');
+        console.log("Something is wrong");
       }
     );
   }
@@ -85,7 +85,7 @@ export class IngredientsComponent implements OnInit {
   }
 
   onSearchClear() {
-    this.searchKey = '';
+    this.searchKey = "";
     this.listData = this.listDataCopy;
   }
 
@@ -105,7 +105,7 @@ export class IngredientsComponent implements OnInit {
       succ => {
         this.getIngredients();
         this.IngredientForm.reset();
-        this.searchKey = '';
+        this.searchKey = "";
       },
       error => {
         console.log(`Error: ${error}`);
@@ -115,7 +115,7 @@ export class IngredientsComponent implements OnInit {
 
   edit() {
     let obj = {
-      id: this.selected['_id'],
+      id: this.selected["_id"],
       description: this.IngredientForm.controls.description.value,
       file: this.fileInput.nativeElement.files[0]
     };
@@ -134,14 +134,14 @@ export class IngredientsComponent implements OnInit {
   }
 
   delete() {
-    this.ingredientService.deleteIngredient(this.selected['_id']).subscribe(
+    this.ingredientService.deleteIngredient(this.selected["_id"]).subscribe(
       succ => {
         this.getIngredients();
         this.IngredientForm.reset();
         this.isSelected = false;
       },
       error => {
-        console.log('Something is wrong');
+        console.log("Something is wrong");
       }
     );
   }

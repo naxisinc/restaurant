@@ -1,27 +1,40 @@
-.fw {
-  width: 15vw;
+@import "../../../../scss/variables";
+
+form {
+  margin: 1rem auto;
+  text-align: center;
 }
 
-.facebook {
-  background: #3b5998;
+mat-form-field,
+.login,
+.facebook-btn,
+.or,
+#new-account {
+  width: 100%;
+}
+
+#forgot {
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.facebook-btn {
+  margin-top: 1rem;
+  background: #4c6baf;
   color: white;
-}
-
-.divider {
-  margin: 1rem 0;
 }
 
 .or {
   display: flex;
+  margin: 1rem auto;
   flex-direction: row;
-  margin: 1rem 0;
   align-items: center;
 }
 .bar {
   flex: auto;
   border: none;
   height: 1px;
-  background: rgba(0, 0, 0, 0.12);
+  background: #ccc;
 }
 .or span {
   color: #ccc;

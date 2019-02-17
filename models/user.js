@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const jwt = require('jsonwebtoken');
-const _ = require('lodash');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const _ = require("lodash");
+const bcrypt = require("bcryptjs");
 
-const config = require('../config/database');
+const config = require("../config/database");
 
 // User Schema
 const UserSchema = new mongoose.Schema(
@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema(
       minlength: 1,
       validate: {
         validator: validator.isEmail,
-        message: '{VALUE} is not a valid email.'
+        message: "{VALUE} is not a valid email."
       }
     },
     password: {
@@ -52,7 +52,7 @@ const UserSchema = new mongoose.Schema(
 UserSchema.methods.toJSON = function() {
   let user = this;
   let userObject = user.toObject();
-  return _.pick(userObject, ['_id', 'email']);
+  return _.pick(userObject, ["_id", "email"]);
 };
 
 UserSchema.methods.generateAuthToken = function(type) {
@@ -63,8 +63,8 @@ UserSchema.methods.generateAuthToken = function(type) {
     .sign(
       {
         _id: user._id.toHexString(),
-        access
-        //exp: Math.floor(Date.now() / 1000) + 60 * 60 //1hr
+        access,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 //1hr
       },
       config.secret
     )
@@ -100,8 +100,8 @@ UserSchema.statics.findByToken = function(token) {
 
   return User.findOne({
     _id: decoded._id,
-    'tokens.token': token,
-    'tokens.access': decoded.access
+    "tokens.token": token,
+    "tokens.access": decoded.access
   });
 };
 
@@ -125,10 +125,10 @@ UserSchema.statics.findByCredentials = function(email, password) {
   });
 };
 
-UserSchema.pre('save', function(next) {
+UserSchema.pre("save", function(next) {
   let user = this;
 
-  if (user.isModified('password')) {
+  if (user.isModified("password")) {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(user.password, salt, (err, hash) => {
         user.password = hash;
@@ -140,4 +140,4 @@ UserSchema.pre('save', function(next) {
   }
 });
 
-const User = (module.exports = mongoose.model('User', UserSchema));
+const User = (module.exports = mongoose.model("User", UserSchema));

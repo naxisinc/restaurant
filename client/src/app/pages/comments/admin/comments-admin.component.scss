@@ -1,0 +1,28 @@
+star-rating {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+.mat-list .mat-list-item .mat-line {
+  white-space: normal;
+}
+.mat-list .mat-list-item .mat-list-avatar {
+  width: 50px;
+  height: 50px;
+}
+.reply {
+  margin-top: 1rem !important;
+  padding-left: 1.5rem !important;
+}
+.btns {
+  margin-top: 0.3rem !important;
+}
+#back-btn {
+  float: left;
+  padding: 1rem;
+}
+#dish {
+  width: 20%;
+  margin: auto;
+  padding: 1rem 0;
+}

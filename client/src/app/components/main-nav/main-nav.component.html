@@ -17,16 +17,26 @@
     </mat-nav-list>
     <mat-nav-list *ngIf="admin">
       <a mat-list-item
-        routerLink="/sizes">Sizes</a>
+        routerLink="/sizes"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">Sizes</a>
       <a mat-list-item
-        routerLink="/categories">Categories</a>
+        routerLink="/categories"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">Categories</a>
       <a mat-list-item
-        routerLink="/ingredients">Ingredients</a>
+        routerLink="/ingredients"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">Ingredients</a>
       <a mat-list-item
-        routerLink="/plates">Dishes</a>
+        routerLink="/plates"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">Dishes</a>
       <mat-divider></mat-divider>
       <a mat-list-item
-        routerLink="/users">Users</a>
+        routerLink="/users"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">Users</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -41,11 +51,18 @@
       </button>
       <span> <a routerLink="/home">My restaurant</a> </span>
       <span class="spacer"></span>
-      <button mat-icon-button
+      <ul>
+        <li *ngIf="!authService.loggedIn()"
+          routerLink="/login"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">Login</li>
+        <li *ngIf="authService.loggedIn()"
+          (click)="onLogoutClick()">Logout</li>
+      </ul>
+      <!-- <button mat-icon-button
         routerLink="/login">
         <mat-icon>account_circle</mat-icon>
-        <!-- <span>Login</span> -->
-      </button>
+      </button> -->
     </mat-toolbar>
     <!-- Add Content Here -->
     <ng-content></ng-content>
