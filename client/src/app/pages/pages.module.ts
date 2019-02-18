@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { StarRatingModule } from "angular-star-rating";
+import { NgbCarouselModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { PagesRoutingModule } from "./pages-routing.module";
 import { MaterialModule } from "../material";
@@ -37,7 +38,8 @@ import { ComponentsModule } from "../components/components.module";
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
-    StarRatingModule.forRoot()
+    StarRatingModule.forRoot(),
+    NgbCarouselModule
   ]
 })
 export class PagesModule {}

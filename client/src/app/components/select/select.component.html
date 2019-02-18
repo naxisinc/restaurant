@@ -1,10 +1,11 @@
-<mat-form-field class="example-full-width" [formGroup]="parentForm">
-  <mat-select
-    [compareWith]="compareFn"
-    placeholder="Choose a category"
+<mat-form-field class="example-full-width"
+  [formGroup]="parentForm">
+  <mat-select [compareWith]="compareFn"
+    placeholder="Choose a category of dishes"
     formControlName="category"
-  >
-    <mat-option [value]="option" *ngFor="let option of options">
+    (selectionChange)="category.emit($event)">
+    <mat-option [value]="option"
+      *ngFor="let option of options">
       {{ option.description }}
     </mat-option>
   </mat-select>

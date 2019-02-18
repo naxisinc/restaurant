@@ -17,12 +17,20 @@ star-rating {
 .btns {
   margin-top: 0.3rem !important;
 }
-#back-btn {
+#back-btn,
+#categories {
   float: left;
   padding: 1rem;
 }
+#categories {
+  width: 20rem;
+}
 #dish {
-  width: 20%;
+  width: 30%;
   margin: auto;
   padding: 1rem 0;
+}
+ngb-carousel,
+img {
+  max-height: 300px;
 }

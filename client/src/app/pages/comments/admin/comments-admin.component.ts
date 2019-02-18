@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
+import { FormBuilder, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material";
 import { CommentsAdminService } from "../../../services/admin/comments-admin.service";
 import { DialogsComponent } from "../../../components/dialogs/dialogs.component";
 import { SubjectService } from "src/app/services/subject.service";
 import { PlatesService } from "../../../services/plates.service";
+import { CategoriesService } from "../../../services/categories.service";
 
 @Component({
   selector: "app-comments-admin",
@@ -17,31 +19,47 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
   response: string; // store the admin reply text
   petitioner: Object; // delete petitioner can by 'post' or 'reply'
   plateId: String = localStorage.getItem("plate");
-  imgPath: string;
-  plateDescription: String;
   plate: Object;
+  images = [1, 2, 3].map(
+    () => `https://picsum.photos/900/500?random&t=${Math.random()}`
+  );
+
+  // Esto no lo necesito pero lo tengo q poner
+  // para poder usar el mismo <app-select> de dishes
+  parentForm = this.fb.group({
+    category: ["", [Validators.required]]
+  });
 
   constructor(
     private commentsAdminService: CommentsAdminService,
     private router: Router,
     private dialog: MatDialog,
     private subject: SubjectService,
-    private platesService: PlatesService
+    private platesService: PlatesService,
+    private categoriesService: CategoriesService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit() {
-    this.platesService.getPlate(this.plateId).subscribe(
-      succ => {
-        this.imgPath = "http://localhost:3000/images/" + succ["img"];
-        this.plateDescription = succ["description"];
-        // console.log(succ);
-        this.plate = succ;
-      },
-      err => {
-        //
-      }
-    );
-    this.getComments();
+    if (this.plateId) {
+      // Si viene de la vista 'Dishes' con un plato especifico
+      console.log(this.plateId);
+    } else {
+      // Si viene de clickear 'Comments'
+      console.log(this.plateId);
+    }
+    // this.platesService.getPlate(this.plateId).subscribe(
+    //   succ => {
+    //     this.imgPath = "http://localhost:3000/images/" + succ["img"];
+    //     this.plateDescription = succ["description"];
+    //     // console.log(succ);
+    //     this.plate = succ;
+    //   },
+    //   err => {
+    //     //
+    //   }
+    // );
+    // this.getComments();
   }
 
   getComments() {
@@ -120,6 +138,10 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
     this.reply[index] = true;
     this.response = this.comments[index].reply;
     this.comments[index].reply = "";
+  }
+
+  receiveCategory(event) {
+    console.log(event.value);
   }
 
   ngOnDestroy() {
