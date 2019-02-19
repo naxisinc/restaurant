@@ -1,30 +1,34 @@
-<div id="toolbar">
-  <div id="back-btn">
-    <button mat-button routerLink="/plates">
-      <i class="material-icons"> arrow_back_ios </i>Back
-    </button>
+<div id="container">
+  <div ng2-carouselamos
+    class="slades-wrapper"
+    [items]="items"
+    [width]="200"
+    [$prev]="prev"
+    [$next]="next"
+    [$item]="item"
+    (onSelectedItem)="onSelectedItem($event.item._id)">
   </div>
 
-  <!-- <div id="categories">
-    <app-select
-      [parentForm]="parentForm"
-      (category)="receiveCategory($event)"
-    ></app-select>
-  </div> -->
-  <div id="dish">
-    <ngb-carousel style="background: green;" (slide)="onSlideEvent($event)">
-      <ng-template ngbSlide *ngFor="let plate of plates">
-        <img [src]="plate.img" alt="Random first slide" />
-        <div class="carousel-caption">
-          <h3>First slide label</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-        </div>
-      </ng-template>
-    </ngb-carousel>
-  </div>
+  <ng-template #prev>
+    <i class="material-icons">arrow_back_ios</i>
+  </ng-template>
+
+  <ng-template #next>
+    <i class="material-icons">arrow_forward_ios</i>
+  </ng-template>
+
+  <ng-template #item
+    let-item
+    let-i="index">
+
+    <div class="items">
+      <img src="http://localhost:3000/images/{{ item.img }}">
+    </div>
+
+  </ng-template>
 </div>
 <mat-divider></mat-divider>
-<!-- <mat-list>
+<mat-list>
   <mat-list-item *ngFor="let comment of comments; let i = index">
     <img matListAvatar
       src="../../../../assets/images/avatars/images.jpg"
@@ -90,4 +94,4 @@
 
     <mat-divider></mat-divider>
   </mat-list-item>
-</mat-list> -->
+</mat-list>

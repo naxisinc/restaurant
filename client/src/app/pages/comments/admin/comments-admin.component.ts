@@ -1,19 +1,15 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material";
-import { NgbCarouselConfig } from "@ng-bootstrap/ng-bootstrap";
 import { CommentsAdminService } from "../../../services/admin/comments-admin.service";
 import { DialogsComponent } from "../../../components/dialogs/dialogs.component";
 import { SubjectService } from "src/app/services/subject.service";
 import { PlatesService } from "../../../services/plates.service";
-// import { CategoriesService } from "../../../services/categories.service";
 
 @Component({
   selector: "app-comments-admin",
   templateUrl: "./comments-admin.component.html",
-  styleUrls: ["./comments-admin.component.scss"],
-  providers: [NgbCarouselConfig] // add NgbCarouselConfig to the component providers
+  styleUrls: ["./comments-admin.component.scss"]
 })
 export class CommentsAdminComponent implements OnInit, OnDestroy {
   comments: Object;
@@ -21,43 +17,34 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
   response: string; // store the admin reply text
   petitioner: Object; // delete petitioner can by 'post' or 'reply'
   plateId: String = localStorage.getItem("plate");
-  plates: any;
-
-  // Esto no lo necesito pero lo tengo q poner
-  // para poder usar el mismo <app-select> de dishes
-  // parentForm = this.fb.group({
-  //   category: ["", [Validators.required]]
-  // });
+  items: any; // Items del carousel
 
   constructor(
     private commentsAdminService: CommentsAdminService,
     private router: Router,
     private dialog: MatDialog,
     private subject: SubjectService,
-    private platesService: PlatesService,
-    // private categoriesService: CategoriesService,
-    private fb: FormBuilder,
-    config: NgbCarouselConfig
-  ) {
-    // customize default values of carousels used by this component tree
-    config.interval = 10000;
-    config.wrap = true; // Whether can wrap from the last to the first slide. Default true
-    config.keyboard = false; //A flag for allowing navigation via keyboard. Default true
-    config.pauseOnHover = true;
+    private platesService: PlatesService
+  ) {}
+
+  async ngOnInit() {
+    await this.getPlates();
+    if (this.plateId) {
+      /* Aqui va la selection del plato en el carousel */
+      this.onSelectedItem(this.plateId);
+    } else {
+      this.onSelectedItem(this.items[0]._id);
+    }
   }
 
-  ngOnInit() {
-    this.getPlates();
+  async getPlates() {
+    this.items = await this.platesService.getPlates().toPromise();
   }
 
-  getPlates() {
-    this.platesService.getPlates().subscribe(
+  onSelectedItem(plateId) {
+    this.commentsAdminService.getCommentByPlateId(plateId).subscribe(
       succ => {
-        this.plates = succ;
-        // Put the image path
-        this.plates.forEach(plate => {
-          plate.img = "http://localhost:3000/images/" + plate.img;
-        });
+        this.comments = succ;
       },
       err => {
         //
@@ -65,28 +52,20 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSlideEvent(event) {
-    console.log(event.current);
-    // this.currentSlide = event.current;
-    // this.slide.emit({
-    //   current: this.currentPic
-    // })
-  }
-
-  getComments() {
-    if (!this.plateId) {
-      this.router.navigate(["/"]); // redirect home
-    } else {
-      this.commentsAdminService.getCommentByPlateId(this.plateId).subscribe(
-        succ => {
-          this.comments = succ;
-        },
-        err => {
-          //
-        }
-      );
-    }
-  }
+  // getComments() {
+  //   if (!this.plateId) {
+  //     this.router.navigate(["/"]); // redirect home
+  //   } else {
+  //     this.commentsAdminService.getCommentByPlateId(this.plateId).subscribe(
+  //       succ => {
+  //         this.comments = succ;
+  //       },
+  //       err => {
+  //         //
+  //       }
+  //     );
+  //   }
+  // }
 
   replyFn(index) {
     this.response = "";
@@ -150,10 +129,6 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
     this.response = this.comments[index].reply;
     this.comments[index].reply = "";
   }
-
-  // receiveCategory(event) {
-  //   console.log(event.value);
-  // }
 
   ngOnDestroy() {
     localStorage.removeItem("plate");
