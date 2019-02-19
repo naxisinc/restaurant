@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  OnDestroy
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material";
 import { CommentsAdminService } from "../../../services/admin/comments-admin.service";
@@ -18,6 +24,7 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
   petitioner: Object; // delete petitioner can by 'post' or 'reply'
   plateId: String = localStorage.getItem("plate");
   items: any; // Items del carousel
+  @ViewChild("tpl", { read: TemplateRef }) tpl: TemplateRef<null>;
 
   constructor(
     private commentsAdminService: CommentsAdminService,
@@ -67,68 +74,68 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  replyFn(index) {
-    this.response = "";
-    this.reply = [false];
-    this.reply[index] = true;
-  }
+  // replyFn(index) {
+  //   this.response = "";
+  //   this.reply = [false];
+  //   this.reply[index] = true;
+  // }
 
-  openDialog(_id, petitioner): void {
-    // update the petitioner in the SubjectService
-    this.petitioner = {
-      name: petitioner,
-      id: _id
-    };
-    this.subject.changeDeletePetitioner(this.petitioner);
+  // openDialog(_id, petitioner): void {
+  //   // update the petitioner in the SubjectService
+  //   this.petitioner = {
+  //     name: petitioner,
+  //     id: _id
+  //   };
+  //   this.subject.changeDeletePetitioner(this.petitioner);
 
-    const dialogRef = this.dialog.open(DialogsComponent, {
-      width: "300px",
-      data: {}
-    });
+  //   const dialogRef = this.dialog.open(DialogsComponent, {
+  //     width: "300px",
+  //     data: {}
+  //   });
 
-    dialogRef.afterClosed().subscribe(data => {
-      if (data) {
-        if (data.name === "post") {
-          this.commentsAdminService.deleteComment(data.id).subscribe(
-            succ => {
-              this.getComments();
-            },
-            err => {
-              //
-            }
-          );
-        } else if (data.name === "reply") {
-          this.response = "";
-          this.postingReply(data.id);
-        }
-      } else {
-        // console.log("Cancel button was pushed");
-      }
-    });
-  }
+  //   dialogRef.afterClosed().subscribe(data => {
+  //     if (data) {
+  //       if (data.name === "post") {
+  //         this.commentsAdminService.deleteComment(data.id).subscribe(
+  //           succ => {
+  //             this.getComments();
+  //           },
+  //           err => {
+  //             //
+  //           }
+  //         );
+  //       } else if (data.name === "reply") {
+  //         this.response = "";
+  //         this.postingReply(data.id);
+  //       }
+  //     } else {
+  //       // console.log("Cancel button was pushed");
+  //     }
+  //   });
+  // }
 
-  postingReply(commentId) {
-    let obj = {
-      id: commentId,
-      reply: this.response
-    };
-    this.commentsAdminService.patchComment(obj).subscribe(
-      succ => {
-        this.reply = [false];
-        this.response = "";
-        this.getComments();
-      },
-      err => {
-        //
-      }
-    );
-  }
+  // postingReply(commentId) {
+  //   let obj = {
+  //     id: commentId,
+  //     reply: this.response
+  //   };
+  //   this.commentsAdminService.patchComment(obj).subscribe(
+  //     succ => {
+  //       this.reply = [false];
+  //       this.response = "";
+  //       this.getComments();
+  //     },
+  //     err => {
+  //       //
+  //     }
+  //   );
+  // }
 
-  loadEdit(index) {
-    this.reply[index] = true;
-    this.response = this.comments[index].reply;
-    this.comments[index].reply = "";
-  }
+  // loadEdit(index) {
+  //   this.reply[index] = true;
+  //   this.response = this.comments[index].reply;
+  //   this.comments[index].reply = "";
+  // }
 
   ngOnDestroy() {
     localStorage.removeItem("plate");

@@ -1,13 +1,14 @@
 <div id="container">
-  <div ng2-carouselamos
+  <div
+    ng2-carouselamos
     class="slades-wrapper"
     [items]="items"
     [width]="200"
     [$prev]="prev"
     [$next]="next"
     [$item]="item"
-    (onSelectedItem)="onSelectedItem($event.item._id)">
-  </div>
+    (onSelectedItem)="onSelectedItem($event.item._id)"
+  ></div>
 
   <ng-template #prev>
     <i class="material-icons">arrow_back_ios</i>
@@ -17,29 +18,33 @@
     <i class="material-icons">arrow_forward_ios</i>
   </ng-template>
 
-  <ng-template #item
-    let-item
-    let-i="index">
+  <ng-template #tpl></ng-template>
 
+  <ng-template #item let-element let-i="index">
     <div class="items">
-      <img src="http://localhost:3000/images/{{ item.img }}">
+      {{ i }}
+      {{ element._id }}
+      <img src="http://localhost:3000/images/{{ element.img }}" />
     </div>
-
   </ng-template>
 </div>
 <mat-divider></mat-divider>
 <mat-list>
   <mat-list-item *ngFor="let comment of comments; let i = index">
-    <img matListAvatar
+    <img
+      matListAvatar
       src="../../../../assets/images/avatars/images.jpg"
-      alt="" />
+      alt=""
+    />
 
     <div matLine>
-      <star-rating [starType]="'svg'"
+      <star-rating
+        [starType]="'svg'"
         [rating]="comment.rate"
         showHalfStars="true"
         readOnly="true"
-        staticColor="ok">
+        staticColor="ok"
+      >
       </star-rating>
     </div>
 
@@ -53,41 +58,35 @@
       <span> {{ comment.comment }} </span>
     </p>
 
-    <div class="reply"
-      *ngIf="comment.reply"
-      matLine>
+    <div class="reply" *ngIf="comment.reply" matLine>
       <p>
         <span> {{ comment.reply }} </span>
       </p>
-      <button mat-button
-        (click)="loadEdit(i)">Edit</button>
-      <button mat-button
+      <button mat-button (click)="loadEdit(i)">Edit</button>
+      <button
+        mat-button
         (click)="openDialog(comment._id, 'reply')"
-        color="warn">Delete</button>
+        color="warn"
+      >
+        Delete
+      </button>
     </div>
 
-    <div class="reply"
-      *ngIf="reply[i]"
-      matLine>
+    <div class="reply" *ngIf="reply[i]" matLine>
       <mat-form-field matLine>
-        <textarea matInput
+        <textarea
+          matInput
           placeholder="Leave a reply"
-          [(ngModel)]="response"></textarea>
+          [(ngModel)]="response"
+        ></textarea>
       </mat-form-field>
-      <button mat-button
-        (click)="postingReply(comment._id)">Post reply</button>
-      <button mat-button
-        (click)="reply[i] = false">Cancel</button>
+      <button mat-button (click)="postingReply(comment._id)">Post reply</button>
+      <button mat-button (click)="reply[i] = false">Cancel</button>
     </div>
 
-    <div class="btns"
-      *ngIf="!comment.reply && !reply[i]"
-      matLine>
-      <button mat-button
-        (click)="replyFn(i)">Reply</button>
-      <button mat-button
-        (click)="openDialog(comment._id, 'post')"
-        color="warn">
+    <div class="btns" *ngIf="!comment.reply && !reply[i]" matLine>
+      <button mat-button (click)="replyFn(i)">Reply</button>
+      <button mat-button (click)="openDialog(comment._id, 'post')" color="warn">
         Delete
       </button>
     </div>
