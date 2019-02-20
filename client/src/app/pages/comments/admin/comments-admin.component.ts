@@ -1,15 +1,10 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  TemplateRef,
-  OnDestroy
-} from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material";
+import { SwiperConfigInterface } from "ngx-swiper-wrapper";
 import { CommentsAdminService } from "../../../services/admin/comments-admin.service";
 import { DialogsComponent } from "../../../components/dialogs/dialogs.component";
-import { SubjectService } from "src/app/services/subject.service";
+import { SubjectService } from "../../../services/subject.service";
 import { PlatesService } from "../../../services/plates.service";
 
 @Component({
@@ -24,7 +19,29 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
   petitioner: Object; // delete petitioner can by 'post' or 'reply'
   plateId: String = localStorage.getItem("plate");
   items: any; // Items del carousel
-  @ViewChild("tpl", { read: TemplateRef }) tpl: TemplateRef<null>;
+
+  public slides = [
+    { name: "First slide", url: "assets/images/001.jpg" },
+    { name: "Second slide", url: "assets/images/002.jpg" },
+    { name: "Third slide", url: "assets/images/003.jpg" },
+    { name: "Fourth slide", url: "assets/images/004.jpg" },
+    { name: "Fifth slide", url: "assets/images/005.jpg" },
+    { name: "Sixth slide", url: "assets/images/006.jpg" }
+  ];
+
+  public config: SwiperConfigInterface = {
+    a11y: true,
+    slidesPerView: 2,
+    keyboard: true,
+    mousewheel: true,
+    scrollbar: false,
+    navigation: true,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+      hideOnClick: false
+    }
+  };
 
   constructor(
     private commentsAdminService: CommentsAdminService,

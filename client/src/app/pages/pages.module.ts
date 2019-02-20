@@ -2,7 +2,13 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { StarRatingModule } from "angular-star-rating";
-import { Ng2CarouselamosModule } from "ng2-carouselamos";
+// import { Ng2CarouselamosModule } from "ng2-carouselamos";
+import {
+  SwiperModule,
+  SWIPER_CONFIG,
+  SwiperConfigInterface
+} from "ngx-swiper-wrapper";
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 import { PagesRoutingModule } from "./pages-routing.module";
 import { MaterialModule } from "../material";
@@ -17,6 +23,15 @@ import { CommentsAdminComponent } from "./comments/admin/comments-admin.componen
 import { ChangePassComponent } from "./users/change-pass/change-pass.component";
 import { RecoverPassComponent } from "./users/recover-pass/recover-pass.component";
 import { ComponentsModule } from "../components/components.module";
+
+const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
+  observer: true,
+  direction: "horizontal",
+  threshold: 50,
+  spaceBetween: 5,
+  slidesPerView: 1,
+  centeredSlides: true
+};
 
 @NgModule({
   declarations: [
@@ -39,7 +54,15 @@ import { ComponentsModule } from "../components/components.module";
     ReactiveFormsModule,
     ComponentsModule,
     StarRatingModule.forRoot(),
-    Ng2CarouselamosModule
+    // Ng2CarouselamosModule
+    SwiperModule,
+    FlexLayoutModule
+  ],
+  providers: [
+    {
+      provide: SWIPER_CONFIG,
+      useValue: DEFAULT_SWIPER_CONFIG
+    }
   ]
 })
 export class PagesModule {}
