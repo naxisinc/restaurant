@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { StarRatingModule } from "angular-star-rating";
-// import { Ng2CarouselamosModule } from "ng2-carouselamos";
 import {
   SwiperModule,
   SWIPER_CONFIG,
@@ -54,7 +53,6 @@ const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
     ReactiveFormsModule,
     ComponentsModule,
     StarRatingModule.forRoot(),
-    // Ng2CarouselamosModule
     SwiperModule,
     FlexLayoutModule
   ],

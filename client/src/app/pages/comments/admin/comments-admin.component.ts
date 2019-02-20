@@ -18,7 +18,7 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
   response: string; // store the admin reply text
   petitioner: Object; // delete petitioner can by 'post' or 'reply'
   plateId: String = localStorage.getItem("plate");
-  items: any; // Items del carousel
+  plates: any; // Items del carousel
 
   public slides = [
     { name: "First slide", url: "assets/images/001.jpg" },
@@ -49,23 +49,25 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private subject: SubjectService,
     private platesService: PlatesService
-  ) {}
+  ) {
+    // this.config.initialSlide = 1;
+  }
 
   async ngOnInit() {
+    // this.config.initialSlide = 1;
     await this.getPlates();
     if (this.plateId) {
-      /* Aqui va la selection del plato en el carousel */
-      this.onSelectedItem(this.plateId);
+      this.getCommentsByPlateId(this.plateId);
     } else {
-      this.onSelectedItem(this.items[0]._id);
+      this.getCommentsByPlateId(this.plates[0]._id);
     }
   }
 
   async getPlates() {
-    this.items = await this.platesService.getPlates().toPromise();
+    this.plates = await this.platesService.getPlates().toPromise();
   }
 
-  onSelectedItem(plateId) {
+  getCommentsByPlateId(plateId) {
     this.commentsAdminService.getCommentByPlateId(plateId).subscribe(
       succ => {
         this.comments = succ;
@@ -74,6 +76,9 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
         //
       }
     );
+  }
+  onIndexChange(plateArrPos) {
+    this.getCommentsByPlateId(this.plates[plateArrPos]._id);
   }
 
   // getComments() {
