@@ -1,28 +1,35 @@
-<div class="box-container"
+<div
+  class="box-container"
   fxLayout="column"
-  [ngStyle.lt-sm]="'min-height: 800px;'">
-  <div class="horizontal-container"
+  [ngStyle.lt-sm]="'min-height: 800px;'"
+>
+  <div
+    class="horizontal-container"
     fxLayout="row"
     fxLayout.lt-sm="column"
     fxLayoutAlign="stretch"
-    fxFlex="auto">
-    <div class="vertical-container"
+    fxFlex="auto"
+  >
+    <div
+      class="vertical-container"
       fxLayout="column"
       fxLayoutAlign="stretch"
-      fxFlex="100%">
-      <div class="content-container"
+      fxFlex="100%"
+    >
+      <div
+        class="content-container"
         fxLayout="column"
         fxLayoutAlign="stretch"
-        fxFlex="auto">
-        <swiper class="swiper-container"
+        fxFlex="auto"
+      >
+        <swiper
+          class="swiper-container"
           fxFlex="auto"
           [config]="config"
-          (indexChange)="onIndexChange($event)">
-          <div *ngFor="let slide of plates"
-            class="swiper-slide">
-            <div fxLayout="column"
-              fxLayoutAlign="center center"
-              fxFlexFill>
+          (indexChange)="onIndexChange($event)"
+        >
+          <div *ngFor="let slide of plates" class="swiper-slide">
+            <div fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
               {{ slide.description }}
               <img src="http://localhost:3000/images/{{ slide.img }}" />
             </div>
@@ -33,7 +40,9 @@
   </div>
 </div>
 <mat-divider></mat-divider>
-<mat-list>
+<div *ngFor="let comment of commentsOfSelectedPlate">*</div>
+
+<!-- <mat-list>
   <mat-list-item *ngFor="let comment of comments; let i = index">
     <img matListAvatar
       src="../../../../assets/images/avatars/images.jpg"
@@ -101,4 +110,4 @@
 
     <mat-divider></mat-divider>
   </mat-list-item>
-</mat-list>
+</mat-list> -->

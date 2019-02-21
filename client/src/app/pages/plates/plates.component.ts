@@ -316,7 +316,8 @@ export class PlatesComponent implements OnInit {
     this.selected = null;
   }
 
-  seeComments(plateId) {
+  seeComments(plateId, index) {
     localStorage.setItem("plate", plateId);
+    localStorage.setItem("index", index);
   }
 }

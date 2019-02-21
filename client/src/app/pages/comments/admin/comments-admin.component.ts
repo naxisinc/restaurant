@@ -18,16 +18,8 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
   response: string; // store the admin reply text
   petitioner: Object; // delete petitioner can by 'post' or 'reply'
   plateId: String = localStorage.getItem("plate");
+  plateIndex: number = parseInt(localStorage.getItem("index"));
   plates: any; // Items del carousel
-
-  public slides = [
-    { name: "First slide", url: "assets/images/001.jpg" },
-    { name: "Second slide", url: "assets/images/002.jpg" },
-    { name: "Third slide", url: "assets/images/003.jpg" },
-    { name: "Fourth slide", url: "assets/images/004.jpg" },
-    { name: "Fifth slide", url: "assets/images/005.jpg" },
-    { name: "Sixth slide", url: "assets/images/006.jpg" }
-  ];
 
   public config: SwiperConfigInterface = {
     a11y: true,
@@ -49,36 +41,45 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private subject: SubjectService,
     private platesService: PlatesService
-  ) {
-    // this.config.initialSlide = 1;
+  ) {}
+
+  ngOnInit() {
+    this.config.initialSlide = this.plateIndex ? this.plateIndex : 0;
+    this.getData();
+    setTimeout(() => {
+      if (!this.plateId) {
+        this.commentsOfSelectedPlate = this.plates[0].comments;
+      }
+    }, 2000);
   }
 
-  async ngOnInit() {
-    // this.config.initialSlide = 1;
-    await this.getPlates();
-    if (this.plateId) {
-      this.getCommentsByPlateId(this.plateId);
-    } else {
-      this.getCommentsByPlateId(this.plates[0]._id);
-    }
+  commentsOfSelectedPlate: Array<Object>;
+  onIndexChange(index) {
+    this.commentsOfSelectedPlate = this.plates[index].comments;
   }
 
-  async getPlates() {
-    this.plates = await this.platesService.getPlates().toPromise();
-  }
-
-  getCommentsByPlateId(plateId) {
-    this.commentsAdminService.getCommentByPlateId(plateId).subscribe(
+  getData() {
+    this.platesService.getPlates().subscribe(
       succ => {
-        this.comments = succ;
+        this.plates = succ;
+        this.plates.forEach((plate, index) => {
+          this.commentsAdminService.getCommentByPlateId(plate._id).subscribe(
+            succ => {
+              this.plates[index].comments = succ;
+              if (this.plateId && this.plates[index]._id === this.plateId) {
+                this.commentsOfSelectedPlate = this.plates[index].comments;
+              }
+            },
+            err => {
+              console.log(err);
+            }
+          );
+        });
       },
       err => {
-        //
+        console.log(err);
       }
     );
-  }
-  onIndexChange(plateArrPos) {
-    this.getCommentsByPlateId(this.plates[plateArrPos]._id);
   }
 
   // getComments() {
@@ -161,5 +162,6 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     localStorage.removeItem("plate");
+    localStorage.removeItem("index");
   }
 }
