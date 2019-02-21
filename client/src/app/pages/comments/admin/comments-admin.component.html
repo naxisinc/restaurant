@@ -40,20 +40,22 @@
   </div>
 </div>
 <mat-divider></mat-divider>
-<div *ngFor="let comment of commentsOfSelectedPlate">*</div>
-
-<!-- <mat-list>
-  <mat-list-item *ngFor="let comment of comments; let i = index">
-    <img matListAvatar
+<mat-list>
+  <mat-list-item *ngFor="let comment of commentsOfSelectedPlate; let i = index">
+    <img
+      matListAvatar
       src="../../../../assets/images/avatars/images.jpg"
-      alt="" />
+      alt=""
+    />
 
     <div matLine>
-      <star-rating [starType]="'svg'"
+      <star-rating
+        [starType]="'svg'"
         [rating]="comment.rate"
         showHalfStars="true"
         readOnly="true"
-        staticColor="ok">
+        staticColor="ok"
+      >
       </star-rating>
     </div>
 
@@ -67,47 +69,39 @@
       <span> {{ comment.comment }} </span>
     </p>
 
-    <div class="reply"
-      *ngIf="comment.reply"
-      matLine>
+    <div class="reply" *ngIf="comment.reply" matLine>
       <p>
         <span> {{ comment.reply }} </span>
       </p>
-      <button mat-button
-        (click)="loadEdit(i)">Edit</button>
-      <button mat-button
+      <button mat-button (click)="loadEdit(i)">Edit</button>
+      <button
+        mat-button
         (click)="openDialog(comment._id, 'reply')"
-        color="warn">
+        color="warn"
+      >
         Delete
       </button>
     </div>
 
-    <div class="reply"
-      *ngIf="reply[i]"
-      matLine>
+    <div class="reply" *ngIf="reply[i]" matLine>
       <mat-form-field matLine>
-        <textarea matInput
+        <textarea
+          matInput
           placeholder="Leave a reply"
-          [(ngModel)]="response"></textarea>
+          [(ngModel)]="response"
+        ></textarea>
       </mat-form-field>
-      <button mat-button
-        (click)="postingReply(comment._id)">Post reply</button>
-      <button mat-button
-        (click)="reply[i] = false">Cancel</button>
+      <button mat-button (click)="postingReply(comment._id)">Post reply</button>
+      <button mat-button (click)="reply[i] = false">Cancel</button>
     </div>
 
-    <div class="btns"
-      *ngIf="!comment.reply && !reply[i]"
-      matLine>
-      <button mat-button
-        (click)="replyFn(i)">Reply</button>
-      <button mat-button
-        (click)="openDialog(comment._id, 'post')"
-        color="warn">
+    <div class="btns" *ngIf="!comment.reply && !reply[i]" matLine>
+      <button mat-button (click)="replyFn(i)">Reply</button>
+      <button mat-button (click)="openDialog(comment._id, 'post')" color="warn">
         Delete
       </button>
     </div>
 
     <mat-divider></mat-divider>
   </mat-list-item>
-</mat-list> -->
+</mat-list>

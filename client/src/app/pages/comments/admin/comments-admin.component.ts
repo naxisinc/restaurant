@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material";
 import { SwiperConfigInterface } from "ngx-swiper-wrapper";
 import { CommentsAdminService } from "../../../services/admin/comments-admin.service";
@@ -13,7 +12,6 @@ import { PlatesService } from "../../../services/plates.service";
   styleUrls: ["./comments-admin.component.scss"]
 })
 export class CommentsAdminComponent implements OnInit, OnDestroy {
-  comments: Object;
   reply: Boolean[] = [false];
   response: string; // store the admin reply text
   petitioner: Object; // delete petitioner can by 'post' or 'reply'
@@ -37,7 +35,6 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
 
   constructor(
     private commentsAdminService: CommentsAdminService,
-    private router: Router,
     private dialog: MatDialog,
     private subject: SubjectService,
     private platesService: PlatesService
@@ -46,11 +43,6 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.config.initialSlide = this.plateIndex ? this.plateIndex : 0;
     this.getData();
-    setTimeout(() => {
-      if (!this.plateId) {
-        this.commentsOfSelectedPlate = this.plates[0].comments;
-      }
-    }, 2000);
   }
 
   commentsOfSelectedPlate: Array<Object>;
@@ -68,97 +60,86 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
               this.plates[index].comments = succ;
               if (this.plateId && this.plates[index]._id === this.plateId) {
                 this.commentsOfSelectedPlate = this.plates[index].comments;
+              } else if (!this.plateId && index === 0) {
+                this.commentsOfSelectedPlate = this.plates[0].comments;
               }
             },
-            err => {
-              console.log(err);
-            }
+            err => console.log(err)
           );
         });
       },
-      err => {
-        console.log(err);
-      }
+      err => console.log(err)
     );
   }
 
-  // getComments() {
-  //   if (!this.plateId) {
-  //     this.router.navigate(["/"]); // redirect home
-  //   } else {
-  //     this.commentsAdminService.getCommentByPlateId(this.plateId).subscribe(
-  //       succ => {
-  //         this.comments = succ;
-  //       },
-  //       err => {
-  //         //
-  //       }
-  //     );
-  //   }
-  // }
+  replyFn(index) {
+    this.response = "";
+    this.reply = [false];
+    this.reply[index] = true;
+  }
 
-  // replyFn(index) {
-  //   this.response = "";
-  //   this.reply = [false];
-  //   this.reply[index] = true;
-  // }
+  openDialog(_id, petitioner): void {
+    // update the petitioner in the SubjectService
+    this.petitioner = {
+      name: petitioner,
+      id: _id
+    };
+    this.subject.changeDeletePetitioner(this.petitioner);
 
-  // openDialog(_id, petitioner): void {
-  //   // update the petitioner in the SubjectService
-  //   this.petitioner = {
-  //     name: petitioner,
-  //     id: _id
-  //   };
-  //   this.subject.changeDeletePetitioner(this.petitioner);
+    const dialogRef = this.dialog.open(DialogsComponent, {
+      width: "300px",
+      data: {}
+    });
 
-  //   const dialogRef = this.dialog.open(DialogsComponent, {
-  //     width: "300px",
-  //     data: {}
-  //   });
+    dialogRef.afterClosed().subscribe(data => {
+      if (data) {
+        if (data.name === "post") {
+          // Delete comment from database
+          this.commentsAdminService.deleteComment(data.id).subscribe(
+            succ => {
+              // Update view array
+              this.commentsOfSelectedPlate = this.commentsOfSelectedPlate.filter(
+                comment => comment["_id"] !== data.id
+              );
+            },
+            err => console.log(err)
+          );
+        } else if (data.name === "reply") {
+          this.response = "";
+          this.postingReply(data.id);
+        }
+      } else {
+        // console.log("Dialog was close");
+      }
+    });
+  }
 
-  //   dialogRef.afterClosed().subscribe(data => {
-  //     if (data) {
-  //       if (data.name === "post") {
-  //         this.commentsAdminService.deleteComment(data.id).subscribe(
-  //           succ => {
-  //             this.getComments();
-  //           },
-  //           err => {
-  //             //
-  //           }
-  //         );
-  //       } else if (data.name === "reply") {
-  //         this.response = "";
-  //         this.postingReply(data.id);
-  //       }
-  //     } else {
-  //       // console.log("Cancel button was pushed");
-  //     }
-  //   });
-  // }
+  postingReply(commentId) {
+    let obj = {
+      id: commentId,
+      reply: this.response
+    };
+    // Modify the comment in the database
+    this.commentsAdminService.patchComment(obj).subscribe(
+      succ => {
+        // Update view array
+        this.commentsOfSelectedPlate.forEach(comment => {
+          if (comment["_id"] === commentId) {
+            comment["reply"] = this.response;
+          }
+        });
+        this.reply = [false];
+        this.response = "";
+      },
+      err => console.log(err)
+    );
+  }
 
-  // postingReply(commentId) {
-  //   let obj = {
-  //     id: commentId,
-  //     reply: this.response
-  //   };
-  //   this.commentsAdminService.patchComment(obj).subscribe(
-  //     succ => {
-  //       this.reply = [false];
-  //       this.response = "";
-  //       this.getComments();
-  //     },
-  //     err => {
-  //       //
-  //     }
-  //   );
-  // }
-
-  // loadEdit(index) {
-  //   this.reply[index] = true;
-  //   this.response = this.comments[index].reply;
-  //   this.comments[index].reply = "";
-  // }
+  loadEdit(index) {
+    this.reply[index] = true;
+    this.response = this.commentsOfSelectedPlate[index]["reply"];
+    this.commentsOfSelectedPlate[index]["reply"] = "";
+  }
 
   ngOnDestroy() {
     localStorage.removeItem("plate");
