@@ -1,17 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
-import { FormControl, Validators } from '@angular/forms';
-import { SizesService } from 'src/app/services/sizes.service';
-import { MyErrorStateMatcher } from '../../services/validator.service';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { MatSort, MatTableDataSource, MatPaginator } from "@angular/material";
+import { FormControl, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { SizesService } from "../../services/sizes.service";
+import { MyErrorStateMatcher } from "../../services/validator.service";
 
 @Component({
-  selector: 'app-sizes',
-  templateUrl: './sizes.component.html',
-  styleUrls: ['./sizes.component.scss']
+  selector: "app-sizes",
+  templateUrl: "./sizes.component.html",
+  styleUrls: ["./sizes.component.scss"]
 })
 export class SizesComponent implements OnInit {
   listData: MatTableDataSource<any>;
-  displayedColumns: string[] = ['description'];
+  displayedColumns: string[] = ["description"];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   searchKey: string;
@@ -19,7 +20,7 @@ export class SizesComponent implements OnInit {
   isSelected: boolean = false;
   selected: Object;
 
-  sizeFormControl = new FormControl('', [
+  sizeFormControl = new FormControl("", [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(20)
@@ -27,7 +28,7 @@ export class SizesComponent implements OnInit {
 
   matcher = new MyErrorStateMatcher();
 
-  constructor(private sizeService: SizesService) {}
+  constructor(private sizeService: SizesService, private router: Router) {}
 
   ngOnInit() {
     this.getSizes();
@@ -41,12 +42,12 @@ export class SizesComponent implements OnInit {
         this.listData.sort = this.sort;
         this.listData.paginator = this.paginator;
       },
-      err => {}
+      err => console.log(err)
     );
   }
 
   onSearchClear() {
-    this.searchKey = '';
+    this.searchKey = "";
     this.applyFilter();
   }
 
@@ -65,17 +66,21 @@ export class SizesComponent implements OnInit {
     this.sizeService.postSize(obj).subscribe(
       succ => {
         this.getSizes();
+        // this.listData.filteredData.push(succ);
         this.sizeFormControl.reset();
       },
-      error => {
-        console.log('Something is wrong');
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        }
       }
     );
   }
 
   edit() {
     let obj = {
-      id: this.selected['_id'],
+      id: this.selected["_id"],
       description: this.sizeFormControl.value
     };
     this.sizeService.patchSize(obj).subscribe(
@@ -84,21 +89,27 @@ export class SizesComponent implements OnInit {
         this.sizeFormControl.reset();
         this.isSelected = false;
       },
-      error => {
-        console.log('Something is wrong');
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        }
       }
     );
   }
 
   delete() {
-    this.sizeService.deleteSize(this.selected['_id']).subscribe(
+    this.sizeService.deleteSize(this.selected["_id"]).subscribe(
       succ => {
         this.getSizes();
         this.sizeFormControl.reset();
         this.isSelected = false;
       },
-      error => {
-        console.log('Something is wrong');
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        }
       }
     );
   }

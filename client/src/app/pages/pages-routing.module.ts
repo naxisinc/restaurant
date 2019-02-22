@@ -10,21 +10,35 @@ import { PlatesComponent } from "./plates/plates.component";
 import { CommentsAdminComponent } from "./comments/admin/comments-admin.component";
 import { RecoverPassComponent } from "./users/recover-pass/recover-pass.component";
 import { ChangePassComponent } from "./users/change-pass/change-pass.component";
+import { TimerComponent } from "./timer/timer.component"; //
 import { AuthGuard } from "../guards/auth.guard";
 
 const routes: Routes = [
+  { path: "timer", component: TimerComponent }, //
   { path: "home", component: HomeComponent },
   { path: "login", component: LoginComponent },
-  { path: "sizes", component: SizesComponent },
-  { path: "categories", component: CategoriesComponent },
-  { path: "ingredients", component: IngredientsComponent },
-  { path: "plates", component: PlatesComponent },
+  { path: "admin/sizes", component: SizesComponent, canActivate: [AuthGuard] },
+  {
+    path: "admin/categories",
+    component: CategoriesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "admin/ingredients",
+    component: IngredientsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "admin/plates",
+    component: PlatesComponent,
+    canActivate: [AuthGuard]
+  },
   {
     path: "admin/comments",
     component: CommentsAdminComponent,
     canActivate: [AuthGuard]
   },
-  { path: "users", component: UsersComponent },
+  { path: "users", component: UsersComponent, canActivate: [AuthGuard] },
   { path: "recoverpass", component: RecoverPassComponent },
   { path: "changepass", component: ChangePassComponent }
 ];

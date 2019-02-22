@@ -22,6 +22,7 @@ import { CommentsAdminComponent } from "./comments/admin/comments-admin.componen
 import { ChangePassComponent } from "./users/change-pass/change-pass.component";
 import { RecoverPassComponent } from "./users/recover-pass/recover-pass.component";
 import { ComponentsModule } from "../components/components.module";
+import { TimerComponent } from './timer/timer.component';
 
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
   observer: true,
@@ -43,7 +44,8 @@ const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
     PlatesComponent,
     CommentsAdminComponent,
     ChangePassComponent,
-    RecoverPassComponent
+    RecoverPassComponent,
+    TimerComponent
   ],
   imports: [
     CommonModule,
