@@ -3,9 +3,9 @@ import { Component } from "@angular/core";
 @Component({
   selector: "app-root",
   template: `
-    <section class="mat-typography">
-      <app-main-nav><router-outlet></router-outlet></app-main-nav>
-    </section>
+    <app-layout
+      ><section class="mat-typography"><router-outlet></router-outlet></section
+    ></app-layout>
   `,
   styleUrls: ["./app.component.scss"]
 })

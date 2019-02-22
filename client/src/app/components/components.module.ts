@@ -5,14 +5,14 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { MaterialModule } from "../material";
 import { FooterComponent } from "./footer/footer.component";
-import { MainNavComponent } from "./main-nav/main-nav.component";
 import { ChipsComponent } from "./chips/chips.component";
 import { SelectComponent } from "./select/select.component";
 import { DialogsComponent } from "./dialogs/dialogs.component";
+import { LayoutComponent } from "./layout/layout.component";
 
 const COMPONENTS = [
   FooterComponent,
-  MainNavComponent,
+  LayoutComponent,
   ChipsComponent,
   SelectComponent,
   DialogsComponent

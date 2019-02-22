@@ -3,17 +3,17 @@
 }
 
 .sidenav {
-  width: 10rem;
+  width: 200px;
 }
 
-// .sidenav .mat-toolbar {
-//   background: inherit;
-// }
+.sidenav .mat-toolbar {
+  background: inherit;
+}
 
 .mat-toolbar.mat-primary {
   position: sticky;
   top: 0;
-  z-index: 3;
+  z-index: 1;
 }
 
 // Mias
@@ -21,7 +21,7 @@
   flex: 1 1 auto;
 }
 
-.mat-toolbar a {
+.mat-toolbar li {
   display: inline-block;
   margin: 0 10px;
   color: white;

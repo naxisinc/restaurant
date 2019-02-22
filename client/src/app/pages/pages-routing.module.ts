@@ -10,6 +10,7 @@ import { PlatesComponent } from "./plates/plates.component";
 import { CommentsAdminComponent } from "./comments/admin/comments-admin.component";
 import { RecoverPassComponent } from "./users/recover-pass/recover-pass.component";
 import { ChangePassComponent } from "./users/change-pass/change-pass.component";
+import { AuthGuard } from "../guards/auth.guard";
 
 const routes: Routes = [
   { path: "home", component: HomeComponent },
@@ -18,7 +19,11 @@ const routes: Routes = [
   { path: "categories", component: CategoriesComponent },
   { path: "ingredients", component: IngredientsComponent },
   { path: "plates", component: PlatesComponent },
-  { path: "admin/comments", component: CommentsAdminComponent },
+  {
+    path: "admin/comments",
+    component: CommentsAdminComponent,
+    canActivate: [AuthGuard]
+  },
   { path: "users", component: UsersComponent },
   { path: "recoverpass", component: RecoverPassComponent },
   { path: "changepass", component: ChangePassComponent }

@@ -6,13 +6,11 @@ import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 
 @Component({
-  selector: "app-main-nav",
-  templateUrl: "./main-nav.component.html",
-  styleUrls: ["./main-nav.component.scss"]
+  selector: "app-layout",
+  templateUrl: "./layout.component.html",
+  styleUrls: ["./layout.component.scss"]
 })
-export class MainNavComponent {
-  admin: boolean = true;
-
+export class LayoutComponent {
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
