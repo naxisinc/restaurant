@@ -64,7 +64,8 @@ UserSchema.methods.generateAuthToken = function(type) {
       {
         _id: user._id.toHexString(),
         access,
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 //1hr
+        // exp: Math.floor(Date.now() / 1000) + 60 * 60 //1hr
+        exp: Math.floor(Date.now() / 1000) + 60 * 1 //1min
       },
       config.secret
     )

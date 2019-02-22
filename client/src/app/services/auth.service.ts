@@ -1,11 +1,30 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { JwtHelperService } from "@auth0/angular-jwt";
+import { Subject, Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root"
 })
 export class AuthService {
+  //
+  _userActionOccured: Subject<void> = new Subject();
+  get userActionOccured(): Observable<void> {
+    return this._userActionOccured.asObservable();
+  }
+
+  notifyUserAction() {
+    this._userActionOccured.next();
+  }
+
+  loginUser() {
+    console.log("user login");
+  }
+
+  logOutUser() {
+    console.log("user logout");
+  }
+
   constructor(private http: HttpClient, private helper: JwtHelperService) {}
 
   authenticateUser(credentials) {
