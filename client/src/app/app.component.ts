@@ -17,6 +17,8 @@ export class AppComponent {
   @HostListener("document:click", ["$event"])
   @HostListener("document:wheel", ["$event"])
   resetTimer() {
-    this.authService.notifyUserAction();
+    if (this.authService.loggedIn()) {
+      this.authService.notifyUserAction();
+    }
   }
 }

@@ -9,13 +9,15 @@ import { ChipsComponent } from "./chips/chips.component";
 import { SelectComponent } from "./select/select.component";
 import { DialogsComponent } from "./dialogs/dialogs.component";
 import { LayoutComponent } from "./layout/layout.component";
+import { SessionDialog } from "./layout/layout.component";
 
 const COMPONENTS = [
   FooterComponent,
   LayoutComponent,
   ChipsComponent,
   SelectComponent,
-  DialogsComponent
+  DialogsComponent,
+  SessionDialog
 ];
 
 @NgModule({
@@ -28,6 +30,6 @@ const COMPONENTS = [
     ReactiveFormsModule
   ],
   exports: [COMPONENTS],
-  entryComponents: [DialogsComponent] // para importar el componente dentro de otro component
+  entryComponents: [DialogsComponent, SessionDialog] // para importar el componente dentro de otro component
 })
 export class ComponentsModule {}

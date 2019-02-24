@@ -3,7 +3,6 @@ import { MatDialog } from "@angular/material";
 import { SwiperConfigInterface } from "ngx-swiper-wrapper";
 import { CommentsAdminService } from "../../../services/admin/comments-admin.service";
 import { DialogsComponent } from "../../../components/dialogs/dialogs.component";
-import { SubjectService } from "../../../services/subject.service";
 import { PlatesService } from "../../../services/plates.service";
 
 @Component({
@@ -36,7 +35,6 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
   constructor(
     private commentsAdminService: CommentsAdminService,
     private dialog: MatDialog,
-    private subject: SubjectService,
     private platesService: PlatesService
   ) {}
 
@@ -79,34 +77,31 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
   }
 
   openDialog(_id, petitioner): void {
-    // update the petitioner in the SubjectService
-    this.petitioner = {
-      name: petitioner,
-      id: _id
-    };
-    this.subject.changeDeletePetitioner(this.petitioner);
-
     const dialogRef = this.dialog.open(DialogsComponent, {
       width: "300px",
-      data: {}
+      data: {
+        dialogId: "delete",
+        petitionerName: petitioner,
+        petitionerId: _id
+      }
     });
 
     dialogRef.afterClosed().subscribe(data => {
       if (data) {
-        if (data.name === "post") {
+        if (data.petitionerName === "post") {
           // Delete comment from database
-          this.commentsAdminService.deleteComment(data.id).subscribe(
+          this.commentsAdminService.deleteComment(data.petitionerId).subscribe(
             succ => {
               // Update view array
               this.commentsOfSelectedPlate = this.commentsOfSelectedPlate.filter(
-                comment => comment["_id"] !== data.id
+                comment => comment["_id"] !== data.petitionerId
               );
             },
             err => console.log(err)
           );
-        } else if (data.name === "reply") {
+        } else if (data.petitionerName === "reply") {
           this.response = "";
-          this.postingReply(data.id);
+          this.postingReply(data.petitionerId);
         }
       } else {
         // console.log("Dialog was close");

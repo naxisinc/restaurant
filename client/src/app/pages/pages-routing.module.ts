@@ -10,11 +10,9 @@ import { PlatesComponent } from "./plates/plates.component";
 import { CommentsAdminComponent } from "./comments/admin/comments-admin.component";
 import { RecoverPassComponent } from "./users/recover-pass/recover-pass.component";
 import { ChangePassComponent } from "./users/change-pass/change-pass.component";
-import { TimerComponent } from "./timer/timer.component"; //
 import { AuthGuard } from "../guards/auth.guard";
 
 const routes: Routes = [
-  { path: "timer", component: TimerComponent }, //
   { path: "home", component: HomeComponent },
   { path: "login", component: LoginComponent },
   { path: "admin/sizes", component: SizesComponent, canActivate: [AuthGuard] },

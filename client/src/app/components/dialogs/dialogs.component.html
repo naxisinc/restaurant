@@ -1,16 +1,20 @@
 <section class="mat-typography">
-  <h1 mat-dialog-title>Alert</h1>
-  <div mat-dialog-content>
-    <p>Would you like to delete this <strong>{{ petitioner.name }}</strong> ?</p>
+
+  <div *ngIf="data.dialogId === 'delete'">
+    <h1 mat-dialog-title>Alert</h1>
+    <div mat-dialog-content>
+      <p>Would you like to delete this <strong>{{ data.petitionerName }}</strong> ?</p>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button
+        [mat-dialog-close]="data"
+        color="warn">
+        Delete
+      </button>
+      <button mat-button
+        mat-dialog-close=""
+        cdkFocusInitial>Cancel</button>
+    </div>
   </div>
-  <div mat-dialog-actions>
-    <button mat-button
-      [mat-dialog-close]="petitioner"
-      color="warn">
-      Delete
-    </button>
-    <button mat-button
-      mat-dialog-close=""
-      cdkFocusInitial>Cancel</button>
-  </div>
+
 </section>

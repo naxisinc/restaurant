@@ -7,7 +7,6 @@ import { Subject, Observable } from "rxjs";
   providedIn: "root"
 })
 export class AuthService {
-  //
   _userActionOccured: Subject<void> = new Subject();
   get userActionOccured(): Observable<void> {
     return this._userActionOccured.asObservable();
@@ -15,14 +14,6 @@ export class AuthService {
 
   notifyUserAction() {
     this._userActionOccured.next();
-  }
-
-  loginUser() {
-    console.log("user login");
-  }
-
-  logOutUser() {
-    console.log("user logout");
   }
 
   constructor(private http: HttpClient, private helper: JwtHelperService) {}

@@ -5,12 +5,12 @@ import { BehaviorSubject } from "rxjs";
   providedIn: "root"
 })
 export class SubjectService {
-  private deleteMsg = new BehaviorSubject(null);
-  currentDeletePetitioner = this.deleteMsg.asObservable();
-
   constructor() {}
 
-  changeDeletePetitioner(petitioner: object) {
-    this.deleteMsg.next(petitioner);
+  private time = new BehaviorSubject(null);
+  currentTime = this.time.asObservable();
+
+  changeTime(time: object) {
+    this.time.next(time);
   }
 }
