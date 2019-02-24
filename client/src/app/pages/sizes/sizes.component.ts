@@ -66,14 +66,13 @@ export class SizesComponent implements OnInit {
     this.sizeService.postSize(obj).subscribe(
       succ => {
         this.getSizes();
-        // this.listData.filteredData.push(succ);
         this.sizeFormControl.reset();
       },
       err => {
         // Unauthorized
         if (err.status === 401) {
           this.router.navigate(["login"]);
-        }
+        } else console.log(err);
       }
     );
   }
@@ -93,7 +92,7 @@ export class SizesComponent implements OnInit {
         // Unauthorized
         if (err.status === 401) {
           this.router.navigate(["login"]);
-        }
+        } else console.log(err);
       }
     );
   }
@@ -109,7 +108,7 @@ export class SizesComponent implements OnInit {
         // Unauthorized
         if (err.status === 401) {
           this.router.navigate(["login"]);
-        }
+        } else console.log(err);
       }
     );
   }

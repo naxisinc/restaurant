@@ -33,6 +33,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   onLogoutClick() {
     this.authService.logout().subscribe(
       res => {
+        // console.log(res);
         this.router.navigate(["home"]);
         localStorage.clear();
       },

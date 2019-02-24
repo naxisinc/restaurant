@@ -52,8 +52,8 @@ export class AuthService {
       "x-auth": localStorage.getItem("x-auth")
     });
     return this.http.delete("http://localhost:3000/users/logout", {
-      headers,
-      observe: "response"
+      headers
+      // observe: "response"
     });
   }
 

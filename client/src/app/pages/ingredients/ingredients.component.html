@@ -1,108 +1,94 @@
 <div id="grid-div">
+  <div id="viewName">
+    <header>Ingredients</header>
+  </div>
   <div class="search-div">
-    <mat-form-field class="search-form-field" floatLabel="never">
-      <input
-        matInput
+    <mat-form-field class="search-form-field"
+      floatLabel="never">
+      <input matInput
         [(ngModel)]="searchKey"
         placeholder="Search..."
         autocomplete="off"
-        (keyup)="search($event.target.value)"
-      />
-      <button
-        mat-button
+        (keyup)="search($event.target.value)" />
+      <button mat-button
         matSuffix
         mat-icon-button
         arial-label="Clear"
         *ngIf="searchKey"
-        (click)="onSearchClear()"
-      >
+        (click)="onSearchClear()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
   </div>
   <div class="mat-elevation-z8">
-    <mat-grid-list
-      *ngIf="listData?.length > 0"
-      cols="3"
+    <mat-grid-list *ngIf="listData?.length > 0"
+      [cols]="breakpointContent"
+      (window:resize)="onResize($event.target)"
       rowHeight="300px"
-      gutterSize="5px"
-    >
-      <mat-grid-tile
-        *ngFor="let tile of listData"
+      gutterSize="5px">
+      <mat-grid-tile *ngFor="let tile of listData"
         (click)="show(tile)"
-        class="pointer"
-      >
-        <img src="{{ imgPath }}{{ tile.img }}" alt="" width="250" />
+        class="pointer">
+        <img src="{{ imgPath }}{{ tile.img }}"
+          alt=""
+          width="250" />
         <mat-grid-tile-footer>{{ tile.description }}</mat-grid-tile-footer>
       </mat-grid-tile>
     </mat-grid-list>
-    <div class="noData-div" *ngIf="listData?.length === 0">No Data.</div>
+    <div class="noData-div"
+      *ngIf="listData?.length === 0">No Data.</div>
 
-    <mat-paginator
-      [length]="length"
+    <mat-paginator [length]="length"
       [pageSizeOptions]="pageSizeOptions"
       [pageSize]="pageSize"
-      (page)="paged($event)"
-    ></mat-paginator>
+      (page)="paged($event)"></mat-paginator>
   </div>
 </div>
 <div id="actions-div">
   <div class="cud-div">
-    <form [formGroup]="IngredientForm" enctype="multipart/form-data">
+    <form [formGroup]="IngredientForm"
+      enctype="multipart/form-data">
       <mat-form-field>
-        <input
-          matInput
+        <input matInput
           placeholder="Description"
           formControlName="description"
-          [errorStateMatcher]="matcher"
-        />
-        <mat-error
-          *ngIf="IngredientForm.controls.description.hasError('required')"
-          >Description is <strong>required.</strong></mat-error
-        >
-        <mat-error
-          *ngIf="IngredientForm.controls.description.hasError('minlength')"
-          >The description must be at least 3 characters long.</mat-error
-        >
-        <mat-error
-          *ngIf="IngredientForm.controls.description.hasError('maxlength')"
-          >The description must have less that 50 characters.</mat-error
-        >
+          [errorStateMatcher]="matcher" />
+        <mat-error *ngIf="IngredientForm.controls.description.hasError('required')">Description is
+          <strong>required.</strong></mat-error>
+        <mat-error *ngIf="IngredientForm.controls.description.hasError('minlength')">The description must be
+          at least 3 characters long.</mat-error>
+        <mat-error *ngIf="IngredientForm.controls.description.hasError('maxlength')">The description must have
+          less that 50 characters.</mat-error>
       </mat-form-field>
-      <input class="btn-file" type="file" #fileInput formControlName="file" />
+      <input class="btn-file"
+        type="file"
+        #fileInput
+        formControlName="file" />
     </form>
-    <button
-      mat-stroked-button
+    <button mat-stroked-button
       color="primary"
       (click)="add()"
       *ngIf="!isSelected"
-      [disabled]="IngredientForm.invalid"
-    >
+      [disabled]="IngredientForm.invalid">
       Add
     </button>
-    <button
-      mat-stroked-button
+    <button mat-stroked-button
       color="primary"
       (click)="edit()"
       *ngIf="isSelected"
-      [disabled]="IngredientForm.controls.description.invalid"
-    >
+      [disabled]="IngredientForm.controls.description.invalid">
       Edit
     </button>
-    <button
-      mat-stroked-button
+    <button mat-stroked-button
       color="primary"
       (click)="delete()"
-      *ngIf="isSelected"
-    >
+      *ngIf="isSelected">
       Delete
     </button>
-    <button
-      mat-stroked-button
+    <button mat-stroked-button
       color="primary"
       (click)="cancel()"
-      *ngIf="isSelected"
-    >
+      *ngIf="isSelected">
       Cancel
     </button>
     <mat-divider id="divider"></mat-divider>

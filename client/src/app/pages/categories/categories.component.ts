@@ -1,17 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
-import { FormControl, Validators } from '@angular/forms';
-import { CategoriesService } from 'src/app/services/categories.service';
-import { MyErrorStateMatcher } from '../../services/validator.service';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { MatSort, MatTableDataSource, MatPaginator } from "@angular/material";
+import { FormControl, Validators } from "@angular/forms";
+import { CategoriesService } from "src/app/services/categories.service";
+import { Router } from "@angular/router";
+
+import { MyErrorStateMatcher } from "../../services/validator.service";
 
 @Component({
-  selector: 'app-categories',
-  templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.scss']
+  selector: "app-categories",
+  templateUrl: "./categories.component.html",
+  styleUrls: ["./categories.component.scss"]
 })
 export class CategoriesComponent implements OnInit {
   listData: MatTableDataSource<any>;
-  displayedColumns: string[] = ['description'];
+  displayedColumns: string[] = ["description"];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   searchKey: string;
@@ -19,7 +21,7 @@ export class CategoriesComponent implements OnInit {
   isSelected: boolean = false;
   selected: Object;
 
-  categoryFormControl = new FormControl('', [
+  categoryFormControl = new FormControl("", [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(20)
@@ -27,7 +29,10 @@ export class CategoriesComponent implements OnInit {
 
   matcher = new MyErrorStateMatcher();
 
-  constructor(private categoryService: CategoriesService) {}
+  constructor(
+    private categoryService: CategoriesService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.getCategories();
@@ -41,12 +46,12 @@ export class CategoriesComponent implements OnInit {
         this.listData.sort = this.sort;
         this.listData.paginator = this.paginator;
       },
-      err => {}
+      err => console.log(err)
     );
   }
 
   onSearchClear() {
-    this.searchKey = '';
+    this.searchKey = "";
     this.applyFilter();
   }
 
@@ -67,15 +72,18 @@ export class CategoriesComponent implements OnInit {
         this.getCategories();
         this.categoryFormControl.reset();
       },
-      error => {
-        console.log('Something is wrong');
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
       }
     );
   }
 
   edit() {
     let obj = {
-      id: this.selected['_id'],
+      id: this.selected["_id"],
       description: this.categoryFormControl.value
     };
     this.categoryService.patchCategory(obj).subscribe(
@@ -84,21 +92,27 @@ export class CategoriesComponent implements OnInit {
         this.categoryFormControl.reset();
         this.isSelected = false;
       },
-      error => {
-        console.log('Something is wrong');
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
       }
     );
   }
 
   delete() {
-    this.categoryService.deleteCategory(this.selected['_id']).subscribe(
+    this.categoryService.deleteCategory(this.selected["_id"]).subscribe(
       succ => {
         this.getCategories();
         this.categoryFormControl.reset();
         this.isSelected = false;
       },
-      error => {
-        console.log('Something is wrong');
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
       }
     );
   }

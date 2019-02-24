@@ -31,9 +31,9 @@
         *ngIf="(isHandset$ | async)">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>My restaurant</span>
+      <span>My app</span>
       <span class="spacer"></span>
-      <h1 *ngIf="authService.loggedIn()">User logout in:
+      <h1 *ngIf="authService.loggedIn()">
         {{ (minutesDisplay) }}:{{ (secondsDisplay) && (secondsDisplay <=59) ? secondsDisplay : '00' }}
       </h1>
       <ul>

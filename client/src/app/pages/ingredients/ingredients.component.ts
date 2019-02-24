@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { MatPaginator, PageEvent } from "@angular/material";
+import { Router } from "@angular/router";
+
 import { IngredientsService } from "../../services/ingredients.service";
 import { MyErrorStateMatcher } from "../../services/validator.service";
 
@@ -29,9 +31,13 @@ export class IngredientsComponent implements OnInit {
   pageSize = 6;
   pageSizeOptions: number[] = [6, 12, 24, 60];
 
+  // Breakpoints
+  breakpointContent: number;
+
   constructor(
     private ingredientService: IngredientsService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.IngredientForm = fb.group({
       description: [
@@ -44,6 +50,9 @@ export class IngredientsComponent implements OnInit {
 
   ngOnInit() {
     this.getIngredients();
+
+    // Formatting Content
+    this.onResize(window);
   }
 
   getIngredients() {
@@ -60,9 +69,7 @@ export class IngredientsComponent implements OnInit {
         this.paged(event);
         this.paginator.firstPage();
       },
-      err => {
-        console.log("Something is wrong");
-      }
+      err => console.log(err)
     );
   }
 
@@ -75,6 +82,17 @@ export class IngredientsComponent implements OnInit {
     const endIndex = pageIndex * this.pageSize + this.pageSize;
 
     this.listData = this.listDataCopy.slice(startIndex, endIndex);
+  }
+
+  onResize(event) {
+    let windowSize = event.innerWidth;
+    if (windowSize >= "1024") {
+      this.breakpointContent = 3;
+    } else if (windowSize < "1024" && windowSize >= "768") {
+      this.breakpointContent = 2;
+    } else {
+      this.breakpointContent = 1;
+    }
   }
 
   search(searchValue) {
@@ -107,8 +125,11 @@ export class IngredientsComponent implements OnInit {
         this.IngredientForm.reset();
         this.searchKey = "";
       },
-      error => {
-        console.log(`Error: ${error}`);
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
       }
     );
   }
@@ -119,18 +140,20 @@ export class IngredientsComponent implements OnInit {
       description: this.IngredientForm.controls.description.value,
       file: this.fileInput.nativeElement.files[0]
     };
-    console.log(obj);
-    // this.ingredientService.patchIngredient(obj).subscribe(
-    //   succ => {
-    //     this.getIngredients();
-    //     this.IngredientForm.reset();
-    //     this.isSelected = false;
-    //     this.searchKey = '';
-    //   },
-    //   error => {
-    //     console.log('Something is wrong');
-    //   }
-    // );
+    this.ingredientService.patchIngredient(obj).subscribe(
+      succ => {
+        this.getIngredients();
+        this.IngredientForm.reset();
+        this.isSelected = false;
+        this.searchKey = "";
+      },
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
+      }
+    );
   }
 
   delete() {
@@ -140,8 +163,11 @@ export class IngredientsComponent implements OnInit {
         this.IngredientForm.reset();
         this.isSelected = false;
       },
-      error => {
-        console.log("Something is wrong");
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
       }
     );
   }

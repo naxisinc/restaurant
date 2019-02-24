@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { SwiperConfigInterface } from "ngx-swiper-wrapper";
+import { Router } from "@angular/router";
+
 import { CommentsAdminService } from "../../../services/admin/comments-admin.service";
 import { DialogsComponent } from "../../../components/dialogs/dialogs.component";
 import { PlatesService } from "../../../services/plates.service";
@@ -35,7 +37,8 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
   constructor(
     private commentsAdminService: CommentsAdminService,
     private dialog: MatDialog,
-    private platesService: PlatesService
+    private platesService: PlatesService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -97,7 +100,12 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
                 comment => comment["_id"] !== data.petitionerId
               );
             },
-            err => console.log(err)
+            err => {
+              // Unauthorized
+              if (err.status === 401) {
+                this.router.navigate(["login"]);
+              } else console.log(err);
+            }
           );
         } else if (data.petitionerName === "reply") {
           this.response = "";
@@ -126,7 +134,12 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
         this.reply = [false];
         this.response = "";
       },
-      err => console.log(err)
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
+      }
     );
   }
 

@@ -7,6 +7,8 @@ import {
   FormArray
 } from "@angular/forms";
 import { MatPaginator, PageEvent } from "@angular/material";
+import { Router } from "@angular/router";
+
 import { PlatesService } from "../../services/plates.service";
 import { SizesService } from "../../services/sizes.service";
 import { CategoriesService } from "../../services/categories.service";
@@ -32,7 +34,7 @@ export class PlatesComponent implements OnInit {
   sizes: any;
   // Set the Ingredients in the child component
   setIngredients = [];
-  // Breakpoins
+  // Breakpoints
   breakpointToolbar: number;
   breakpointContent: number;
 
@@ -55,7 +57,8 @@ export class PlatesComponent implements OnInit {
     private plateService: PlatesService,
     private sizesService: SizesService,
     private categoriesService: CategoriesService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     // Get sizes
     this.sizesService.getSizes().subscribe(
@@ -159,16 +162,7 @@ export class PlatesComponent implements OnInit {
 
   onResize(event) {
     let windowSize = event.innerWidth;
-    if (windowSize <= 375) {
-      this.breakpointToolbar = this.filtercolspan = 1;
-    } else if (windowSize > 375 && windowSize <= 1024) {
-      this.breakpointToolbar = 2;
-      this.filtercolspan = 1;
-    } else {
-      this.breakpointToolbar = 3;
-      this.filtercolspan = 2;
-    }
-    this.breakpointContent = windowSize <= 375 ? 1 : 3;
+    this.breakpointContent = this.breakpointToolbar = windowSize <= 375 ? 1 : 3;
   }
 
   sortby(filterId) {
@@ -277,7 +271,10 @@ export class PlatesComponent implements OnInit {
         this.searchKey = "";
       },
       err => {
-        //
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
       }
     );
   }
@@ -291,8 +288,11 @@ export class PlatesComponent implements OnInit {
         this.isSelected = false;
         this.searchKey = "";
       },
-      error => {
-        console.log("Something is wrong");
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
       }
     );
   }
@@ -304,8 +304,11 @@ export class PlatesComponent implements OnInit {
         this.clearForm();
         this.isSelected = false;
       },
-      error => {
-        console.log("Something is wrong");
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
       }
     );
   }
