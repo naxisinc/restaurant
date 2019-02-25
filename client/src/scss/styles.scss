@@ -32,6 +32,11 @@ body {
   #login-form {
     width: 70%;
   }
+  // #filter,
+  // .search-div {
+  //   width: 90%;
+  //   margin: auto;
+  // }
 }
 // Phones
 @media (max-width: 375px) {
@@ -42,6 +47,11 @@ body {
   #actions-div {
     width: 100% !important;
   }
+  // #filter,
+  // .search-div {
+  //   width: 90%;
+  //   margin: auto;
+  // }
 }
 
 .hide {
@@ -58,22 +68,15 @@ body {
   padding: 15px;
   text-align: center;
 }
-#viewName {
-  float: left;
-  width: 50%;
-}
 header {
   padding: 12px;
   font-size: 1rem;
   font-weight: bold;
 }
-#filter {
-  width: 50%;
-  margin-left: 45%;
-}
+#filter,
 .search-div {
-  width: 100%;
-  padding: 0.5rem;
+  width: 90%;
+  margin: auto;
 }
 .search-form-field {
   width: 100%;
@@ -121,4 +124,8 @@ header {
 
 .pointer {
   cursor: pointer;
+}
+
+.mat-tab-header-pagination {
+  z-index: 1 !important;
 }

@@ -160,9 +160,17 @@ export class PlatesComponent implements OnInit {
     this.listData = this.listDataCopy.slice(startIndex, endIndex);
   }
 
+  colspan: number = 1;
   onResize(event) {
     let windowSize = event.innerWidth;
-    this.breakpointContent = this.breakpointToolbar = windowSize <= 375 ? 1 : 3;
+    this.breakpointContent = windowSize <= 375 ? 1 : 3;
+    if (windowSize <= 375) {
+      this.breakpointToolbar = 2;
+      this.colspan = 2;
+    } else {
+      this.breakpointToolbar = 3;
+      this.colspan = 1;
+    }
   }
 
   sortby(filterId) {
