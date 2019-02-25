@@ -1,10 +1,18 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  AbstractControl
+} from "@angular/forms";
 import { MatPaginator, PageEvent } from "@angular/material";
 import { Router } from "@angular/router";
 
 import { IngredientsService } from "../../services/ingredients.service";
-import { MyErrorStateMatcher } from "../../services/validator.service";
+import {
+  MyErrorStateMatcher,
+  CustomValidator
+} from "../../services/validator.service";
 
 @Component({
   selector: "app-ingredients",
@@ -37,14 +45,15 @@ export class IngredientsComponent implements OnInit {
   constructor(
     private ingredientService: IngredientsService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private customValidator: CustomValidator
   ) {
     this.IngredientForm = fb.group({
       description: [
         "",
         [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
       ],
-      file: ["", [Validators.required]]
+      file: ["", [Validators.required, this.customValidator.validatingExt]]
     });
   }
 

@@ -4,7 +4,8 @@ import {
   FormGroup,
   FormBuilder,
   Validators,
-  FormArray
+  FormArray,
+  AbstractControl
 } from "@angular/forms";
 import { MatPaginator, PageEvent } from "@angular/material";
 import { Router } from "@angular/router";
@@ -12,7 +13,10 @@ import { Router } from "@angular/router";
 import { PlatesService } from "../../services/plates.service";
 import { SizesService } from "../../services/sizes.service";
 import { CategoriesService } from "../../services/categories.service";
-import { MyErrorStateMatcher } from "../../services/validator.service";
+import {
+  MyErrorStateMatcher,
+  CustomValidator
+} from "../../services/validator.service";
 
 @Component({
   selector: "app-plates",
@@ -58,7 +62,8 @@ export class PlatesComponent implements OnInit {
     private sizesService: SizesService,
     private categoriesService: CategoriesService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private customValidator: CustomValidator
   ) {
     // Get sizes
     this.sizesService.getSizes().subscribe(
@@ -90,7 +95,7 @@ export class PlatesComponent implements OnInit {
         "",
         [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
       ],
-      file: ["", [Validators.required]],
+      file: ["", [Validators.required, this.customValidator.validatingExt]],
       category: ["", [Validators.required]],
       items: this.fb.array([])
     });

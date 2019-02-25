@@ -13,7 +13,6 @@ body {
 body {
   margin: 0;
 }
-
 // @Media (max) apply <= value
 // XL Desktops
 @media (max-width: 1920px) {
@@ -53,7 +52,6 @@ body {
   //   margin: auto;
   // }
 }
-
 .hide {
   display: none;
 }
@@ -69,6 +67,7 @@ body {
   text-align: center;
 }
 header {
+  float: left;
   padding: 12px;
   font-size: 1rem;
   font-weight: bold;
@@ -97,7 +96,6 @@ header {
   height: 32px;
   width: 32px;
 }
-
 #grid-div {
   width: 70%;
   float: left;
@@ -117,15 +115,18 @@ header {
   margin-top: 1rem;
   margin-right: 0.5rem;
 }
-
 #divider {
   margin: 1rem 0;
 }
-
 .pointer {
   cursor: pointer;
 }
-
 .mat-tab-header-pagination {
   z-index: 1 !important;
+}
+mat-error {
+  font-size: 10.5px;
+}
+.btn-file {
+  margin-top: 1rem;
 }

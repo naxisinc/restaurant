@@ -1,27 +1,34 @@
 <div id="grid-div">
-  <mat-grid-list id="grid-toolbar"
+  <mat-grid-list
+    id="grid-toolbar"
     [cols]="breakpointToolbar"
     rowHeight="3rem"
-    (window:resize)="onResize($event.target)">
+    (window:resize)="onResize($event.target)"
+  >
     <mat-grid-tile [colspan]="colspan">
       <div>
         <header>Dishes</header>
       </div>
     </mat-grid-tile>
     <mat-grid-tile>
-      <mat-form-field id="filter"
-        floatLabel="never">
-        <mat-select [formControl]="filter"
+      <mat-form-field id="filter" floatLabel="never">
+        <mat-select
+          [formControl]="filter"
           placeholder="Sort by"
-          (selectionChange)="sortby($event.value)">
+          (selectionChange)="sortby($event.value)"
+        >
           <mat-option value="rating">Customer Ratings</mat-option>
           <mat-option value="l2h">Price Low to High</mat-option>
           <mat-option value="h2l">Price High to Low</mat-option>
-          <mat-optgroup *ngFor="let group of sortbyGroups"
+          <mat-optgroup
+            *ngFor="let group of sortbyGroups"
             [label]="group.name"
-            [disabled]="group.disabled">
-            <mat-option *ngFor="let category of group.categories"
-              [value]="category._id">
+            [disabled]="group.disabled"
+          >
+            <mat-option
+              *ngFor="let category of group.categories"
+              [value]="category._id"
+            >
               {{ category.description }}
             </mat-option>
           </mat-optgroup>
@@ -30,19 +37,22 @@
     </mat-grid-tile>
     <mat-grid-tile>
       <div class="search-div">
-        <mat-form-field class="search-form-field"
-          floatLabel="never">
-          <input matInput
+        <mat-form-field class="search-form-field" floatLabel="never">
+          <input
+            matInput
             [(ngModel)]="searchKey"
             placeholder="Search by dish name ..."
             autocomplete="off"
-            (keyup)="search($event.target.value)" />
-          <button mat-button
+            (keyup)="search($event.target.value)"
+          />
+          <button
+            mat-button
             matSuffix
             mat-icon-button
             arial-label="Clear"
             *ngIf="searchKey"
-            (click)="onSearchClear()">
+            (click)="onSearchClear()"
+          >
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
@@ -50,17 +60,18 @@
     </mat-grid-tile>
   </mat-grid-list>
   <div *ngIf="listData?.length > 0">
-    <mat-grid-list id="grid-data"
+    <mat-grid-list
+      id="grid-data"
       *ngFor="let grid of listData; let i = index"
       [cols]="breakpointContent"
       rowHeight="300px"
       gutterSize="0px"
       (click)="show(grid)"
-      class="pointer">
+      class="pointer"
+    >
       <mat-grid-tile>
         <mat-card class="example-card">
-          <img mat-card-image
-            src="{{ imgPath }}{{ grid.img }}" />
+          <img mat-card-image src="{{ imgPath }}{{ grid.img }}" />
           <mat-card-content>
             <p>{{ grid.description }}</p>
           </mat-card-content>
@@ -73,27 +84,30 @@
             Category: {{ grid._category.description }}
           </mat-list-item>
           <mat-divider></mat-divider>
-          <div id="subHeader"
-            matSubheader>Ingredients</div>
+          <div id="subHeader" matSubheader>Ingredients</div>
           <mat-list-item>
-            <div id="chip"
-              *ngFor="let ingredient of grid._ingredients">
+            <div id="chip" *ngFor="let ingredient of grid._ingredients">
               {{ ingredient.description }}
             </div>
           </mat-list-item>
           <mat-divider></mat-divider>
           <mat-list-item>
-            <star-rating [starType]="'svg'"
+            <star-rating
+              [starType]="'svg'"
               [rating]="grid.averagerate"
               [showHalfStars]="true"
               [readOnly]="true"
-              staticColor="ok">
+              staticColor="ok"
+            >
             </star-rating>
-            <a *ngIf="grid.qtyOfComments > 0"
+            <a
+              *ngIf="grid.qtyOfComments > 0"
               routerLink="/admin/comments"
               (click)="seeComments(grid._id, i)"
               matTooltip="See comments"
-              matTooltipPosition="after">({{ grid.qtyOfComments }})</a>
+              matTooltipPosition="after"
+              >({{ grid.qtyOfComments }})</a
+            >
           </mat-list-item>
         </mat-list>
       </mat-grid-tile>
@@ -128,97 +142,132 @@
       </mat-grid-tile>
     </mat-grid-list>
   </div>
-  <div class="noData-div"
-    *ngIf="listData?.length === 0">No Data.</div>
-  <mat-paginator [length]="length"
+  <div class="noData-div" *ngIf="listData?.length === 0">No Data.</div>
+  <mat-paginator
+    [length]="length"
     [pageSizeOptions]="pageSizeOptions"
     [pageSize]="pageSize"
-    (page)="paged($event)"></mat-paginator>
+    (page)="paged($event)"
+  ></mat-paginator>
 </div>
 <div id="actions-div">
   <div class="cud-div">
-    <form [formGroup]="parentForm"
-      enctype="multipart/form-data">
+    <form [formGroup]="parentForm" enctype="multipart/form-data">
       <mat-form-field>
-        <input matInput
+        <input
+          matInput
           placeholder="Name of the dish"
           formControlName="description"
-          [errorStateMatcher]="matcher" />
-        <mat-error *ngIf="parentForm.controls.description.hasError('required')">Description is
-          <strong>required.</strong></mat-error>
-        <mat-error *ngIf="parentForm.controls.description.hasError('minlength')">The description must be at
-          least 3 characters long.</mat-error>
-        <mat-error *ngIf="parentForm.controls.description.hasError('maxlength')">The description must have
-          less that 50 characters.</mat-error>
+          [errorStateMatcher]="matcher"
+        />
+        <mat-error *ngIf="parentForm.controls.description.hasError('required')"
+          >Description is <strong>required.</strong></mat-error
+        >
+        <mat-error *ngIf="parentForm.controls.description.hasError('minlength')"
+          >The description must be at least 3 characters long.</mat-error
+        >
+        <mat-error *ngIf="parentForm.controls.description.hasError('maxlength')"
+          >The description must have less that 50 characters.</mat-error
+        >
       </mat-form-field>
-      <input class="btn-file"
+      <input
+        class="btn-file"
         type="file"
         #fileInput
-        formControlName="file" />
-      <app-chips (ingredients)="gettingIngredients($event)"
-        [fruits]="setIngredients"></app-chips>
+        formControlName="file"
+        accept=".png, .jpg, .jpeg"
+      />
+      <mat-error *ngIf="parentForm.controls.file.hasError('extension')"
+        >The extension must be [*.png, *.jpg, *.jpeg].</mat-error
+      >
+      <app-chips
+        (ingredients)="gettingIngredients($event)"
+        [fruits]="setIngredients"
+      ></app-chips>
       <app-select [parentForm]="parentForm"></app-select>
 
       <mat-list *ngIf="sizes?.length > 0">
         <mat-list-item>Details of the dishes</mat-list-item>
         <!-- <mat-divider></mat-divider> -->
         <div formArrayName="items">
-          <mat-tab-group animationDuration="0ms"
+          <mat-tab-group
+            animationDuration="0ms"
             backgroundColor="accent"
-            dynamicHeight>
-            <mat-tab *ngFor="
-                  let item of parentForm.get('items').controls;
-                  let i = index
-                "
-              label="{{ item.value.description }}">
+            dynamicHeight
+          >
+            <mat-tab
+              *ngFor="
+                let item of parentForm.get('items').controls;
+                let i = index
+              "
+              label="{{ item.value.description }}"
+            >
               <div [formGroupName]="i">
                 <mat-form-field style="margin-top:1rem;">
                   <span matPrefix>$ &nbsp;</span>
-                  <input required
+                  <input
+                    required
                     matInput
                     placeholder="Price"
-                    formControlName="price" />
-                  <mat-error *ngIf="item.controls.price.hasError('required')">Price is
-                    <strong>required</strong></mat-error>
-                  <mat-error *ngIf="item.controls.price.hasError('pattern')">The price must be an integer
-                    number in this format
-                    <strong>(xx.xx)</strong>.</mat-error>
+                    formControlName="price"
+                  />
+                  <mat-error *ngIf="item.controls.price.hasError('required')"
+                    >Price is <strong>required</strong></mat-error
+                  >
+                  <mat-error *ngIf="item.controls.price.hasError('pattern')"
+                    >The price must be an integer number in this format
+                    <strong>(xx.xx)</strong>.</mat-error
+                  >
                 </mat-form-field>
                 <mat-form-field>
-                  <input type="number"
+                  <input
+                    type="number"
                     required
                     matInput
                     placeholder="Calories"
-                    formControlName="calories" />
+                    formControlName="calories"
+                  />
                   <span matSuffix>cal</span>
-                  <mat-error *ngIf="item.controls.calories.hasError('required')">Calories are
-                    <strong>required</strong></mat-error>
-                  <mat-error *ngIf="item.controls.calories.hasError('pattern')">The calories must be an
-                    integer number.</mat-error>
+                  <mat-error *ngIf="item.controls.calories.hasError('required')"
+                    >Calories are <strong>required</strong></mat-error
+                  >
+                  <mat-error *ngIf="item.controls.calories.hasError('pattern')"
+                    >The calories must be an integer number.</mat-error
+                  >
                 </mat-form-field>
                 <mat-form-field>
-                  <input type="number"
+                  <input
+                    type="number"
                     required
                     matInput
                     placeholder="Total Fat"
-                    formControlName="totalfat" />
+                    formControlName="totalfat"
+                  />
                   <span matSuffix>g</span>
-                  <mat-error *ngIf="item.controls.totalfat.hasError('required')">Total Fat is
-                    <strong>required</strong></mat-error>
-                  <mat-error *ngIf="item.controls.totalfat.hasError('pattern')">The Total Fat must be an
-                    integer number.</mat-error>
+                  <mat-error *ngIf="item.controls.totalfat.hasError('required')"
+                    >Total Fat is <strong>required</strong></mat-error
+                  >
+                  <mat-error *ngIf="item.controls.totalfat.hasError('pattern')"
+                    >The Total Fat must be an integer number.</mat-error
+                  >
                 </mat-form-field>
                 <mat-form-field>
-                  <input type="number"
+                  <input
+                    type="number"
                     required
                     matInput
                     placeholder="Total Carbs"
-                    formControlName="totalcarbs" />
+                    formControlName="totalcarbs"
+                  />
                   <span matSuffix>g</span>
-                  <mat-error *ngIf="item.controls.totalcarbs.hasError('required')">Total Carbs is
-                    <strong>required</strong></mat-error>
-                  <mat-error *ngIf="item.controls.totalcarbs.hasError('pattern')">The Total Carbs must be an
-                    integer number.</mat-error>
+                  <mat-error
+                    *ngIf="item.controls.totalcarbs.hasError('required')"
+                    >Total Carbs is <strong>required</strong></mat-error
+                  >
+                  <mat-error
+                    *ngIf="item.controls.totalcarbs.hasError('pattern')"
+                    >The Total Carbs must be an integer number.</mat-error
+                  >
                 </mat-form-field>
               </div>
             </mat-tab>
@@ -226,37 +275,45 @@
         </div>
       </mat-list>
     </form>
-    <button mat-stroked-button
+    <button
+      mat-stroked-button
       color="primary"
       (click)="add()"
       *ngIf="!isSelected"
-      [disabled]="!parentForm.valid">
+      [disabled]="!parentForm.valid"
+    >
       Add
     </button>
-    <button mat-stroked-button
+    <button
+      mat-stroked-button
       color="primary"
       (click)="edit()"
       *ngIf="isSelected"
-      [disabled]="parentForm.controls.description.invalid">
+      [disabled]="parentForm.controls.description.invalid"
+    >
       Edit
     </button>
-    <button mat-stroked-button
+    <button
+      mat-stroked-button
       color="primary"
       (click)="delete()"
-      *ngIf="isSelected">
+      *ngIf="isSelected"
+    >
       Delete
     </button>
-    <button mat-stroked-button
+    <button
+      mat-stroked-button
       color="primary"
       (click)="cancel()"
-      *ngIf="isSelected">
+      *ngIf="isSelected"
+    >
       Cancel
     </button>
     <mat-divider id="divider"></mat-divider>
     <div id="info">
       <div *ngIf="!isSelected">
-        To <strong>edit</strong> or <strong>delete</strong> an item, it must
-        be selected from the list.
+        To <strong>edit</strong> or <strong>delete</strong> an item, it must be
+        selected from the list.
       </div>
       <div *ngIf="isSelected">Press <strong>Cancel</strong> to go back.</div>
     </div>
