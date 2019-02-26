@@ -4,9 +4,11 @@ import { AuthService } from "./services/auth.service";
 @Component({
   selector: "app-root",
   template: `
-    <app-layout
-      ><section class="mat-typography"><router-outlet></router-outlet></section
-    ></app-layout>
+    <app-layout>
+      <section class="mat-typography">
+        <router-outlet></router-outlet>
+      </section>
+    </app-layout>
   `,
   styleUrls: ["./app.component.scss"]
 })

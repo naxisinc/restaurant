@@ -8,20 +8,21 @@ import { FooterComponent } from "./footer/footer.component";
 import { ChipsComponent } from "./chips/chips.component";
 import { SelectComponent } from "./select/select.component";
 import { DialogsComponent } from "./dialogs/dialogs.component";
-import { LayoutComponent } from "./layout/layout.component";
-import { SessionDialog } from "./layout/layout.component";
+import { LayoutComponent, SessionDialog } from "./layout/layout.component";
+import { CudComponent } from "./cud/cud.component";
 
 const COMPONENTS = [
   FooterComponent,
   LayoutComponent,
+  SessionDialog,
   ChipsComponent,
   SelectComponent,
   DialogsComponent,
-  SessionDialog
+  CudComponent
 ];
 
 @NgModule({
-  declarations: [COMPONENTS],
+  declarations: COMPONENTS,
   imports: [
     CommonModule,
     MaterialModule,
@@ -29,7 +30,7 @@ const COMPONENTS = [
     FormsModule,
     ReactiveFormsModule
   ],
-  exports: [COMPONENTS],
-  entryComponents: [DialogsComponent, SessionDialog] // para importar el componente dentro de otro component
+  exports: COMPONENTS,
+  entryComponents: [DialogsComponent, SessionDialog]
 })
 export class ComponentsModule {}

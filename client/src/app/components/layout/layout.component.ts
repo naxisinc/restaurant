@@ -5,12 +5,10 @@ import { map } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { Subject, timer, Subscription } from "rxjs";
 import { takeUntil, take } from "rxjs/operators";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { MatDialog, MatDialogRef } from "@angular/material";
 
 import { AuthService } from "../../services/auth.service";
 import { SubjectService } from "../../services/subject.service";
-import { CompileTemplateMetadata } from "@angular/compiler";
-import { nextContext } from "@angular/core/src/render3";
 
 @Component({
   selector: "app-layout",
@@ -22,13 +20,18 @@ export class LayoutComponent implements OnInit, OnDestroy {
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
 
+  isCudRoute: boolean;
   constructor(
     private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
     private router: Router,
     private dialog: MatDialog,
     private subjectService: SubjectService
-  ) {}
+  ) {
+    this.subjectService.currentRoute.subscribe(route => {
+      this.isCudRoute = route !== "comments" ? true : false;
+    });
+  }
 
   onLogoutClick() {
     this.authService.logout().subscribe(
@@ -41,10 +44,12 @@ export class LayoutComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Timer logout
+  // ============== Timer logout =============
   minutesDisplay = 0;
   secondsDisplay = 0;
 
+  // endTime = 1; // min de inactividad antes de logout
+  // preLogoutTime = 40; // seconds (60min = 3600sec) - 3480sec = [2min]
   endTime = 60; // min de inactividad antes de logout
   preLogoutTime = 3480; // seconds (60min = 3600sec) - 3480sec = [2min]
 

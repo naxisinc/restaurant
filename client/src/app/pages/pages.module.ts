@@ -32,19 +32,21 @@ const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
   centeredSlides: true
 };
 
+const COMPONENTS = [
+  HomeComponent,
+  LoginComponent,
+  UsersComponent,
+  SizesComponent,
+  CategoriesComponent,
+  IngredientsComponent,
+  PlatesComponent,
+  CommentsAdminComponent,
+  ChangePassComponent,
+  RecoverPassComponent
+];
+
 @NgModule({
-  declarations: [
-    HomeComponent,
-    LoginComponent,
-    UsersComponent,
-    SizesComponent,
-    CategoriesComponent,
-    IngredientsComponent,
-    PlatesComponent,
-    CommentsAdminComponent,
-    ChangePassComponent,
-    RecoverPassComponent
-  ],
+  declarations: COMPONENTS,
   imports: [
     CommonModule,
     PagesRoutingModule,

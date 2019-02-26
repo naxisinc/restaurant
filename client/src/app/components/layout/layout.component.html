@@ -1,7 +1,8 @@
+<mat-toolbar class="example-header">Header</mat-toolbar>
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer
     class="sidenav"
-    fixedInViewport="true"
+    fixedInViewport="false"
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="!(isHandset$ | async)">
@@ -21,6 +22,13 @@
         routerLink="/users">Users</a>
       <mat-divider></mat-divider>
     </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav position="end"
+    class="sidenav-end"
+    fixedInViewport="false"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="!(isHandset$ | async) && isCudRoute">
+    <app-cud></app-cud>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
@@ -46,3 +54,4 @@
     <ng-content></ng-content>
   </mat-sidenav-content>
 </mat-sidenav-container>
+<mat-toolbar class="example-footer">Footer</mat-toolbar>
