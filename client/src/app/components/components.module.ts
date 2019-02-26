@@ -9,7 +9,6 @@ import { ChipsComponent } from "./chips/chips.component";
 import { SelectComponent } from "./select/select.component";
 import { DialogsComponent } from "./dialogs/dialogs.component";
 import { LayoutComponent, SessionDialog } from "./layout/layout.component";
-import { CudComponent } from "./cud/cud.component";
 
 const COMPONENTS = [
   FooterComponent,
@@ -17,8 +16,7 @@ const COMPONENTS = [
   SessionDialog,
   ChipsComponent,
   SelectComponent,
-  DialogsComponent,
-  CudComponent
+  DialogsComponent
 ];
 
 @NgModule({

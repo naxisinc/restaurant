@@ -70,9 +70,7 @@ export class PlatesComponent implements OnInit {
       res => {
         this.sizes = res;
       },
-      err => {
-        //
-      }
+      err => console.log(err)
     );
 
     // Get categories
@@ -85,9 +83,7 @@ export class PlatesComponent implements OnInit {
           }
         ];
       },
-      err => {
-        //
-      }
+      err => console.log(err)
     );
 
     this.parentForm = this.fb.group({
@@ -149,9 +145,7 @@ export class PlatesComponent implements OnInit {
         this.paged(event);
         this.paginator.firstPage();
       },
-      err => {
-        console.log("Something is wrong");
-      }
+      err => console.log(err)
     );
   }
 
