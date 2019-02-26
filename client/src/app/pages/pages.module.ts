@@ -47,7 +47,7 @@ const COMPONENTS = [
 
 @NgModule({
   declarations: COMPONENTS,
-  exports: [],
+  exports: [SizesComponent],
   imports: [
     CommonModule,
     PagesRoutingModule,

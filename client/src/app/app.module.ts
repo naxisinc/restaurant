@@ -7,6 +7,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { MaterialModule } from "./material";
+import { LayoutModule } from "./layout/layout.module";
 import { PagesModule } from "./pages/pages.module";
 import { ComponentsModule } from "./components/components.module";
 import { PageNotFoundComponent } from "./pages/page-not-found/page-not-found.component";
@@ -21,6 +22,7 @@ export function tokenGetter() {
     BrowserModule,
     BrowserAnimationsModule,
     MaterialModule,
+    LayoutModule,
     PagesModule,
     ComponentsModule,
     HttpClientModule,
