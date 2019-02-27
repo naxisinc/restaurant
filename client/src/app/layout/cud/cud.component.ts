@@ -18,6 +18,7 @@ export class CudComponent implements OnInit {
       .subscribe((event: NavigationStart) => {
         this.route = event.url.split("/").pop();
         this.subjectService.changeRoute(this.route);
+        // console.log(this.route);
       });
   }
 

@@ -15,6 +15,7 @@ import { HomeComponent } from "./home/home.component";
 import { LoginComponent } from "./users/login/login.component";
 import { UsersComponent } from "./users/users.component";
 import { SizesComponent } from "./sizes/sizes.component";
+import { SizesFormComponent } from "./sizes/sizes-form/sizes-form.component";
 import { CategoriesComponent } from "./categories/categories.component";
 import { IngredientsComponent } from "./ingredients/ingredients.component";
 import { PlatesComponent } from "./plates/plates.component";
@@ -37,6 +38,7 @@ const COMPONENTS = [
   LoginComponent,
   UsersComponent,
   SizesComponent,
+  SizesFormComponent,
   CategoriesComponent,
   IngredientsComponent,
   PlatesComponent,
@@ -45,9 +47,11 @@ const COMPONENTS = [
   RecoverPassComponent
 ];
 
+const CudForms = [SizesFormComponent];
+
 @NgModule({
   declarations: COMPONENTS,
-  exports: [SizesComponent],
+  exports: [CudForms],
   imports: [
     CommonModule,
     PagesRoutingModule,
