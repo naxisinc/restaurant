@@ -19,17 +19,32 @@ body {
   #login-form {
     width: 20%;
   }
+  .sidenav-end {
+    width: 500px;
+  }
 }
 // Desktops
 @media (max-width: 1024px) {
   #login-form {
     width: 30%;
   }
+  .sidenav {
+    width: 150px !important;
+  }
+  .sidenav-end {
+    width: 300px;
+  }
 }
 // Tablets
 @media (max-width: 768px) {
   #login-form {
     width: 70%;
+  }
+  .sidenav {
+    width: 125px !important;
+  }
+  .sidenav-end {
+    width: 200px;
   }
   // #filter,
   // .search-div {
@@ -42,7 +57,7 @@ body {
   #login-form {
     width: 90%;
   }
-  #grid-div,
+  #grid-div,//
   #actions-div {
     width: 100% !important;
   }
@@ -97,6 +112,7 @@ header {
   width: 32px;
 }
 #grid-div {
+  //
   width: 70%;
   float: left;
 }

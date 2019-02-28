@@ -23,10 +23,24 @@ export class SubjectService {
     this.route.next(route);
   }
 
+  // Set the Item Selected Flag
+  private flag = new BehaviorSubject<boolean>(false);
+  getItemSelectedFlag = this.flag.asObservable();
+  setItemSelectedFlag(state: boolean) {
+    this.flag.next(state);
+  }
+
+  // ============= Size ===========
   // Refresh the DataSource
   private sizeRefresh = new BehaviorSubject(null);
-  refresh = this.sizeRefresh.asObservable();
-  changeRoute(route: string) {
-    this.sizeRefresh.next(sizeRefresh);
+  sizeRefreshed = this.sizeRefresh.asObservable();
+  sizeDataSourceRefresh() {
+    this.sizeRefresh.next("");
+  }
+
+  private sizeSelect = new BehaviorSubject(null);
+  sizeSelected = this.sizeSelect.asObservable();
+  setSizeSelect(size: object) {
+    this.sizeSelect.next(size);
   }
 }

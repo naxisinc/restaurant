@@ -21,6 +21,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     .pipe(map(result => result.matches));
 
   isCudRoute: boolean;
+  isItemSelected: boolean;
   constructor(
     private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
@@ -28,9 +29,19 @@ export class LayoutComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private subjectService: SubjectService
   ) {
+    // Identify the route for hide or show the navbar-end
     this.subjectService.currentRoute.subscribe(route => {
       this.isCudRoute = route !== "comments" ? true : false;
     });
+
+    // Check if any item was selected for hide or show the navbar-end
+    this.subjectService.getItemSelectedFlag.subscribe(flag => {
+      this.isItemSelected = flag ? true : false;
+    });
+  }
+
+  close(reason: string) {
+    this.subjectService.setItemSelectedFlag(false);
   }
 
   onLogoutClick() {

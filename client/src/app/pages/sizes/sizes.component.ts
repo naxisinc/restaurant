@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatSort, MatTableDataSource, MatPaginator } from "@angular/material";
-import { FormControl, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
 import { SizesService } from "../../services/sizes.service";
-import { MyErrorStateMatcher } from "../../services/validator.service";
+import { SubjectService } from "src/app/services/subject.service";
 
 @Component({
   selector: "app-sizes",
@@ -17,21 +15,21 @@ export class SizesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   searchKey: string;
 
-  isSelected: boolean = false;
-  selected: Object;
-
-  sizeFormControl = new FormControl("", [
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(20)
-  ]);
-
-  matcher = new MyErrorStateMatcher();
-
-  constructor(private sizeService: SizesService, private router: Router) {}
+  constructor(
+    private sizeService: SizesService,
+    private subjectService: SubjectService
+  ) {}
 
   ngOnInit() {
     this.getSizes();
+    this.subjectService.sizeRefreshed.subscribe(
+      succ => {
+        if (succ !== null) {
+          this.getSizes();
+        }
+      },
+      err => console.log(err)
+    );
   }
 
   getSizes() {
@@ -56,66 +54,7 @@ export class SizesComponent implements OnInit {
   }
 
   show(size) {
-    this.selected = size;
-    this.sizeFormControl.patchValue(size.description);
-    this.isSelected = true;
-  }
-
-  add() {
-    let obj = { description: this.sizeFormControl.value };
-    this.sizeService.postSize(obj).subscribe(
-      succ => {
-        this.getSizes();
-        this.sizeFormControl.reset();
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  edit() {
-    let obj = {
-      id: this.selected["_id"],
-      description: this.sizeFormControl.value
-    };
-    this.sizeService.patchSize(obj).subscribe(
-      succ => {
-        this.getSizes();
-        this.sizeFormControl.reset();
-        this.isSelected = false;
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  delete() {
-    this.sizeService.deleteSize(this.selected["_id"]).subscribe(
-      succ => {
-        this.getSizes();
-        this.sizeFormControl.reset();
-        this.isSelected = false;
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  cancel() {
-    this.sizeFormControl.reset();
-    this.isSelected = false;
-    this.selected = null;
+    this.subjectService.setSizeSelect(size);
+    this.subjectService.setItemSelectedFlag(true);
   }
 }
