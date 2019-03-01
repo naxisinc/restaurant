@@ -1,14 +1,11 @@
-.sidenav {
-  width: 200px;
-}
 .sidenav-container {
   // height: 100vh;
-  overflow: hidden;
-  position: absolute;
-  top: 60px;
-  bottom: 60px;
-  left: 0;
-  right: 0;
+  // overflow: hidden;
+  // position: absolute;
+  // top: 60px;
+  // bottom: 60px;
+  // left: 0;
+  // right: 0;
 }
 .sidenav .mat-toolbar {
   background: inherit;
@@ -28,18 +25,19 @@
   color: white;
   text-decoration: none;
 }
-.example-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: red;
-}
 
-.example-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: blue;
-}
+// .example-header {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   background: red;
+// }
+
+// .example-footer {
+//   position: fixed;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
+//   background: blue;
+// }

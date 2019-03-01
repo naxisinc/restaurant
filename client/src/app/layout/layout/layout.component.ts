@@ -20,7 +20,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
 
-  isCudRoute: boolean;
+  isCudRoute: boolean = false;
   isItemSelected: boolean;
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -31,7 +31,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
   ) {
     // Identify the route for hide or show the navbar-end
     this.subjectService.currentRoute.subscribe(route => {
-      this.isCudRoute = route !== "comments" ? true : false;
+      if (route !== null) {
+        if (route !== "home" && route !== "login" && route !== "comments") {
+          this.isCudRoute = true;
+        } else {
+          this.isCudRoute = false;
+        }
+      }
     });
 
     // Check if any item was selected for hide or show the navbar-end

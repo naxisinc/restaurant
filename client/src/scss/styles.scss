@@ -13,67 +13,83 @@ body {
 body {
   margin: 0;
 }
-// @Media (max) apply <= value
-// XL Desktops
-@media (max-width: 1920px) {
+
+// @ Mobile First
+// @ (min) apply >= value
+// Phones
+@media only screen and (min-width: 375px) {
   #login-form {
-    width: 20%;
-  }
-  .sidenav-end {
-    width: 500px;
+    width: 90%;
   }
   .search-form-field {
-    width: 40%;
-    margin-left: 57%;
+    width: 95%;
   }
 }
-// Desktops
-@media (max-width: 1024px) {
-  #login-form {
-    width: 30%;
-  }
-  .sidenav {
-    width: 150px !important;
-  }
-  .sidenav-end {
-    width: 300px;
-  }
-  .search-form-field {
-    width: 60%;
-    margin-left: 35%;
-  }
-}
+
 // Tablets
-@media (max-width: 768px) {
+@media only screen and (min-width: 768px) {
   #login-form {
     width: 70%;
   }
   .sidenav {
-    width: 125px !important;
+    width: 120px;
   }
   .sidenav-end {
-    width: 200px;
+    width: 300px;
   }
   .search-form-field {
     width: 80%;
     margin-left: 15%;
   }
 }
-// Phones
-@media (max-width: 375px) {
+
+// Big Tablets
+@media only screen and (min-width: 1024px) {
   #login-form {
-    width: 90%;
+    width: 30%;
   }
-  #grid-div,//
-  #actions-div {
-    width: 100% !important;
+  .sidenav {
+    width: 125px;
   }
-  // #filter,
-  // .search-div {
-  //   width: 90%;
-  //   margin: auto;
-  // }
+  .sidenav-end {
+    width: 250px;
+  }
+  .search-form-field {
+    width: 60%;
+    margin-left: 35%;
+  }
 }
+
+// Desktops
+@media only screen and (min-width: 1280px) {
+  #login-form {
+    width: 25%;
+  }
+  .sidenav {
+    width: 150px;
+  }
+  .sidenav-end {
+    width: 300px;
+  }
+}
+
+// XL Desktops
+@media only screen and (min-width: 1920px) {
+  #login-form {
+    width: 20%;
+  }
+  .sidenav {
+    width: 175px;
+  }
+  .sidenav-end {
+    width: 400px;
+  }
+  .search-form-field {
+    width: 40%;
+    margin-left: 57%;
+  }
+}
+
 .hide {
   display: none;
 }
@@ -118,14 +134,7 @@ header {
   height: 32px;
   width: 32px;
 }
-#grid-div {
-  //
-  width: 70%;
-  float: left;
-}
-#actions-div {
-  width: 30%;
-  overflow: hidden;
+#data-source-div {
 }
 .cud-div {
   width: 90%;
