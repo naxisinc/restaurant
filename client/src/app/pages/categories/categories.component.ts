@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatSort, MatTableDataSource, MatPaginator } from "@angular/material";
-import { FormControl, Validators } from "@angular/forms";
 import { CategoriesService } from "src/app/services/categories.service";
-import { Router } from "@angular/router";
-
-import { MyErrorStateMatcher } from "../../services/validator.service";
+import { SubjectService } from "src/app/services/subject.service";
 
 @Component({
   selector: "app-categories",
@@ -18,24 +15,21 @@ export class CategoriesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   searchKey: string;
 
-  isSelected: boolean = false;
-  selected: Object;
-
-  categoryFormControl = new FormControl("", [
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(20)
-  ]);
-
-  matcher = new MyErrorStateMatcher();
-
   constructor(
     private categoryService: CategoriesService,
-    private router: Router
+    private subjectService: SubjectService
   ) {}
 
   ngOnInit() {
     this.getCategories();
+    this.subjectService.categoryRefreshed.subscribe(
+      succ => {
+        if (succ !== null) {
+          this.getCategories();
+        }
+      },
+      err => console.log(err)
+    );
   }
 
   getCategories() {
@@ -60,66 +54,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   show(category) {
-    this.selected = category;
-    this.categoryFormControl.patchValue(category.description);
-    this.isSelected = true;
-  }
-
-  add() {
-    let obj = { description: this.categoryFormControl.value };
-    this.categoryService.postCategory(obj).subscribe(
-      succ => {
-        this.getCategories();
-        this.categoryFormControl.reset();
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  edit() {
-    let obj = {
-      id: this.selected["_id"],
-      description: this.categoryFormControl.value
-    };
-    this.categoryService.patchCategory(obj).subscribe(
-      succ => {
-        this.getCategories();
-        this.categoryFormControl.reset();
-        this.isSelected = false;
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  delete() {
-    this.categoryService.deleteCategory(this.selected["_id"]).subscribe(
-      succ => {
-        this.getCategories();
-        this.categoryFormControl.reset();
-        this.isSelected = false;
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  cancel() {
-    this.categoryFormControl.reset();
-    this.isSelected = false;
-    this.selected = null;
+    this.subjectService.setCategorySelect(category);
+    this.subjectService.setItemSelectedFlag(true);
   }
 }

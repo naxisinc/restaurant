@@ -1,18 +1,17 @@
 import { Component, OnInit } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-
-import { SizesService } from "../../../services/sizes.service";
-import { SubjectService } from "../../../services/subject.service";
+import { FormControl, Validators } from "@angular/forms";
+import { CategoriesService } from "src/app/services/categories.service";
+import { SubjectService } from "src/app/services/subject.service";
 
 @Component({
-  selector: "app-sizes-form",
-  templateUrl: "./sizes-form.component.html",
-  styleUrls: ["./sizes-form.component.scss"]
+  selector: "app-categories-form",
+  templateUrl: "./categories-form.component.html",
+  styleUrls: ["./categories-form.component.scss"]
 })
-export class SizesFormComponent implements OnInit {
+export class CategoriesFormComponent implements OnInit {
   // Form Validators
-  sizeFormControl = new FormControl("", [
+  categoryFormControl = new FormControl("", [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(20)
@@ -22,17 +21,17 @@ export class SizesFormComponent implements OnInit {
   selected: Object;
 
   constructor(
-    private sizeService: SizesService,
+    private categoryService: CategoriesService,
     private router: Router,
     private subjectService: SubjectService
   ) {}
 
   ngOnInit() {
-    this.subjectService.sizeSelected.subscribe(
+    this.subjectService.categorySelected.subscribe(
       succ => {
         if (succ !== null) {
           this.selected = succ;
-          this.sizeFormControl.patchValue(this.selected["description"]);
+          this.categoryFormControl.patchValue(this.selected["description"]);
           this.isSelected = true;
         }
       },
@@ -41,11 +40,11 @@ export class SizesFormComponent implements OnInit {
   }
 
   add() {
-    let obj = { description: this.sizeFormControl.value };
-    this.sizeService.postSize(obj).subscribe(
+    let obj = { description: this.categoryFormControl.value };
+    this.categoryService.postCategory(obj).subscribe(
       succ => {
-        this.sizeFormControl.reset();
-        this.subjectService.sizeDataSourceRefresh();
+        this.categoryFormControl.reset();
+        this.subjectService.categoryDataSourceRefresh();
         this.subjectService.setItemSelectedFlag(false);
       },
       err => {
@@ -60,13 +59,13 @@ export class SizesFormComponent implements OnInit {
   edit() {
     let obj = {
       id: this.selected["_id"],
-      description: this.sizeFormControl.value
+      description: this.categoryFormControl.value
     };
-    this.sizeService.patchSize(obj).subscribe(
+    this.categoryService.patchCategory(obj).subscribe(
       succ => {
-        this.sizeFormControl.reset();
+        this.categoryFormControl.reset();
         this.isSelected = false;
-        this.subjectService.sizeDataSourceRefresh();
+        this.subjectService.categoryDataSourceRefresh();
         this.subjectService.setItemSelectedFlag(false);
       },
       err => {
@@ -79,11 +78,11 @@ export class SizesFormComponent implements OnInit {
   }
 
   delete() {
-    this.sizeService.deleteSize(this.selected["_id"]).subscribe(
+    this.categoryService.deleteCategory(this.selected["_id"]).subscribe(
       succ => {
-        this.sizeFormControl.reset();
+        this.categoryFormControl.reset();
         this.isSelected = false;
-        this.subjectService.sizeDataSourceRefresh();
+        this.subjectService.categoryDataSourceRefresh();
         this.subjectService.setItemSelectedFlag(false);
       },
       err => {
@@ -96,9 +95,9 @@ export class SizesFormComponent implements OnInit {
   }
 
   cancel() {
-    this.sizeFormControl.reset();
-    this.selected = null;
+    this.categoryFormControl.reset();
     this.isSelected = false;
+    this.selected = null;
     this.subjectService.setItemSelectedFlag(false);
   }
 }

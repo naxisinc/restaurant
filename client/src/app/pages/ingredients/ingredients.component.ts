@@ -1,18 +1,8 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  AbstractControl
-} from "@angular/forms";
 import { MatPaginator, PageEvent } from "@angular/material";
-import { Router } from "@angular/router";
 
 import { IngredientsService } from "../../services/ingredients.service";
-import {
-  MyErrorStateMatcher,
-  CustomValidator
-} from "../../services/validator.service";
+import { SubjectService } from "src/app/services/subject.service";
 
 @Component({
   selector: "app-ingredients",
@@ -26,13 +16,8 @@ export class IngredientsComponent implements OnInit {
   imgPath: string = "http://localhost:3000/images/";
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
-  isSelected: boolean = false;
-  selected: Object;
-  @ViewChild("fileInput") fileInput;
 
-  // Reactive Form and Matcher
-  IngredientForm: FormGroup;
-  matcher = new MyErrorStateMatcher();
+  @ViewChild("fileInput") fileInput;
 
   // MatPaginator Inputs
   length = 0;
@@ -44,21 +29,19 @@ export class IngredientsComponent implements OnInit {
 
   constructor(
     private ingredientService: IngredientsService,
-    private fb: FormBuilder,
-    private router: Router,
-    private customValidator: CustomValidator
-  ) {
-    this.IngredientForm = fb.group({
-      description: [
-        "",
-        [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
-      ],
-      file: ["", [Validators.required, this.customValidator.validatingExt]]
-    });
-  }
+    private subjectService: SubjectService
+  ) {}
 
   ngOnInit() {
     this.getIngredients();
+    this.subjectService.ingredientRefreshed.subscribe(
+      succ => {
+        if (succ !== null) {
+          this.getIngredients();
+        }
+      },
+      err => console.log(err)
+    );
 
     // Formatting Content
     this.onResize(window);
@@ -117,73 +100,7 @@ export class IngredientsComponent implements OnInit {
   }
 
   show(ingredient) {
-    this.selected = ingredient;
-    this.IngredientForm.controls.description.patchValue(ingredient.description);
-    this.isSelected = true;
-  }
-
-  add() {
-    let obj = {
-      description: this.IngredientForm.controls.description.value,
-      file: this.fileInput.nativeElement.files[0]
-    };
-
-    this.ingredientService.postIngredient(obj).subscribe(
-      succ => {
-        this.getIngredients();
-        this.IngredientForm.reset();
-        this.searchKey = "";
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  edit() {
-    let obj = {
-      id: this.selected["_id"],
-      description: this.IngredientForm.controls.description.value,
-      file: this.fileInput.nativeElement.files[0]
-    };
-    this.ingredientService.patchIngredient(obj).subscribe(
-      succ => {
-        this.getIngredients();
-        this.IngredientForm.reset();
-        this.isSelected = false;
-        this.searchKey = "";
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  delete() {
-    this.ingredientService.deleteIngredient(this.selected["_id"]).subscribe(
-      succ => {
-        this.getIngredients();
-        this.IngredientForm.reset();
-        this.isSelected = false;
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  cancel() {
-    this.IngredientForm.reset();
-    this.isSelected = false;
-    this.selected = null;
+    this.subjectService.setIngredientSelect(ingredient);
+    this.subjectService.setItemSelectedFlag(true);
   }
 }

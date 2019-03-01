@@ -37,10 +37,35 @@ export class SubjectService {
   sizeDataSourceRefresh() {
     this.sizeRefresh.next("");
   }
-
   private sizeSelect = new BehaviorSubject(null);
   sizeSelected = this.sizeSelect.asObservable();
   setSizeSelect(size: object) {
     this.sizeSelect.next(size);
+  }
+
+  // ============= Categories ===========
+  // Refresh the DataSource
+  private categoryRefresh = new BehaviorSubject(null);
+  categoryRefreshed = this.categoryRefresh.asObservable();
+  categoryDataSourceRefresh() {
+    this.categoryRefresh.next("");
+  }
+  private categorySelect = new BehaviorSubject(null);
+  categorySelected = this.categorySelect.asObservable();
+  setCategorySelect(category: object) {
+    this.categorySelect.next(category);
+  }
+
+  // ============= Ingredients ===========
+  // Refresh the DataSource
+  private ingredientRefresh = new BehaviorSubject(null);
+  ingredientRefreshed = this.ingredientRefresh.asObservable();
+  ingredientDataSourceRefresh() {
+    this.ingredientRefresh.next("");
+  }
+  private ingredientSelect = new BehaviorSubject(null);
+  ingredientSelected = this.ingredientSelect.asObservable();
+  setIngredientSelect(ingredient: object) {
+    this.ingredientSelect.next(ingredient);
   }
 }
