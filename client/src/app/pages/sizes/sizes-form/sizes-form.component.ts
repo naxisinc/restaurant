@@ -101,4 +101,8 @@ export class SizesFormComponent implements OnInit {
     this.isSelected = false;
     this.subjectService.setItemSelectedFlag(false);
   }
+
+  ngOnDestroy() {
+    this.subjectService.setSizeSelect(null);
+  }
 }

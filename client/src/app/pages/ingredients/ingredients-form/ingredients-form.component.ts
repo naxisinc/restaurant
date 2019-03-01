@@ -114,4 +114,8 @@ export class IngredientsFormComponent implements OnInit {
     this.selected = null;
     this.subjectService.setItemSelectedFlag(false);
   }
+
+  ngOnDestroy() {
+    this.subjectService.setIngredientSelect(null);
+  }
 }

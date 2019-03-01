@@ -100,4 +100,8 @@ export class CategoriesFormComponent implements OnInit {
     this.selected = null;
     this.subjectService.setItemSelectedFlag(false);
   }
+
+  ngOnDestroy() {
+    this.subjectService.setCategorySelect(null);
+  }
 }

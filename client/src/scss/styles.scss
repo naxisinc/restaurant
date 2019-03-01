@@ -22,6 +22,10 @@ body {
   .sidenav-end {
     width: 500px;
   }
+  .search-form-field {
+    width: 40%;
+    margin-left: 57%;
+  }
 }
 // Desktops
 @media (max-width: 1024px) {
@@ -33,6 +37,10 @@ body {
   }
   .sidenav-end {
     width: 300px;
+  }
+  .search-form-field {
+    width: 60%;
+    margin-left: 35%;
   }
 }
 // Tablets
@@ -46,11 +54,10 @@ body {
   .sidenav-end {
     width: 200px;
   }
-  // #filter,
-  // .search-div {
-  //   width: 90%;
-  //   margin: auto;
-  // }
+  .search-form-field {
+    width: 80%;
+    margin-left: 15%;
+  }
 }
 // Phones
 @media (max-width: 375px) {
@@ -87,13 +94,13 @@ header {
   font-size: 1rem;
   font-weight: bold;
 }
-#filter,
+// #filter,
 .search-div {
-  width: 90%;
-  margin: auto;
+  width: 50%;
+  margin-left: 50%;
+  padding: 0.5rem 0;
 }
 .search-form-field {
-  width: 100%;
   border-radius: 50px;
   background: #b0bec5;
 }

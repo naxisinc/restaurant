@@ -26,7 +26,8 @@
           <h3>Sizes</h3>
         </mat-header-cell>
         <mat-cell *matCellDef="let element"
-          (click)="show(element)">{{
+          (click)="show(element)"
+          class="pointer">{{
           element.description
         }}</mat-cell>
       </ng-container>
