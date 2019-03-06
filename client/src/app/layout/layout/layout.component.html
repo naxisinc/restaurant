@@ -1,4 +1,4 @@
-<!-- <mat-toolbar class="example-header">Header</mat-toolbar> -->
+<mat-toolbar class="example-header">Header</mat-toolbar>
 <mat-sidenav-container
   class="sidenav-container"
   (backdropClick)="close('backdrop')"
@@ -6,7 +6,7 @@
   <mat-sidenav
     #drawer
     class="sidenav"
-    fixedInViewport="true"
+    fixedInViewport="false"
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="!(isHandset$ | async)"
@@ -14,7 +14,7 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item routerLink="/admin/sizes">Sizes</a>
-      <a mat-list-item routerLink="/admin/categories">Categories </a>
+      <a mat-list-item routerLink="/admin/categories">Categories</a>
       <a mat-list-item routerLink="/admin/ingredients">Ingredients</a>
       <a mat-list-item routerLink="/admin/plates">Dishes</a>
       <a mat-list-item routerLink="/admin/comments">Comments</a>
@@ -22,10 +22,10 @@
       <mat-divider></mat-divider>
     </mat-nav-list>
   </mat-sidenav>
-  <!-- <mat-sidenav
+  <mat-sidenav
     position="end"
     class="sidenav-end"
-    fixedInViewport="true"
+    fixedInViewport="false"
     (keydown.escape)="close('escape')"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="
@@ -34,7 +34,7 @@
     "
   >
     <app-cud></app-cud>
-  </mat-sidenav> -->
+  </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
       <button
