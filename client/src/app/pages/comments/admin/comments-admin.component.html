@@ -1,35 +1,28 @@
-<div
-  class="box-container"
+<div class="box-container"
   fxLayout="column"
-  [ngStyle.lt-sm]="'min-height: 800px;'"
->
-  <div
-    class="horizontal-container"
+  [ngStyle.lt-sm]="'min-height: 800px;'">
+  <div class="horizontal-container"
     fxLayout="row"
     fxLayout.lt-sm="column"
     fxLayoutAlign="stretch"
-    fxFlex="auto"
-  >
-    <div
-      class="vertical-container"
+    fxFlex="auto">
+    <div class="vertical-container"
       fxLayout="column"
       fxLayoutAlign="stretch"
-      fxFlex="100%"
-    >
-      <div
-        class="content-container"
+      fxFlex="100%">
+      <div class="content-container"
         fxLayout="column"
         fxLayoutAlign="stretch"
-        fxFlex="auto"
-      >
-        <swiper
-          class="swiper-container"
+        fxFlex="auto">
+        <swiper class="swiper-container"
           fxFlex="auto"
           [config]="config"
-          (indexChange)="onIndexChange($event)"
-        >
-          <div *ngFor="let slide of plates" class="swiper-slide">
-            <div fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
+          (indexChange)="onIndexChange($event)">
+          <div *ngFor="let slide of plates"
+            class="swiper-slide">
+            <div fxLayout="column"
+              fxLayoutAlign="center center"
+              fxFlexFill>
               {{ slide.description }}
               <img src="http://localhost:3000/images/{{ slide.img }}" />
             </div>
@@ -42,20 +35,16 @@
 <mat-divider></mat-divider>
 <mat-list>
   <mat-list-item *ngFor="let comment of commentsOfSelectedPlate; let i = index">
-    <img
-      matListAvatar
+    <img matListAvatar
       src="../../../../assets/images/avatars/images.jpg"
-      alt=""
-    />
+      alt="" />
 
     <div matLine>
-      <star-rating
-        [starType]="'svg'"
+      <star-rating [starType]="'svg'"
         [rating]="comment.rate"
         showHalfStars="true"
         readOnly="true"
-        staticColor="ok"
-      >
+        staticColor="ok">
       </star-rating>
     </div>
 
@@ -69,35 +58,43 @@
       <span> {{ comment.comment }} </span>
     </p>
 
-    <div class="reply" *ngIf="comment.reply" matLine>
+    <div class="reply"
+      *ngIf="comment.reply"
+      matLine>
       <p>
         <span> {{ comment.reply }} </span>
       </p>
-      <button mat-button (click)="loadEdit(i)">Edit</button>
-      <button
-        mat-button
+      <button mat-button
+        (click)="loadEdit(i)">Edit</button>
+      <button mat-button
         (click)="openDialog(comment._id, 'reply')"
-        color="warn"
-      >
+        color="warn">
         Delete
       </button>
     </div>
 
-    <div class="reply" *ngIf="reply[i]" matLine>
+    <div class="reply"
+      *ngIf="reply[i]"
+      matLine>
       <mat-form-field matLine>
-        <textarea
-          matInput
+        <textarea matInput
           placeholder="Leave a reply"
-          [(ngModel)]="response"
-        ></textarea>
+          [(ngModel)]="response"></textarea>
       </mat-form-field>
-      <button mat-button (click)="postingReply(comment._id)">Post reply</button>
-      <button mat-button (click)="reply[i] = false">Cancel</button>
+      <button mat-button
+        (click)="postingReply(comment._id)">Post reply</button>
+      <button mat-button
+        (click)="reply[i] = false">Cancel</button>
     </div>
 
-    <div class="btns" *ngIf="!comment.reply && !reply[i]" matLine>
-      <button mat-button (click)="replyFn(i)">Reply</button>
-      <button mat-button (click)="openDialog(comment._id, 'post')" color="warn">
+    <div class="btns"
+      *ngIf="!comment.reply && !reply[i]"
+      matLine>
+      <button mat-button
+        (click)="replyFn(i)">Reply</button>
+      <button mat-button
+        (click)="openDialog(comment._id, 'post')"
+        color="warn">
         Delete
       </button>
     </div>

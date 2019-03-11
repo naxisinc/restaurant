@@ -18,18 +18,19 @@ export class SizesComponent implements OnInit {
   constructor(
     private sizeService: SizesService,
     private subjectService: SubjectService
-  ) {}
+  ) {
+    // this.subjectService.sizeRefreshed.subscribe(
+    //   succ => {
+    //     if (succ !== null) {
+    //       this.getSizes();
+    //     }
+    //   },
+    //   err => console.log(err)
+    // );
+  }
 
   ngOnInit() {
     this.getSizes();
-    this.subjectService.sizeRefreshed.subscribe(
-      succ => {
-        if (succ !== null) {
-          this.getSizes();
-        }
-      },
-      err => console.log(err)
-    );
   }
 
   getSizes() {

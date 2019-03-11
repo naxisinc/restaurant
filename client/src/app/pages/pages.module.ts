@@ -18,6 +18,8 @@ import { SizesComponent } from "./sizes/sizes.component";
 import { SizesFormComponent } from "./sizes/sizes-form/sizes-form.component";
 import { CategoriesComponent } from "./categories/categories.component";
 import { CategoriesFormComponent } from "./categories/categories-form/categories-form.component";
+import { MixedComponent } from "./mixed/mixed.component";
+import { MixedFormComponent } from "./mixed/mixed-form/mixed-form.component";
 import { IngredientsComponent } from "./ingredients/ingredients.component";
 import { IngredientsFormComponent } from "./ingredients/ingredients-form/ingredients-form.component";
 import { PlatesComponent } from "./plates/plates.component";
@@ -44,6 +46,8 @@ const COMPONENTS = [
   SizesFormComponent,
   CategoriesComponent,
   CategoriesFormComponent,
+  MixedComponent,
+  MixedFormComponent,
   IngredientsComponent,
   IngredientsFormComponent,
   PlatesComponent,
@@ -56,6 +60,7 @@ const COMPONENTS = [
 const CudForms = [
   SizesFormComponent,
   CategoriesFormComponent,
+  MixedFormComponent,
   IngredientsFormComponent,
   PlatesFormComponent
 ];

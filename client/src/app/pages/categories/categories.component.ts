@@ -18,10 +18,7 @@ export class CategoriesComponent implements OnInit {
   constructor(
     private categoryService: CategoriesService,
     private subjectService: SubjectService
-  ) {}
-
-  ngOnInit() {
-    this.getCategories();
+  ) {
     this.subjectService.categoryRefreshed.subscribe(
       succ => {
         if (succ !== null) {
@@ -30,6 +27,10 @@ export class CategoriesComponent implements OnInit {
       },
       err => console.log(err)
     );
+  }
+
+  ngOnInit() {
+    this.getCategories();
   }
 
   getCategories() {

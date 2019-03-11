@@ -6,12 +6,13 @@
 @import "~css-star-rating/scss/star-rating";
 @import "_variables.scss";
 
+* {
+  margin: 0;
+  padding: 0;
+}
 html,
 body {
   height: 100%;
-}
-body {
-  margin: 0;
 }
 
 // @ Mobile First
@@ -31,12 +32,6 @@ body {
   #login-form {
     width: 70%;
   }
-  .sidenav {
-    width: 120px;
-  }
-  .sidenav-end {
-    width: 300px;
-  }
   .search-form-field {
     width: 80%;
     margin-left: 15%;
@@ -47,12 +42,6 @@ body {
 @media only screen and (min-width: 1024px) {
   #login-form {
     width: 30%;
-  }
-  .sidenav {
-    width: 125px;
-  }
-  .sidenav-end {
-    width: 250px;
   }
   .search-form-field {
     width: 60%;
@@ -65,24 +54,12 @@ body {
   #login-form {
     width: 25%;
   }
-  .sidenav {
-    width: 150px;
-  }
-  .sidenav-end {
-    width: 300px;
-  }
 }
 
 // XL Desktops
 @media only screen and (min-width: 1920px) {
   #login-form {
     width: 20%;
-  }
-  .sidenav {
-    width: 175px;
-  }
-  .sidenav-end {
-    width: 400px;
   }
   .search-form-field {
     width: 40%;
@@ -135,6 +112,8 @@ header {
   width: 32px;
 }
 #data-source-div {
+  padding: 0 2rem 2rem 2rem;
+  margin: auto;
 }
 .cud-div {
   width: 90%;

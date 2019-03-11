@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { HomeComponent } from "./home/home.component";
 import { LoginComponent } from "./users/login/login.component";
 import { UsersComponent } from "./users/users.component";
+import { MixedComponent } from "./mixed/mixed.component";
 import { SizesComponent } from "./sizes/sizes.component";
 import { CategoriesComponent } from "./categories/categories.component";
 import { IngredientsComponent } from "./ingredients/ingredients.component";
@@ -15,10 +16,10 @@ import { AuthGuard } from "../guards/auth.guard";
 const routes: Routes = [
   { path: "home", component: HomeComponent },
   { path: "login", component: LoginComponent },
-  { path: "admin/sizes", component: SizesComponent, canActivate: [AuthGuard] },
+  { path: "admin/sizes", component: MixedComponent, canActivate: [AuthGuard] },
   {
     path: "admin/categories",
-    component: CategoriesComponent,
+    component: MixedComponent,
     canActivate: [AuthGuard]
   },
   {

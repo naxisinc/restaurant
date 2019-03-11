@@ -56,6 +56,19 @@ export class SubjectService {
     this.categorySelect.next(category);
   }
 
+  // ============= Mixed ===========
+  // Table for renderRows() from any route
+  private tableToRefresh = new BehaviorSubject(null);
+  getTable = this.tableToRefresh.asObservable();
+  pushTable(table: any) {
+    this.tableToRefresh.next(table);
+  }
+  private elementSelect = new BehaviorSubject(null);
+  elementSelected = this.elementSelect.asObservable();
+  setElementSelect(element: object) {
+    this.elementSelect.next(element);
+  }
+
   // ============= Ingredients ===========
   // Refresh the DataSource
   private ingredientRefresh = new BehaviorSubject(null);

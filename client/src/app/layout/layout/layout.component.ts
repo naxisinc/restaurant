@@ -20,6 +20,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
 
+  isEnoughBig$: Observable<boolean> = this.breakpointObserver
+    .observe("(max-width: 1256px)")
+    .pipe(map(result => result.matches));
+
   isCudRoute: boolean = false;
   isItemSelected: boolean;
   constructor(
