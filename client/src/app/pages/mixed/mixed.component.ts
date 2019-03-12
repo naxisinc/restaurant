@@ -1,10 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import {
-  MatSort,
-  MatTable,
-  MatTableDataSource,
-  MatPaginator
-} from "@angular/material";
+import { MatSort, MatTableDataSource, MatPaginator } from "@angular/material";
 import { CategoriesService } from "src/app/services/categories.service";
 import { SizesService } from "src/app/services/sizes.service";
 import { Router } from "@angular/router";
@@ -18,7 +13,6 @@ import { SubjectService } from "src/app/services/subject.service";
 export class MixedComponent implements OnInit {
   listData: MatTableDataSource<any>;
   displayedColumns: string[] = ["description"];
-  @ViewChild(MatTable) table: MatTable<any>;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   searchKey: string;
@@ -30,12 +24,24 @@ export class MixedComponent implements OnInit {
     private sizeService: SizesService,
     private router: Router
   ) {
-    this.subjectService.pushTable(this.table);
+    // Getting the route from observer
+    this.subjectService.currentRoute.subscribe(route => {
+      this.route = route;
+    });
+
+    // Listen the observer for refresh the datasource
+    this.subjectService.elementRefreshed.subscribe(
+      succ => {
+        if (succ !== null) {
+          this.getData();
+        }
+      },
+      err => console.log(err)
+    );
   }
 
-  ngOnInit() {
-    this.route = this.router.url.split("/").pop();
-    this.getData();
+  async ngOnInit() {
+    await this.getData();
   }
 
   async getData() {
@@ -61,6 +67,9 @@ export class MixedComponent implements OnInit {
 
   applyFilter() {
     this.listData.filter = this.searchKey.trim().toLowerCase();
+    // this.listData = this.listData.filter(it => {
+    //   return it.
+    // })
   }
 
   show(element) {

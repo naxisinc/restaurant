@@ -4,8 +4,6 @@ import { HomeComponent } from "./home/home.component";
 import { LoginComponent } from "./users/login/login.component";
 import { UsersComponent } from "./users/users.component";
 import { MixedComponent } from "./mixed/mixed.component";
-import { SizesComponent } from "./sizes/sizes.component";
-import { CategoriesComponent } from "./categories/categories.component";
 import { IngredientsComponent } from "./ingredients/ingredients.component";
 import { PlatesComponent } from "./plates/plates.component";
 import { CommentsAdminComponent } from "./comments/admin/comments-admin.component";

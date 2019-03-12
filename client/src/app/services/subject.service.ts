@@ -58,10 +58,10 @@ export class SubjectService {
 
   // ============= Mixed ===========
   // Table for renderRows() from any route
-  private tableToRefresh = new BehaviorSubject(null);
-  getTable = this.tableToRefresh.asObservable();
-  pushTable(table: any) {
-    this.tableToRefresh.next(table);
+  private elementToRefresh = new BehaviorSubject(null);
+  elementRefreshed = this.elementToRefresh.asObservable();
+  elementDataSourceRefresh() {
+    this.elementToRefresh.next("");
   }
   private elementSelect = new BehaviorSubject(null);
   elementSelected = this.elementSelect.asObservable();

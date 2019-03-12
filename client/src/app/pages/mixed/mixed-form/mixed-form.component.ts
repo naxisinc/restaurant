@@ -13,7 +13,6 @@ import { SubjectService } from "src/app/services/subject.service";
 })
 export class MixedFormComponent implements OnInit {
   element: string; // sizes OR categories
-  table: any;
 
   // Form Validators
   elementFormControl = new FormControl("", [
@@ -37,15 +36,6 @@ export class MixedFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.subjectService.getTable.subscribe(
-      succ => {
-        if (succ !== null) {
-          this.table = succ;
-        }
-      },
-      err => console.log(err)
-    );
-
     this.subjectService.elementSelected.subscribe(
       succ => {
         if (succ !== null) {
@@ -61,76 +51,56 @@ export class MixedFormComponent implements OnInit {
   async add() {
     try {
       let obj = { description: this.elementFormControl.value };
-      const result =
-        this.element === "sizes"
-          ? await this.sizeService.postSize(obj).toPromise()
-          : await this.categoryService.postCategory(obj).toPromise();
-      if (result) {
-        this.elementFormControl.reset();
-        this.subjectService.setItemSelectedFlag(false);
-        this.table.renderRows();
-      }
+      this.element === "sizes"
+        ? await this.sizeService.postSize(obj).toPromise()
+        : await this.categoryService.postCategory(obj).toPromise();
+
+      this.clearEverything();
     } catch (e) {
       console.log(e);
     }
-
-    /*this.categoryService.postCategory(obj).subscribe(
-      succ => {
-        this.elementFormControl.reset();
-        this.subjectService.categoryDataSourceRefresh();
-        this.subjectService.setItemSelectedFlag(false);
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );*/
   }
 
-  edit() {
-    let obj = {
-      id: this.selected["_id"],
-      description: this.elementFormControl.value
-    };
-    this.categoryService.patchCategory(obj).subscribe(
-      succ => {
-        this.elementFormControl.reset();
-        this.isSelected = false;
-        this.subjectService.categoryDataSourceRefresh();
-        this.subjectService.setItemSelectedFlag(false);
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
+  async edit() {
+    try {
+      let obj = {
+        id: this.selected["_id"],
+        description: this.elementFormControl.value
+      };
+      this.element === "sizes"
+        ? await this.sizeService.patchSize(obj).toPromise()
+        : await this.categoryService.patchCategory(obj).toPromise();
+
+      this.clearEverything();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
-  delete() {
-    this.categoryService.deleteCategory(this.selected["_id"]).subscribe(
-      succ => {
-        this.elementFormControl.reset();
-        this.isSelected = false;
-        this.subjectService.categoryDataSourceRefresh();
-        this.subjectService.setItemSelectedFlag(false);
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
+  async delete() {
+    try {
+      let id = this.selected["_id"];
+      this.element === "sizes"
+        ? await this.sizeService.deleteSize(id).toPromise()
+        : await this.categoryService.deleteCategory(id).toPromise();
+
+      this.clearEverything();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   cancel() {
-    this.elementFormControl.reset();
-    this.isSelected = false;
     this.selected = null;
+    this.isSelected = false;
+    this.elementFormControl.reset();
+    this.subjectService.setItemSelectedFlag(false);
+  }
+
+  clearEverything() {
+    this.isSelected = false;
+    this.elementFormControl.reset();
+    this.subjectService.elementDataSourceRefresh();
     this.subjectService.setItemSelectedFlag(false);
   }
 

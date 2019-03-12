@@ -14,10 +14,6 @@ import { MaterialModule } from "../material";
 import { HomeComponent } from "./home/home.component";
 import { LoginComponent } from "./users/login/login.component";
 import { UsersComponent } from "./users/users.component";
-import { SizesComponent } from "./sizes/sizes.component";
-import { SizesFormComponent } from "./sizes/sizes-form/sizes-form.component";
-import { CategoriesComponent } from "./categories/categories.component";
-import { CategoriesFormComponent } from "./categories/categories-form/categories-form.component";
 import { MixedComponent } from "./mixed/mixed.component";
 import { MixedFormComponent } from "./mixed/mixed-form/mixed-form.component";
 import { IngredientsComponent } from "./ingredients/ingredients.component";
@@ -42,10 +38,6 @@ const COMPONENTS = [
   HomeComponent,
   LoginComponent,
   UsersComponent,
-  SizesComponent,
-  SizesFormComponent,
-  CategoriesComponent,
-  CategoriesFormComponent,
   MixedComponent,
   MixedFormComponent,
   IngredientsComponent,
@@ -58,8 +50,6 @@ const COMPONENTS = [
 ];
 
 const CudForms = [
-  SizesFormComponent,
-  CategoriesFormComponent,
   MixedFormComponent,
   IngredientsFormComponent,
   PlatesFormComponent

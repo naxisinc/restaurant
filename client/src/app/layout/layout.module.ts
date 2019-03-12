@@ -19,6 +19,7 @@ const COMPONENTS = [LayoutComponent, SessionDialog, CudComponent];
     RouterModule,
     PagesModule,
     ComponentsModule
-  ]
+  ],
+  entryComponents: [SessionDialog]
 })
 export class LayoutModule {}

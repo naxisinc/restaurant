@@ -70,7 +70,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   secondsDisplay = 0;
 
   // endTime = 1; // min de inactividad antes de logout
-  // preLogoutTime = 40; // seconds (60min = 3600sec) - 3480sec = [2min]
+  // preLogoutTime = 30; // seconds (60min = 3600sec) - 3480sec = [2min]
   endTime = 60; // min de inactividad antes de logout
   preLogoutTime = 3480; // seconds (60min = 3600sec) - 3480sec = [2min]
 
