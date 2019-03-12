@@ -17,8 +17,6 @@ export class IngredientsComponent implements OnInit {
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
 
-  @ViewChild("fileInput") fileInput;
-
   // MatPaginator Inputs
   length = 0;
   pageSize = 6;
@@ -30,10 +28,7 @@ export class IngredientsComponent implements OnInit {
   constructor(
     private ingredientService: IngredientsService,
     private subjectService: SubjectService
-  ) {}
-
-  ngOnInit() {
-    this.getIngredients();
+  ) {
     this.subjectService.ingredientRefreshed.subscribe(
       succ => {
         if (succ !== null) {
@@ -42,6 +37,10 @@ export class IngredientsComponent implements OnInit {
       },
       err => console.log(err)
     );
+  }
+
+  ngOnInit() {
+    this.getIngredients();
 
     // Formatting Content
     this.onResize(window);
