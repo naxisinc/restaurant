@@ -21,6 +21,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     .pipe(map(result => result.matches));
 
   isEnoughBig$: Observable<boolean> = this.breakpointObserver
+    // .observe("(max-width: 1280px)")
     .observe("(max-width: 1256px)")
     .pipe(map(result => result.matches));
 

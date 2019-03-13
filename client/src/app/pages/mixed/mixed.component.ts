@@ -40,8 +40,8 @@ export class MixedComponent implements OnInit {
     );
   }
 
-  async ngOnInit() {
-    await this.getData();
+  ngOnInit() {
+    this.getData();
   }
 
   async getData() {
@@ -67,9 +67,6 @@ export class MixedComponent implements OnInit {
 
   applyFilter() {
     this.listData.filter = this.searchKey.trim().toLowerCase();
-    // this.listData = this.listData.filter(it => {
-    //   return it.
-    // })
   }
 
   show(element) {

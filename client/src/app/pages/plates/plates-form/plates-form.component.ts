@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormGroup, FormBuilder, Validators, FormArray } from "@angular/forms";
 import { CustomValidator } from "src/app/services/validator.service";
 import { SizesService } from "src/app/services/sizes.service";
+import { PlatesService } from "src/app/services/plates.service";
+import { SubjectService } from "src/app/services/subject.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-plates-form",
@@ -17,6 +20,9 @@ export class PlatesFormComponent implements OnInit {
   isSelected: boolean = false;
   selected: Object;
   @ViewChild("fileInput") fileInput;
+
+  // Set the Ingredients in the child component
+  setIngredients = [];
 
   // Reactive Form and properties
   parentForm: FormGroup = this.fb.group({
@@ -34,7 +40,10 @@ export class PlatesFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private sizesService: SizesService,
-    private customValidator: CustomValidator
+    private customValidator: CustomValidator,
+    private plateService: PlatesService,
+    private subjectService: SubjectService,
+    private router: Router
   ) {
     // Get sizes
     this.sizesService.getSizes().subscribe(
@@ -63,13 +72,105 @@ export class PlatesFormComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.subjectService.dishSelected.subscribe(
+      succ => {
+        if (succ !== null) {
+          this.selected = succ;
+          console.log(this.selected);
+          this.parentForm.patchValue({
+            description: this.selected["description"],
+            category: this.selected["_category"],
+            items: this.selected["details"]
+          });
+          // Ingredients
+          //if (!this.isSelected || this.selected["_id"] !== dish._id) {
+          this.setIngredients = [];
+          this.selected["_ingredients"].forEach(ingredient => {
+            this.setIngredients.push(ingredient.description);
+            this.ingredientsId.push(ingredient._id); // update the listener array
+          });
+          //}
+          this.isSelected = true;
+        }
+      },
+      err => console.log(err)
+    );
+  }
 
   gettingIngredients(list) {
     this.ingredientsId = list;
   }
 
-  /*clearForm() {
+  getFormValues() {
+    let sizeDetailsArray = [];
+    this.parentForm.get("items")["controls"].forEach(size => {
+      sizeDetailsArray.push(size.value);
+    });
+    let obj = {
+      id: this.isSelected ? this.selected["_id"] : "undefined",
+      description: this.parentForm.controls.description.value,
+      file: this.fileInput.nativeElement.files[0],
+      _ingredients: this.ingredientsId,
+      _category: this.parentForm.controls.category.value._id,
+      sizeDetails: sizeDetailsArray
+    };
+    return obj;
+  }
+
+  add() {
+    let data = this.getFormValues();
+    this.plateService.postPlate(data).subscribe(
+      res => {
+        this.clearEverything();
+      },
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
+      }
+    );
+  }
+
+  edit() {
+    let data = this.getFormValues();
+    this.plateService.patchPlate(data).subscribe(
+      succ => {
+        this.clearEverything();
+      },
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
+      }
+    );
+  }
+
+  delete() {
+    this.plateService.deletePlate(this.selected["_id"]).subscribe(
+      succ => {
+        this.clearEverything();
+      },
+      err => {
+        // Unauthorized
+        if (err.status === 401) {
+          this.router.navigate(["login"]);
+        } else console.log(err);
+      }
+    );
+  }
+
+  cancel() {
+    this.selected = null;
+    this.clearEverything();
+    this.isSelected = false;
+  }
+
+  clearEverything() {
+    this.isSelected = false;
+
     this.parentForm.reset();
     this.sizes.forEach((size, index) => {
       this.parentForm.controls.items["controls"][
@@ -81,5 +182,12 @@ export class PlatesFormComponent implements OnInit {
     });
     this.setIngredients = [];
     this.ingredientsId = []; // claening ingredients previously selected
-  }*/
+
+    this.subjectService.setItemSelectedFlag(false);
+    this.subjectService.dishDataSourceRefresh();
+  }
+
+  ngOnDestroy() {
+    this.subjectService.setDishSelect(null);
+  }
 }

@@ -30,34 +30,8 @@ export class SubjectService {
     this.flag.next(state);
   }
 
-  // ============= Size ===========
-  // Refresh the DataSource
-  private sizeRefresh = new BehaviorSubject(null);
-  sizeRefreshed = this.sizeRefresh.asObservable();
-  sizeDataSourceRefresh() {
-    this.sizeRefresh.next("");
-  }
-  private sizeSelect = new BehaviorSubject(null);
-  sizeSelected = this.sizeSelect.asObservable();
-  setSizeSelect(size: object) {
-    this.sizeSelect.next(size);
-  }
-
-  // ============= Categories ===========
-  // Refresh the DataSource
-  private categoryRefresh = new BehaviorSubject(null);
-  categoryRefreshed = this.categoryRefresh.asObservable();
-  categoryDataSourceRefresh() {
-    this.categoryRefresh.next("");
-  }
-  private categorySelect = new BehaviorSubject(null);
-  categorySelected = this.categorySelect.asObservable();
-  setCategorySelect(category: object) {
-    this.categorySelect.next(category);
-  }
-
   // ============= Mixed ===========
-  // Table for renderRows() from any route
+  // Refresh the DataSource
   private elementToRefresh = new BehaviorSubject(null);
   elementRefreshed = this.elementToRefresh.asObservable();
   elementDataSourceRefresh() {
@@ -80,5 +54,18 @@ export class SubjectService {
   ingredientSelected = this.ingredientSelect.asObservable();
   setIngredientSelect(ingredient: object) {
     this.ingredientSelect.next(ingredient);
+  }
+
+  // ============= Dishes ===========
+  // Refresh the DataSource
+  private dishRefresh = new BehaviorSubject(null);
+  dishRefreshed = this.dishRefresh.asObservable();
+  dishDataSourceRefresh() {
+    this.dishRefresh.next("");
+  }
+  private dishSelect = new BehaviorSubject(null);
+  dishSelected = this.dishSelect.asObservable();
+  setDishSelect(ingredient: object) {
+    this.dishSelect.next(ingredient);
   }
 }

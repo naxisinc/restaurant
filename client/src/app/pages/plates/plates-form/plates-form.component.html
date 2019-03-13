@@ -1,88 +1,115 @@
 <div class="cud-div">
-  <form [formGroup]="parentForm"
-    enctype="multipart/form-data">
+  <form [formGroup]="parentForm" enctype="multipart/form-data">
     <mat-form-field>
-      <input matInput
+      <input
+        matInput
         placeholder="Name of the dish"
         formControlName="description"
-        [errorStateMatcher]="matcher" />
-      <mat-error *ngIf="parentForm.controls.description.hasError('required')">Description is
-        <strong>required.</strong></mat-error>
-      <mat-error *ngIf="parentForm.controls.description.hasError('minlength')">The description must be at
-        least 3 characters long.</mat-error>
-      <mat-error *ngIf="parentForm.controls.description.hasError('maxlength')">The description must have less
-        that 50 characters.</mat-error>
+        [errorStateMatcher]="matcher"
+      />
+      <mat-error *ngIf="parentForm.controls.description.hasError('required')"
+        >Description is <strong>required.</strong></mat-error
+      >
+      <mat-error *ngIf="parentForm.controls.description.hasError('minlength')"
+        >The description must be at least 3 characters long.</mat-error
+      >
+      <mat-error *ngIf="parentForm.controls.description.hasError('maxlength')"
+        >The description must have less that 50 characters.</mat-error
+      >
     </mat-form-field>
-    <input class="btn-file"
+    <input
+      class="btn-file"
       type="file"
       #fileInput
       formControlName="file"
-      accept=".png, .jpg, .jpeg" />
-    <mat-error *ngIf="parentForm.controls.file.hasError('extension')">The extension must be [*.png, *.jpg,
-      *.jpeg].</mat-error>
-    <app-chips (ingredients)="gettingIngredients($event)"></app-chips>
+      accept=".png, .jpg, .jpeg"
+    />
+    <mat-error *ngIf="parentForm.controls.file.hasError('extension')"
+      >The extension must be [*.png, *.jpg, *.jpeg].</mat-error
+    >
+    <app-chips
+      (ingredients)="gettingIngredients($event)"
+      [fruits]="setIngredients"
+    ></app-chips>
     <app-select [parentForm]="parentForm"></app-select>
 
     <mat-list *ngIf="sizes?.length > 0">
       <mat-list-item>Details of the dishes</mat-list-item>
       <!-- <mat-divider></mat-divider> -->
       <div formArrayName="items">
-        <mat-tab-group animationDuration="0ms"
+        <mat-tab-group
+          animationDuration="0ms"
           backgroundColor="accent"
-          dynamicHeight>
-          <mat-tab *ngFor="
-                let item of parentForm.get('items').controls;
-                let i = index
-              "
-            label="{{ item.value.description }}">
+          dynamicHeight
+        >
+          <mat-tab
+            *ngFor="let item of parentForm.get('items').controls; let i = index"
+            label="{{ item.value.description }}"
+          >
             <div [formGroupName]="i">
               <mat-form-field style="margin-top:1rem;">
                 <span matPrefix>$ &nbsp;</span>
-                <input required
+                <input
+                  required
                   matInput
                   placeholder="Price"
-                  formControlName="price" />
-                <mat-error *ngIf="item.controls.price.hasError('required')">Price is <strong>required</strong>
+                  formControlName="price"
+                />
+                <mat-error *ngIf="item.controls.price.hasError('required')"
+                  >Price is <strong>required</strong>
                 </mat-error>
-                <mat-error *ngIf="item.controls.price.hasError('pattern')">The price must be an integer number
-                  in this format
-                  <strong>(xx.xx)</strong>.</mat-error>
+                <mat-error *ngIf="item.controls.price.hasError('pattern')"
+                  >The price must be an integer number in this format
+                  <strong>(xx.xx)</strong>.</mat-error
+                >
               </mat-form-field>
               <mat-form-field>
-                <input type="number"
+                <input
+                  type="number"
                   required
                   matInput
                   placeholder="Calories"
-                  formControlName="calories" />
+                  formControlName="calories"
+                />
                 <span matSuffix>cal</span>
-                <mat-error *ngIf="item.controls.calories.hasError('required')">Calories are
-                  <strong>required</strong></mat-error>
-                <mat-error *ngIf="item.controls.calories.hasError('pattern')">The calories must be an integer
-                  number.</mat-error>
+                <mat-error *ngIf="item.controls.calories.hasError('required')"
+                  >Calories are <strong>required</strong></mat-error
+                >
+                <mat-error *ngIf="item.controls.calories.hasError('pattern')"
+                  >The calories must be an integer number.</mat-error
+                >
               </mat-form-field>
               <mat-form-field>
-                <input type="number"
+                <input
+                  type="number"
                   required
                   matInput
                   placeholder="Total Fat"
-                  formControlName="totalfat" />
+                  formControlName="totalfat"
+                />
                 <span matSuffix>g</span>
-                <mat-error *ngIf="item.controls.totalfat.hasError('required')">Total Fat is
-                  <strong>required</strong></mat-error>
-                <mat-error *ngIf="item.controls.totalfat.hasError('pattern')">The Total Fat must be an integer
-                  number.</mat-error>
+                <mat-error *ngIf="item.controls.totalfat.hasError('required')"
+                  >Total Fat is <strong>required</strong></mat-error
+                >
+                <mat-error *ngIf="item.controls.totalfat.hasError('pattern')"
+                  >The Total Fat must be an integer number.</mat-error
+                >
               </mat-form-field>
               <mat-form-field>
-                <input type="number"
+                <input
+                  type="number"
                   required
                   matInput
                   placeholder="Total Carbs"
-                  formControlName="totalcarbs" />
+                  formControlName="totalcarbs"
+                />
                 <span matSuffix>g</span>
-                <mat-error *ngIf="item.controls.totalcarbs.hasError('required')">Total Carbs is
-                  <strong>required</strong></mat-error>
-                <mat-error *ngIf="item.controls.totalcarbs.hasError('pattern')">The Total Carbs must be an
-                  integer number.</mat-error>
+                <mat-error *ngIf="item.controls.totalcarbs.hasError('required')"
+                  >Total Carbs is <strong>required</strong></mat-error
+                >
+                <mat-error *ngIf="item.controls.totalcarbs.hasError('pattern')"
+                  >The Total Carbs must be an integer number.</mat-error
+                >
               </mat-form-field>
             </div>
           </mat-tab>
@@ -90,30 +117,38 @@
       </div>
     </mat-list>
   </form>
-  <button mat-stroked-button
+  <button
+    mat-stroked-button
     color="primary"
     (click)="add()"
     *ngIf="!isSelected"
-    [disabled]="!parentForm.valid">
+    [disabled]="!parentForm.valid"
+  >
     Add
   </button>
-  <button mat-stroked-button
+  <button
+    mat-stroked-button
     color="primary"
     (click)="edit()"
     *ngIf="isSelected"
-    [disabled]="parentForm.controls.description.invalid">
+    [disabled]="parentForm.controls.description.invalid"
+  >
     Edit
   </button>
-  <button mat-stroked-button
+  <button
+    mat-stroked-button
     color="primary"
     (click)="delete()"
-    *ngIf="isSelected">
+    *ngIf="isSelected"
+  >
     Delete
   </button>
-  <button mat-stroked-button
+  <button
+    mat-stroked-button
     color="primary"
     (click)="cancel()"
-    *ngIf="isSelected">
+    *ngIf="isSelected"
+  >
     Cancel
   </button>
   <mat-divider id="divider"></mat-divider>

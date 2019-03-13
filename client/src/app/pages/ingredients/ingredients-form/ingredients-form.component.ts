@@ -55,9 +55,7 @@ export class IngredientsFormComponent implements OnInit {
 
     this.ingredientService.postIngredient(obj).subscribe(
       succ => {
-        this.IngredientForm.reset();
-        this.subjectService.ingredientDataSourceRefresh();
-        this.subjectService.setItemSelectedFlag(false);
+        this.clearEverything();
       },
       err => {
         // Unauthorized
@@ -76,11 +74,7 @@ export class IngredientsFormComponent implements OnInit {
     };
     this.ingredientService.patchIngredient(obj).subscribe(
       succ => {
-        // this.getIngredients();
-        this.IngredientForm.reset();
-        this.isSelected = false;
-        this.subjectService.ingredientDataSourceRefresh();
-        this.subjectService.setItemSelectedFlag(false);
+        this.clearEverything();
       },
       err => {
         // Unauthorized
@@ -95,9 +89,7 @@ export class IngredientsFormComponent implements OnInit {
     this.ingredientService.deleteIngredient(this.selected["_id"]).subscribe(
       succ => {
         this.IngredientForm.reset();
-        this.isSelected = false;
-        this.subjectService.ingredientDataSourceRefresh();
-        this.subjectService.setItemSelectedFlag(false);
+        this.clearEverything();
       },
       err => {
         // Unauthorized
@@ -109,10 +101,17 @@ export class IngredientsFormComponent implements OnInit {
   }
 
   cancel() {
-    this.IngredientForm.reset();
-    this.isSelected = false;
     this.selected = null;
+    this.isSelected = false;
+    this.IngredientForm.reset();
     this.subjectService.setItemSelectedFlag(false);
+  }
+
+  clearEverything() {
+    this.isSelected = false;
+    this.IngredientForm.reset();
+    this.subjectService.setItemSelectedFlag(false);
+    this.subjectService.ingredientDataSourceRefresh();
   }
 
   ngOnDestroy() {

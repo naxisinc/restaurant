@@ -45,7 +45,9 @@
       <mat-footer-row
         class="footer-row"
         *matFooterRowDef="['noData']"
-        [ngClass]="{ hide: !(listData != null && listData.data.length === 0) }"
+        [ngClass]="{
+          hide: !(listData && listData.filteredData.length === 0)
+        }"
       ></mat-footer-row>
     </mat-table>
     <mat-paginator

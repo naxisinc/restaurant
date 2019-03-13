@@ -35,7 +35,8 @@ export class PlatesComponent implements OnInit {
 
   constructor(
     private plateService: PlatesService,
-    private categoriesService: CategoriesService
+    private categoriesService: CategoriesService,
+    private subjectService: SubjectService
   ) {
     // Get categories
     this.categoriesService.getCategories().subscribe(
@@ -46,6 +47,16 @@ export class PlatesComponent implements OnInit {
             categories: res
           }
         ];
+      },
+      err => console.log(err)
+    );
+
+    // Listen from the refresh observable
+    this.subjectService.dishRefreshed.subscribe(
+      succ => {
+        if (succ !== null) {
+          this.getPlates();
+        }
       },
       err => console.log(err)
     );
@@ -151,8 +162,10 @@ export class PlatesComponent implements OnInit {
     this.listData = this.listDataCopy;
   }
 
-  /*show(dish) {
-    // Patch values in the form
+  show(dish) {
+    this.subjectService.setDishSelect(dish);
+    this.subjectService.setItemSelectedFlag(true);
+    /*// Patch values in the form
     this.parentForm.patchValue({
       description: dish.description,
       category: dish._category,
@@ -168,10 +181,10 @@ export class PlatesComponent implements OnInit {
     }
     // Updating variables
     this.selected = dish;
-    this.isSelected = true;
+    this.isSelected = true;*/
   }
 
-  getFormValues() {
+  /*getFormValues() {
     let sizeDetailsArray = [];
     this.parentForm.get("items")["controls"].forEach(size => {
       sizeDetailsArray.push(size.value);
@@ -242,10 +255,10 @@ export class PlatesComponent implements OnInit {
     this.clearForm();
     this.isSelected = false;
     this.selected = null;
-  }
+  }*/
 
   seeComments(plateId, index) {
     localStorage.setItem("plate", plateId);
     localStorage.setItem("index", index);
-  }*/
+  }
 }
