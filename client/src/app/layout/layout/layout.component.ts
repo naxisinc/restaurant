@@ -36,7 +36,12 @@ export class LayoutComponent implements OnInit, OnDestroy {
     // Identify the route for hide or show the navbar-end
     this.subjectService.currentRoute.subscribe(route => {
       if (route !== null) {
-        if (route !== "home" && route !== "login" && route !== "comments") {
+        if (
+          route !== "home" &&
+          route !== "login" &&
+          route !== "comments" &&
+          route !== "dashboard"
+        ) {
           this.isCudRoute = true;
         } else {
           this.isCudRoute = false;

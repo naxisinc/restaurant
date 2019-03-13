@@ -1,22 +1,10 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import {
-  FormControl,
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormArray,
-  AbstractControl
-} from "@angular/forms";
+import { FormControl } from "@angular/forms";
 import { MatPaginator, PageEvent } from "@angular/material";
-import { Router } from "@angular/router";
 
 import { PlatesService } from "../../services/plates.service";
-import { SizesService } from "../../services/sizes.service";
 import { CategoriesService } from "../../services/categories.service";
-import {
-  MyErrorStateMatcher,
-  CustomValidator
-} from "../../services/validator.service";
+import { SubjectService } from "src/app/services/subject.service";
 
 @Component({
   selector: "app-plates",
@@ -30,22 +18,10 @@ export class PlatesComponent implements OnInit {
   imgPath: string = "http://localhost:3000/images/";
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
-  isSelected: boolean = false;
-  selected: Object;
-  @ViewChild("fileInput") fileInput;
-  // Save the array of ingredients coming from child component
-  ingredientsId = [];
-  sizes: any;
-  // Set the Ingredients in the child component
-  setIngredients = [];
+
   // Breakpoints
   breakpointToolbar: number;
   breakpointContent: number;
-
-  // Reactive Form and Matcher
-  parentForm: FormGroup;
-  items: FormArray;
-  matcher = new MyErrorStateMatcher();
 
   // MatPaginator Inputs
   length = 0;
@@ -59,20 +35,8 @@ export class PlatesComponent implements OnInit {
 
   constructor(
     private plateService: PlatesService,
-    private sizesService: SizesService,
-    private categoriesService: CategoriesService,
-    private fb: FormBuilder,
-    private router: Router,
-    private customValidator: CustomValidator
+    private categoriesService: CategoriesService
   ) {
-    // Get sizes
-    this.sizesService.getSizes().subscribe(
-      res => {
-        this.sizes = res;
-      },
-      err => console.log(err)
-    );
-
     // Get categories
     this.categoriesService.getCategories().subscribe(
       res => {
@@ -85,41 +49,9 @@ export class PlatesComponent implements OnInit {
       },
       err => console.log(err)
     );
-
-    this.parentForm = this.fb.group({
-      description: [
-        "",
-        [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
-      ],
-      file: ["", [Validators.required, this.customValidator.validatingExt]],
-      category: ["", [Validators.required]],
-      items: this.fb.array([])
-    });
-  }
-
-  createItem(id, description): FormGroup {
-    return this.fb.group({
-      _size: id,
-      description: description,
-      price: [
-        "",
-        [Validators.required, Validators.pattern("^[0-9]*.[0-9]{2}$")]
-      ],
-      calories: ["", [Validators.required, Validators.pattern("^[0-9]+$")]],
-      totalfat: ["", [Validators.required, Validators.pattern("^[0-9]+$")]],
-      totalcarbs: ["", [Validators.required, Validators.pattern("^[0-9]+$")]]
-    });
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      // This's necessary cause sizes is a Observable result
-      this.sizes.forEach(size => {
-        this.items = this.parentForm.get("items") as FormArray;
-        this.items.push(this.createItem(size._id, size.description));
-      });
-    }, 500);
-
     // Getting plates
     this.getPlates();
 
@@ -127,9 +59,9 @@ export class PlatesComponent implements OnInit {
     this.onResize(window);
   }
 
-  gettingIngredients(list) {
-    this.ingredientsId = list;
-  }
+  // gettingIngredients(list) {
+  //   this.ingredientsId = list;
+  // }
 
   getPlates() {
     this.plateService.getPlates().subscribe(
@@ -219,21 +151,7 @@ export class PlatesComponent implements OnInit {
     this.listData = this.listDataCopy;
   }
 
-  clearForm() {
-    this.parentForm.reset();
-    this.sizes.forEach((size, index) => {
-      this.parentForm.controls.items["controls"][
-        index
-      ].controls.description.patchValue(size.description);
-      this.parentForm.controls.items["controls"][
-        index
-      ].controls._size.patchValue(size._id);
-    });
-    this.setIngredients = [];
-    this.ingredientsId = []; // claening ingredients previously selected
-  }
-
-  show(dish) {
+  /*show(dish) {
     // Patch values in the form
     this.parentForm.patchValue({
       description: dish.description,
@@ -329,5 +247,5 @@ export class PlatesComponent implements OnInit {
   seeComments(plateId, index) {
     localStorage.setItem("plate", plateId);
     localStorage.setItem("index", index);
-  }
+  }*/
 }

@@ -12,6 +12,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { PagesRoutingModule } from "./pages-routing.module";
 import { MaterialModule } from "../material";
 import { HomeComponent } from "./home/home.component";
+import { DashboardComponent } from "./dashboard/dashboard.component";
 import { LoginComponent } from "./users/login/login.component";
 import { UsersComponent } from "./users/users.component";
 import { MixedComponent } from "./mixed/mixed.component";
@@ -24,6 +25,9 @@ import { CommentsAdminComponent } from "./comments/admin/comments-admin.componen
 import { ChangePassComponent } from "./users/change-pass/change-pass.component";
 import { RecoverPassComponent } from "./users/recover-pass/recover-pass.component";
 import { ComponentsModule } from "../components/components.module";
+import { MenuComponent } from "./menu/menu.component";
+import { LocationComponent } from "./location/location.component";
+import { AboutComponent } from "./about/about.component";
 
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
   observer: true,
@@ -36,6 +40,10 @@ const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
 
 const COMPONENTS = [
   HomeComponent,
+  MenuComponent,
+  LocationComponent,
+  AboutComponent,
+  DashboardComponent,
   LoginComponent,
   UsersComponent,
   MixedComponent,

@@ -25,6 +25,9 @@ body {
   .search-form-field {
     width: 95%;
   }
+  #filter {
+    width: 90%;
+  }
 }
 
 // Tablets
@@ -35,6 +38,9 @@ body {
   .search-form-field {
     width: 80%;
     margin-left: 15%;
+  }
+  #filter {
+    width: 90%;
   }
 }
 
@@ -47,12 +53,18 @@ body {
     width: 60%;
     margin-left: 35%;
   }
+  #filter {
+    width: auto;
+  }
 }
 
 // Desktops
 @media only screen and (min-width: 1280px) {
   #login-form {
     width: 25%;
+  }
+  #filter {
+    width: auto;
   }
 }
 
@@ -64,6 +76,9 @@ body {
   .search-form-field {
     width: 40%;
     margin-left: 57%;
+  }
+  #filter {
+    width: auto;
   }
 }
 
@@ -87,7 +102,6 @@ header {
   font-size: 1rem;
   font-weight: bold;
 }
-// #filter,
 .search-div {
   width: 50%;
   margin-left: 50%;

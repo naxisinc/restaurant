@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-// import { RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { MaterialModule } from "../material";
@@ -9,6 +8,7 @@ import { ChipsComponent } from "./chips/chips.component";
 import { SelectComponent } from "./select/select.component";
 import { DialogsComponent } from "./dialogs/dialogs.component";
 import { HeaderComponent } from "./header/header.component";
+import { PagesRoutingModule } from "../pages/pages-routing.module";
 // import { LayoutComponent, SessionDialog } from "./layout/layout.component";
 
 const COMPONENTS = [
@@ -26,7 +26,7 @@ const COMPONENTS = [
   imports: [
     CommonModule,
     MaterialModule,
-    // RouterModule,
+    PagesRoutingModule,
     FormsModule,
     ReactiveFormsModule
   ],

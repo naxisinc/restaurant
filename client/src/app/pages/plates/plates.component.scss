@@ -5,7 +5,7 @@
 }
 #grid-data {
   margin: 1px 0;
-  border-bottom: 1px solid rgb(228, 228, 228);
+  border: 1px solid rgb(200, 0, 0);
 }
 
 #grid-data:hover {
@@ -40,4 +40,15 @@ td {
 // }
 th {
   border-bottom: 1px solid rgb(228, 228, 228);
+}
+
+// Removing style in style.scss
+.search-div {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.search-form-field {
+  width: 100%;
+  margin: 0;
 }
