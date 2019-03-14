@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // VisitorsCounter Schema
 const VisitorsCounterSchema = new mongoose.Schema(
   {
-    route: {
+    counterId: {
       type: String,
       required: true,
       minlength: 1,

@@ -38,10 +38,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.subjectService.currentRoute.subscribe(route => {
       if (route !== null) {
         if (
-          route !== "home" &&
-          route !== "login" &&
-          route !== "comments" &&
-          route !== "dashboard"
+          route === "sizes" ||
+          route === "categories" ||
+          route === "ingredients" ||
+          route === "plates"
         ) {
           this.isCudRoute = true;
         } else {
@@ -84,6 +84,18 @@ export class LayoutComponent implements OnInit, OnDestroy {
   timerSubscription: Subscription;
 
   ngOnInit() {
+    var ua = navigator.userAgent;
+    let device;
+    if (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(
+        ua
+      )
+    )
+      device = "mobile-other";
+    else if (/Chrome/i.test(ua)) device = "chrome";
+    else device = "desktop-other";
+    console.log(device);
+
     this.resetTimer();
     this.authService.userActionOccured
       .pipe(takeUntil(this.unsubscribe$))

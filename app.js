@@ -57,9 +57,6 @@ app.use("/plates", plates);
 app.use("/images", images);
 app.use("/visitorscounter", visitorscounter);
 
-app.maxConnections = 20;
-app.getConnections((error, count) => console.log(count));
-
 // Start serve
 app.listen(port, () => {
   console.log("server started on port: " + port);

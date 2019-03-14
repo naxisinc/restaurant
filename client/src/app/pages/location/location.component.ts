@@ -19,7 +19,7 @@ export class LocationComponent implements OnInit {
       succ => {
         this.locationRoute = succ;
         this.locationRoute = this.locationRoute.filter(
-          x => x.route === "location"
+          x => x.counterId === "location"
         )[0];
 
         // Increase the visitor counter for menu

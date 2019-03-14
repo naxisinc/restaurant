@@ -9,10 +9,10 @@ const { authorized } = require("../middleware/authorized");
 // POST /visitorscounter
 router.post("/", authorized, async (req, res) => {
   try {
-    const route = _.pick(req.body, ["route"]);
-    const newRoute = new VisitorsCounter(route);
-    await newRoute.save();
-    res.status(200).send(newRoute);
+    const counterNew = _.pick(req.body, ["counterId"]);
+    const newCounter = new VisitorsCounter(counterNew);
+    await newCounter.save();
+    res.status(200).send(newCounter);
   } catch (e) {
     res.status(400).send(e);
   }
@@ -21,8 +21,8 @@ router.post("/", authorized, async (req, res) => {
 // GET /visitorscounter
 router.get("/", async (req, res) => {
   try {
-    const routes = await VisitorsCounter.find().sort({ _id: -1 });
-    res.status(200).send(routes);
+    const counters = await VisitorsCounter.find().sort({ _id: -1 });
+    res.status(200).send(counters);
   } catch (e) {
     res.status(400).send(e);
   }
@@ -33,26 +33,26 @@ router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const route = await VisitorsCounter.findById(id);
-    if (!route) return res.status(404).send();
-    res.status(200).send(route);
+    const counter = await VisitorsCounter.findById(id);
+    if (!counter) return res.status(404).send();
+    res.status(200).send(counter);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
 // PATCH /visitorscounter/id
-router.patch("/:id", authorized, async (req, res) => {
+router.patch("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const routeUpd = await VisitorsCounter.findByIdAndUpdate(
+    const counterUpd = await VisitorsCounter.findByIdAndUpdate(
       id,
       { $inc: { counter: 1 } },
       { new: true }
     );
-    if (!routeUpd) return res.status(404).send();
-    res.status(200).send(routeUpd);
+    if (!counterUpd) return res.status(404).send();
+    res.status(200).send(counterUpd);
   } catch (e) {
     res.status(400).send(e);
   }
@@ -63,9 +63,9 @@ router.delete("/:id", authorized, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const route = await VisitorsCounter.findByIdAndRemove(id);
-    if (!route) return res.status(404).send();
-    res.status(200).send(route);
+    const counter = await VisitorsCounter.findByIdAndRemove(id);
+    if (!counter) return res.status(404).send();
+    res.status(200).send(counter);
   } catch (e) {
     res.status(400).send(e);
   }

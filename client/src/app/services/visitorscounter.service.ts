@@ -22,16 +22,9 @@ export class VisitorsCounterService {
   }
 
   patchRoute(route) {
-    const headers = new HttpHeaders({
-      "Content-Type": "application/json",
-      "x-auth": localStorage.getItem("x-auth")
-    });
     return this.http.patch(
       "http://localhost:3000/visitorscounter/" + route._id,
-      route,
-      {
-        headers
-      }
+      route
     );
   }
 

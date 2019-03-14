@@ -8,14 +8,14 @@ import { VisitorsCounterService } from "../../services/visitorscounter.service";
   styleUrls: ["./dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
-  routes: Object;
+  visitorsCounter: Object;
 
   constructor(private visitorsCounterService: VisitorsCounterService) {}
 
   ngOnInit() {
     this.visitorsCounterService.getRoutesCounter().subscribe(
       succ => {
-        this.routes = succ;
+        this.visitorsCounter = succ;
       },
       err => console.log(err)
     );
