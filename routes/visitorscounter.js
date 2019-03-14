@@ -21,7 +21,7 @@ router.post("/", authorized, async (req, res) => {
 // GET /visitorscounter
 router.get("/", async (req, res) => {
   try {
-    const routes = await Size.find().sort({ _id: -1 });
+    const routes = await VisitorsCounter.find().sort({ _id: -1 });
     res.status(200).send(routes);
   } catch (e) {
     res.status(400).send(e);
@@ -33,9 +33,9 @@ router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const size = await Size.findById(id);
-    if (!size) return res.status(404).send();
-    res.status(200).send(size);
+    const route = await VisitorsCounter.findById(id);
+    if (!route) return res.status(404).send();
+    res.status(200).send(route);
   } catch (e) {
     res.status(400).send(e);
   }
@@ -46,14 +46,13 @@ router.patch("/:id", authorized, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const description = req.body.description;
-    const size = await Size.findByIdAndUpdate(
+    const routeUpd = await VisitorsCounter.findByIdAndUpdate(
       id,
-      { description },
+      { $inc: { counter: 1 } },
       { new: true }
     );
-    if (!size) return res.status(404).send();
-    res.status(200).send(size);
+    if (!routeUpd) return res.status(404).send();
+    res.status(200).send(routeUpd);
   } catch (e) {
     res.status(400).send(e);
   }
@@ -64,9 +63,9 @@ router.delete("/:id", authorized, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    const size = await Size.findByIdAndRemove(id);
-    if (!size) return res.status(404).send();
-    res.status(200).send(size);
+    const route = await VisitorsCounter.findByIdAndRemove(id);
+    if (!route) return res.status(404).send();
+    res.status(200).send(route);
   } catch (e) {
     res.status(400).send(e);
   }

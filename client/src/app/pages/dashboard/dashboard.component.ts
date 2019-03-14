@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { SubjectService } from "src/app/services/subject.service";
+
+import { VisitorsCounterService } from "../../services/visitorscounter.service";
 
 @Component({
   selector: "app-dashboard",
@@ -7,7 +8,16 @@ import { SubjectService } from "src/app/services/subject.service";
   styleUrls: ["./dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
-  constructor() {}
+  routes: Object;
 
-  ngOnInit() {}
+  constructor(private visitorsCounterService: VisitorsCounterService) {}
+
+  ngOnInit() {
+    this.visitorsCounterService.getRoutesCounter().subscribe(
+      succ => {
+        this.routes = succ;
+      },
+      err => console.log(err)
+    );
+  }
 }

@@ -27,7 +27,7 @@ export class VisitorsCounterService {
       "x-auth": localStorage.getItem("x-auth")
     });
     return this.http.patch(
-      "http://localhost:3000/visitorscounter/" + route.id,
+      "http://localhost:3000/visitorscounter/" + route._id,
       route,
       {
         headers
