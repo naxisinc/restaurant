@@ -12,6 +12,11 @@ const VisitorsCounterSchema = new mongoose.Schema(
     counter: {
       type: Number,
       default: 0
+    },
+    counted_at: {
+      type: Date,
+      required: true,
+      default: Date.now
     }
   },
   {

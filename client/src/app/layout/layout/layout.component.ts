@@ -84,18 +84,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
   timerSubscription: Subscription;
 
   ngOnInit() {
-    var ua = navigator.userAgent;
-    let device;
-    if (
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(
-        ua
-      )
-    )
-      device = "mobile-other";
-    else if (/Chrome/i.test(ua)) device = "chrome";
-    else device = "desktop-other";
-    console.log(device);
-
     this.resetTimer();
     this.authService.userActionOccured
       .pipe(takeUntil(this.unsubscribe$))

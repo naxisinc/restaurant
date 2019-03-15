@@ -1,3 +1,14 @@
-<p *ngFor="let route of routes">
-  {{route.route}}: {{route.counter}}
-</p>
+<div id="chart">ch</div>
+<div id="stats">
+
+  <div id="stats-header">Visitors Statistics</div>
+
+  <mat-tab-group id="tabs"
+    headerPosition="below">
+    <mat-tab label="Today">
+      <div class="counterValue"
+        *ngFor="let range of ranges">{{range}}</div>
+    </mat-tab>
+  </mat-tab-group>
+
+</div>

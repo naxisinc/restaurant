@@ -1,0 +1,28 @@
+#chart {
+  float: left;
+  width: 60%;
+  height: 500px; //
+  background: rgb(252, 239, 239);
+}
+#stats {
+  float: right;
+  width: 40%;
+  height: 500px; //
+  background: rgb(239, 239, 253);
+}
+
+#stats-header {
+  font-size: 1.5rem;
+  padding: 2rem;
+  margin: auto;
+}
+#tabs {
+  padding-top: 4rem;
+  margin: auto;
+  width: 60%; //
+}
+.counterValue {
+  font-size: 4rem;
+  padding: 2rem;
+  margin: auto;
+}
