@@ -1,6 +1,6 @@
 import { Component, HostListener } from "@angular/core";
 import { AuthService } from "./services/auth.service";
-import { VisitorsCounterService } from "./services/visitorscounter.service";
+import { DeviceCounterService } from "./services/devicecounter.service";
 
 @Component({
   selector: "app-root",
@@ -17,7 +17,7 @@ export class AppComponent {
   device: string;
   constructor(
     private authService: AuthService,
-    private visitorsCounterService: VisitorsCounterService
+    private deviceCounterService: DeviceCounterService
   ) {
     let ua = navigator.userAgent;
     if (
@@ -32,22 +32,11 @@ export class AppComponent {
     this.deviceType();
   }
 
-  deviceCounter: any;
   deviceType() {
-    this.visitorsCounterService.getRoutesCounter().subscribe(
+    let obj = { type: this.device };
+    this.deviceCounterService.postDevice(obj).subscribe(
       succ => {
-        this.deviceCounter = succ;
-        this.deviceCounter = this.deviceCounter.filter(
-          x => x.counterId === this.device
-        )[0];
-
-        // Increase the visitor counter for menu
-        this.visitorsCounterService.patchRoute(this.deviceCounter).subscribe(
-          succ => {
-            // console.log('increased succesfully');
-          },
-          err => console.log(err)
-        );
+        // console.log(succ);
       },
       err => console.log(err)
     );

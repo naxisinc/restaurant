@@ -46,6 +46,7 @@ const comments = require("./routes/comments");
 const plates = require("./routes/plates");
 const images = require("./routes/images");
 const visitorscounter = require("./routes/visitorscounter");
+const devicecounter = require("./routes/devicecounter");
 
 app.use("/users", users);
 app.use("/sizes", sizes);
@@ -56,6 +57,7 @@ app.use("/comments", comments);
 app.use("/plates", plates);
 app.use("/images", images);
 app.use("/visitorscounter", visitorscounter);
+app.use("/devicecounter", devicecounter);
 
 // Start serve
 app.listen(port, () => {

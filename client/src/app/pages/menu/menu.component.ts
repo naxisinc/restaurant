@@ -18,7 +18,7 @@ export class MenuComponent implements OnInit {
     this.visitorsCounterService.getRoutesCounter().subscribe(
       succ => {
         this.menuRoute = succ;
-        this.menuRoute = this.menuRoute.filter(x => x.counterId === "menu")[0];
+        this.menuRoute = this.menuRoute.filter(x => x.route === "menu")[0];
 
         // Increase the visitor counter for menu
         this.visitorsCounterService.patchRoute(this.menuRoute).subscribe(

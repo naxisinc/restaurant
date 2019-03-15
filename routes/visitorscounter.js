@@ -9,10 +9,10 @@ const { authorized } = require("../middleware/authorized");
 // POST /visitorscounter
 router.post("/", authorized, async (req, res) => {
   try {
-    const counterNew = _.pick(req.body, ["counterId"]);
-    const newCounter = new VisitorsCounter(counterNew);
-    await newCounter.save();
-    res.status(200).send(newCounter);
+    const route = _.pick(req.body, ["route"]);
+    const newRoute = new VisitorsCounter(route);
+    await newRoute.save();
+    res.status(200).send(newRoute);
   } catch (e) {
     res.status(400).send(e);
   }
