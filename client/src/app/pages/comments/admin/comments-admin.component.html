@@ -34,9 +34,10 @@
 </div>
 <mat-divider></mat-divider>
 <mat-list>
+  <!--../../../../assets/images/avatars/images.jpg-->
   <mat-list-item *ngFor="let comment of commentsOfSelectedPlate; let i = index">
     <img matListAvatar
-      src="../../../../assets/images/avatars/images.jpg"
+      src="http://localhost:3000/images/{{ comment.avatar }}"
       alt="" />
 
     <div matLine>

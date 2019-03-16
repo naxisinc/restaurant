@@ -28,18 +28,14 @@
       (click)="onLogin()"
       [disabled]="!loginForm.valid">Login</button>
   </div>
-  <div>
-    <a class="facebook-btn"
-      mat-button
-      routerLink="/">Sing In with Facebook</a>
-  </div>
+  <app-facebook></app-facebook>
   <div class="or">
     <hr class="bar" />
     <span>OR</span>
     <hr class="bar" />
   </div>
   <div>
-    <a id="new-account"
+    <a class="new-account"
       mat-stroked-button
       routerLink="/">Create an account</a>
   </div>
