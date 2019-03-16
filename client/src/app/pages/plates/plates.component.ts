@@ -15,7 +15,6 @@ export class PlatesComponent implements OnInit {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  imgPath: string = "http://localhost:3000/images/";
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
 
@@ -25,8 +24,8 @@ export class PlatesComponent implements OnInit {
 
   // MatPaginator Inputs
   length = 0;
-  pageSize = 6;
-  pageSizeOptions: number[] = [6, 12, 24, 60];
+  pageSize = 2;
+  pageSizeOptions: number[] = [2, 6, 12, 24];
 
   // Filter (Sort by)
   filter = new FormControl();
@@ -69,10 +68,6 @@ export class PlatesComponent implements OnInit {
     // Formatting the toolbar
     this.onResize(window);
   }
-
-  // gettingIngredients(list) {
-  //   this.ingredientsId = list;
-  // }
 
   getPlates() {
     this.plateService.getPlates().subscribe(
@@ -165,97 +160,7 @@ export class PlatesComponent implements OnInit {
   show(dish) {
     this.subjectService.setDishSelect(dish);
     this.subjectService.setItemSelectedFlag(true);
-    /*// Patch values in the form
-    this.parentForm.patchValue({
-      description: dish.description,
-      category: dish._category,
-      items: dish.details
-    });
-    // Ingredients
-    if (!this.isSelected || this.selected["_id"] !== dish._id) {
-      this.setIngredients = [];
-      dish._ingredients.forEach(ingredient => {
-        this.setIngredients.push(ingredient.description);
-        this.ingredientsId.push(ingredient._id); // update the listener array
-      });
-    }
-    // Updating variables
-    this.selected = dish;
-    this.isSelected = true;*/
   }
-
-  /*getFormValues() {
-    let sizeDetailsArray = [];
-    this.parentForm.get("items")["controls"].forEach(size => {
-      sizeDetailsArray.push(size.value);
-    });
-    let obj = {
-      id: this.isSelected ? this.selected["_id"] : "undefined",
-      description: this.parentForm.controls.description.value,
-      file: this.fileInput.nativeElement.files[0],
-      _ingredients: this.ingredientsId,
-      _category: this.parentForm.controls.category.value._id,
-      sizeDetails: sizeDetailsArray
-    };
-    return obj;
-  }
-
-  add() {
-    let data = this.getFormValues();
-    this.plateService.postPlate(data).subscribe(
-      res => {
-        this.getPlates();
-        this.clearForm();
-        this.searchKey = "";
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  edit() {
-    let data = this.getFormValues();
-    this.plateService.patchPlate(data).subscribe(
-      succ => {
-        this.getPlates();
-        this.clearForm();
-        this.isSelected = false;
-        this.searchKey = "";
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  delete() {
-    this.plateService.deletePlate(this.selected["_id"]).subscribe(
-      succ => {
-        this.getPlates();
-        this.clearForm();
-        this.isSelected = false;
-      },
-      err => {
-        // Unauthorized
-        if (err.status === 401) {
-          this.router.navigate(["login"]);
-        } else console.log(err);
-      }
-    );
-  }
-
-  cancel() {
-    this.clearForm();
-    this.isSelected = false;
-    this.selected = null;
-  }*/
 
   seeComments(plateId, index) {
     localStorage.setItem("plate", plateId);

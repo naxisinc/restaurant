@@ -18,7 +18,7 @@ export class AboutComponent implements OnInit {
     this.visitorsCounterService.getRoutesCounter().subscribe(
       succ => {
         this.aboutRoute = succ;
-        this.aboutRoute = this.aboutRoute.filter(x => x.route === "about")[0];
+        this.aboutRoute = this.aboutRoute.filter(x => x.name === "about")[0];
 
         // Increase the visitor counter for menu
         this.visitorsCounterService.patchRoute(this.aboutRoute).subscribe(

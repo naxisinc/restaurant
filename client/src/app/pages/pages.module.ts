@@ -8,6 +8,7 @@ import {
   SwiperConfigInterface
 } from "ngx-swiper-wrapper";
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { NgxChartsModule } from "@swimlane/ngx-charts";
 
 import { PagesRoutingModule } from "./pages-routing.module";
 import { MaterialModule } from "../material";
@@ -75,7 +76,8 @@ const CudForms = [
     ComponentsModule,
     StarRatingModule.forRoot(),
     SwiperModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    NgxChartsModule
   ],
   providers: [
     {

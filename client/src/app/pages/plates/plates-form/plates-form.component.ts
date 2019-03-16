@@ -77,7 +77,7 @@ export class PlatesFormComponent implements OnInit {
       succ => {
         if (succ !== null) {
           this.selected = succ;
-          console.log(this.selected);
+          // console.log(this.selected);
           this.parentForm.patchValue({
             description: this.selected["description"],
             category: this.selected["_category"],

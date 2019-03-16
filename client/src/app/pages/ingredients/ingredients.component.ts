@@ -13,7 +13,6 @@ export class IngredientsComponent implements OnInit {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  imgPath: string = "http://localhost:3000/images/";
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
 

@@ -9,7 +9,22 @@ import { DeviceCounterService } from "src/app/services/devicecounter.service";
   styleUrls: ["./dashboard.component.scss"]
 })
 export class DashboardComponent implements OnInit {
-  visitedRouteCounter: any;
+  // ===== Pie Chart Settings =====
+  // @docs: https://plnkr.co/edit/1wyoTPr38ajgzUmOhMHi?p=info
+  chartData: any;
+
+  // view: any[] = [700, 400]; // la variacion del width pudiera hacerlo responsive
+  view: any[] = [600, 400];
+
+  colorScheme = {
+    domain: ["#5AA454", "#A10A28", "#C7B42C", "#AAAAAA"]
+  };
+
+  onSelect(event) {
+    // console.log(event);
+  }
+
+  // ===== VISITORS STATISTICS =====
   connectedDeviceCounter: any;
   mobileConn: number;
   desktopConn: number;
@@ -50,8 +65,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.visitedRouteCounterService.getRoutesCounter().subscribe(
       succ => {
-        this.visitedRouteCounter = succ;
-        console.log(this.visitedRouteCounter);
+        this.chartData = succ;
       },
       err => console.log(err)
     );
@@ -59,7 +73,7 @@ export class DashboardComponent implements OnInit {
     this.connectedDeviceCounterService.getDeviceCounter().subscribe(
       succ => {
         this.connectedDeviceCounter = succ;
-        console.log(this.connectedDeviceCounter);
+        // console.log(this.connectedDeviceCounter);
 
         // Getting the All connections in the history
         this.counterConn[5].value = this.connectedDeviceCounter.length; // ALL

@@ -1,6 +1,12 @@
-<div id="chart">ch</div>
-<div id="stats">
+<div id="chart">
+  <div id="chart-header">Visitors Statistics</div>
+  <ngx-charts-pie-grid [view]="view"
+    [scheme]="colorScheme"
+    [results]="chartData"
+    (select)="onSelect($event)"></ngx-charts-pie-grid>
+</div>
 
+<div id="stats">
   <div id="stats-header">Visitors Statistics</div>
   <mat-tab-group id="tabs-stats"
     headerPosition="below">
@@ -20,5 +26,4 @@
       <div class="counterValue">{{desktopConn}}</div>
     </mat-tab>
   </mat-tab-group>
-
 </div>

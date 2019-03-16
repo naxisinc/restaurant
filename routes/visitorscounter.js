@@ -9,7 +9,7 @@ const { authorized } = require("../middleware/authorized");
 // POST /visitorscounter
 router.post("/", authorized, async (req, res) => {
   try {
-    const route = _.pick(req.body, ["route"]);
+    const route = _.pick(req.body, ["name"]);
     const newRoute = new VisitorsCounter(route);
     await newRoute.save();
     res.status(200).send(newRoute);
@@ -21,25 +21,25 @@ router.post("/", authorized, async (req, res) => {
 // GET /visitorscounter
 router.get("/", async (req, res) => {
   try {
-    const counters = await VisitorsCounter.find().sort({ _id: -1 });
+    const counters = await VisitorsCounter.find();
     res.status(200).send(counters);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
-// GET /visitorscounter/id
-router.get("/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    if (!ObjectID.isValid(id)) return res.status(404).send();
-    const counter = await VisitorsCounter.findById(id);
-    if (!counter) return res.status(404).send();
-    res.status(200).send(counter);
-  } catch (e) {
-    res.status(400).send(e);
-  }
-});
+// // GET /visitorscounter/id
+// router.get("/:id", async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     if (!ObjectID.isValid(id)) return res.status(404).send();
+//     const counter = await VisitorsCounter.findById(id);
+//     if (!counter) return res.status(404).send();
+//     res.status(200).send(counter);
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// });
 
 // PATCH /visitorscounter/id
 router.patch("/:id", async (req, res) => {
@@ -48,7 +48,7 @@ router.patch("/:id", async (req, res) => {
     if (!ObjectID.isValid(id)) return res.status(404).send();
     const counterUpd = await VisitorsCounter.findByIdAndUpdate(
       id,
-      { $inc: { counter: 1 } },
+      { $inc: { value: 1 } },
       { new: true }
     );
     if (!counterUpd) return res.status(404).send();
