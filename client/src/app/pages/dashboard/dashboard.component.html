@@ -2,12 +2,22 @@
 <div id="stats">
 
   <div id="stats-header">Visitors Statistics</div>
-
-  <mat-tab-group id="tabs"
+  <mat-tab-group id="tabs-stats"
     headerPosition="below">
-    <mat-tab label="Today">
-      <div class="counterValue"
-        *ngFor="let range of ranges">{{range}}</div>
+    <mat-tab label="{{counter.label}}"
+      *ngFor="let counter of counterConn">
+      <div class="counterValue">{{counter.value}}</div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <div id="stats-header">Visits by devices</div>
+  <mat-tab-group id="tabs-devices"
+    headerPosition="below">
+    <mat-tab label="Mobile">
+      <div class="counterValue">{{mobileConn}}</div>
+    </mat-tab>
+    <mat-tab label="Desktop">
+      <div class="counterValue">{{desktopConn}}</div>
     </mat-tab>
   </mat-tab-group>
 

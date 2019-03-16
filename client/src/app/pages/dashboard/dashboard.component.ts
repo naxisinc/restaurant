@@ -13,13 +13,34 @@ export class DashboardComponent implements OnInit {
   connectedDeviceCounter: any;
   mobileConn: number;
   desktopConn: number;
-
-  today: number;
-  lastWeek: number;
-  lastMonth: number;
-  lastThreeMonths: number;
-  lastYear: number;
-  all: number;
+  timeArray = [86400, 604800, 2592000, 7776000, 31536000]; // 1D, 1W, 1M, 3M, 1Y
+  // counter = []; // 1D, 1W, 1M, 3M, 1Y, ALL
+  counterConn = [
+    {
+      label: "1D",
+      value: 0
+    },
+    {
+      label: "1W",
+      value: 0
+    },
+    {
+      label: "1M",
+      value: 0
+    },
+    {
+      label: "3M",
+      value: 0
+    },
+    {
+      label: "1Y",
+      value: 0
+    },
+    {
+      label: "ALL",
+      value: 0
+    }
+  ];
 
   constructor(
     private visitedRouteCounterService: VisitorsCounterService,
@@ -40,44 +61,30 @@ export class DashboardComponent implements OnInit {
         this.connectedDeviceCounter = succ;
         console.log(this.connectedDeviceCounter);
 
-        // All connections in the history
-        this.all = this.connectedDeviceCounter.length;
-
-        let now = new Date(Date.now());
-        console.log(now); // string
-        console.log(Date.now()); //timestamp now
-        console.log(Date.now() - 365); //timestamp now
-        console.log(now.setDate(now.getDate() - 365)); //timestamp last year
-
-        // // Getting the lastYear connections.
-        // this.lastYear = this.connectedDeviceCounter.filter(x => {
-        //   let date = new Date(x.counted_at);
-        //   return date.getTime() >= Date.now() - 365;
-        // }).length;
-        // console.log(`lastYear: ${this.lastYear}`);
-
-        // // Getting the lastThreeMonths connections.
-        // this.lastThreeMonths = this.connectedDeviceCounter.filter(x => {
-        //   let date = new Date(x.counted_at);
-        //   return date.getTime() >= now.setDate(now.getDate() - 90);
-        // }).length;
-        // console.log(`lastThreeMonth: ${this.lastThreeMonths}`);
+        // Getting the All connections in the history
+        this.counterConn[5].value = this.connectedDeviceCounter.length; // ALL
+        // Getting the connections counter.
+        for (let i = 0; i < 5; i++) {
+          this.counterConn[i].value = this.connectedDeviceCounter.filter(x => {
+            let a = Math.floor(Date.now() / 1000);
+            let b = Math.floor(Date.parse(x.counted_at) / 1000);
+            let diff = a - b;
+            return diff <= this.timeArray[i];
+          }).length;
+        }
+        // console.log(this.counter);
 
         // Getting the total of mobile connections.
         this.mobileConn = this.connectedDeviceCounter.filter(
           x => x.type === "mobile"
         ).length;
-        console.log(`mobileConn: ${this.mobileConn}`);
+        // console.log(`mobileConn: ${this.mobileConn}`);
 
         // Getting the total of desktop connections.
         this.desktopConn = this.connectedDeviceCounter.filter(
           x => x.type === "desktop"
         ).length;
-        console.log(`desktopConn: ${this.desktopConn}`);
-
-        // this.connectedDeviceCounter.forEach(connection => {
-
-        // });
+        // console.log(`desktopConn: ${this.desktopConn}`);
       },
       err => console.log(err)
     );
