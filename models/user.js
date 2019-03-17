@@ -25,10 +25,6 @@ const UserSchema = new mongoose.Schema(
       required: true,
       minlength: 6
     },
-    avatar: {
-      type: String,
-      default: null
-    },
     tokens: [
       {
         access: {
@@ -46,6 +42,22 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       requered: true,
       default: 0
+    },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 1
+    },
+    photoUrl: {
+      type: String,
+      required: true,
+      default: "anonymousavatar.jpg"
+    },
+    provider: {
+      type: String,
+      required: true,
+      default: "LOCAL"
     }
   },
   {
