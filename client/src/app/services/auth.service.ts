@@ -1,21 +1,21 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { map } from "rxjs/Operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class AuthService {
-  /*_userActionOccured: Subject<void> = new Subject();
+  // Esto es para saber si user esta activo en la session
+  _userActionOccured: Subject<void> = new Subject();
   get userActionOccured(): Observable<void> {
     return this._userActionOccured.asObservable();
   }
-
   notifyUserAction() {
     this._userActionOccured.next();
-  }*/
+  }
 
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
@@ -60,7 +60,7 @@ export class AuthService {
     });
   }
 
-  verifyEmail(email) {
+  /*verifyEmail(email) {
     const headers = new HttpHeaders({ "Content-Type": "application/json" });
     return this.http.post("http://localhost:3000/users/verify-email", email, {
       headers
@@ -79,15 +79,18 @@ export class AuthService {
         headers
       }
     );
-  }
+  }*/
 
   logout() {
+    // remove user from local storage to log user out
+    localStorage.removeItem("currentUser");
+    this.currentUserSubject.next(null);
+
     const headers = new HttpHeaders({
       "x-auth": localStorage.getItem("x-auth")
     });
     return this.http.delete("http://localhost:3000/users/logout", {
       headers
-      // observe: "response"
     });
   }
 

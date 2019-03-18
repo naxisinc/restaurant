@@ -29,28 +29,42 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ["admin"] }
   },
-  { path: "admin/sizes", component: MixedComponent, canActivate: [AuthGuard] },
+  {
+    path: "admin/sizes",
+    component: MixedComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ["admin"] }
+  },
   {
     path: "admin/categories",
     component: MixedComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { roles: ["admin"] }
   },
   {
     path: "admin/ingredients",
     component: IngredientsComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { roles: ["admin"] }
   },
   {
     path: "admin/plates",
     component: PlatesComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { roles: ["admin"] }
   },
   {
     path: "admin/comments",
     component: CommentsAdminComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { roles: ["admin"] }
   },
-  { path: "users", component: UsersComponent, canActivate: [AuthGuard] }
+  {
+    path: "users",
+    component: UsersComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ["admin"] }
+  }
 ];
 
 @NgModule({
