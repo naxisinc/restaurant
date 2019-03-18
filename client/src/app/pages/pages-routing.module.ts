@@ -20,12 +20,15 @@ const routes: Routes = [
   { path: "menu", component: MenuComponent },
   { path: "location", component: LocationComponent },
   { path: "about", component: AboutComponent },
+  { path: "login", component: LoginComponent },
+  { path: "recoverpass", component: RecoverPassComponent },
+  { path: "changepass", component: ChangePassComponent },
   {
     path: "admin/dashboard",
     component: DashboardComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { roles: ["admin"] }
   },
-  { path: "login", component: LoginComponent },
   { path: "admin/sizes", component: MixedComponent, canActivate: [AuthGuard] },
   {
     path: "admin/categories",
@@ -47,9 +50,7 @@ const routes: Routes = [
     component: CommentsAdminComponent,
     canActivate: [AuthGuard]
   },
-  { path: "users", component: UsersComponent, canActivate: [AuthGuard] },
-  { path: "recoverpass", component: RecoverPassComponent },
-  { path: "changepass", component: ChangePassComponent }
+  { path: "users", component: UsersComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

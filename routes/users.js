@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const url = require("url");
 
 const User = require("../models/user");
 const { sendEmail } = require("../utils/sendEmail");
 const { authenticate } = require("../middleware/authenticate");
+const config = require("../config/database");
 
 // POST /users
 router.post("/", async (req, res) => {
@@ -32,9 +34,38 @@ router.post("/login", async (req, res) => {
     const user = await User.findByCredentials(body.email, body.password);
     const token = await user.generateAuthToken("auth");
     res
+      // .header("x-auth", token)
+      .status(200)
+      .json({
+        _id: user._id,
+        email: user.email,
+        role: user.role,
+        token
+      });
+  } catch (e) {
+    res.status(400).send();
+  }
+});
+
+// POST /users/domeatoken
+router.post("/domeatoken", async (req, res) => {
+  try {
+    const access = "x-auth";
+    const token = jwt
+      .sign(
+        {
+          _id: req.body.id,
+          access,
+          // exp: Math.floor(Date.now() / 1000) + 60 * 60 //1hr
+          exp: Math.floor(Date.now() / 1000) + 60 * 10080 // 1 week
+        },
+        config.secret
+      )
+      .toString();
+    res
       .header("x-auth", token)
       .status(200)
-      .json({ _id: user._id, email: user.email });
+      .json({ _id: req.body.id, email: req.body.email });
   } catch (e) {
     res.status(400).send();
   }

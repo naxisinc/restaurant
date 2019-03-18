@@ -13,12 +13,17 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {}
 
   onLogoutClick() {
-    this.authService.logout().subscribe(
-      res => {
-        localStorage.clear();
-        this.router.navigate(["home"]);
-      },
-      err => console.log(err)
-    );
+    if (localStorage.getItem("provider")) {
+      localStorage.clear();
+      this.router.navigate(["home"]);
+    } else {
+      this.authService.logout().subscribe(
+        res => {
+          localStorage.clear();
+          this.router.navigate(["home"]);
+        },
+        err => console.log(err)
+      );
+    }
   }
 }

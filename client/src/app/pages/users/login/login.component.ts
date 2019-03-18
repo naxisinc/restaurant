@@ -10,7 +10,7 @@ import { AuthService } from "../../../services/auth.service";
 })
 export class LoginComponent implements OnInit {
   hide = true;
-  headers: any;
+  // headers: any;
 
   loginForm = this.fb.group({
     email: ["", [Validators.required, Validators.email]],
@@ -32,17 +32,15 @@ export class LoginComponent implements OnInit {
     };
     this.authService.authenticateUser(credentials).subscribe(
       res => {
-        // Storing the token in the localStorage
-        res.headers.keys().map(key => {
-          if (key === "x-auth") {
-            const token = res.headers.get(key);
-            localStorage.setItem("x-auth", token);
-          }
-        });
-        // Redirect from Dashboard
+        // // Storing the token in the localStorage
+        // res.headers.keys().map(key => {
+        //   if (key === "x-auth") {
+        //     const token = res.headers.get(key);
+        //     localStorage.setItem("x-auth", token);
+        //   }
+        // });
+        // Redirect from HomePage
         this.router.navigate(["home"]);
-        // Show Success Message
-        // this.toast.success("Welcome to Air Technik Inc.");
       },
       err => {
         console.log(err);

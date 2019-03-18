@@ -37,11 +37,9 @@ const UserSchema = new mongoose.Schema(
         }
       }
     ],
-    rol: {
-      // 0=>users, 1=>admin
-      type: Number,
-      requered: true,
-      default: 0
+    role: {
+      type: String,
+      default: "user"
     },
     name: {
       type: String,
@@ -49,15 +47,9 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       minlength: 1
     },
-    photoUrl: {
+    avatar: {
       type: String,
-      required: true,
       default: "anonymousavatar.jpg"
-    },
-    provider: {
-      type: String,
-      required: true,
-      default: "LOCAL"
     }
   },
   {
