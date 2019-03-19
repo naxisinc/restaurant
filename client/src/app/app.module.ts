@@ -12,11 +12,10 @@ import { PagesModule } from "./pages/pages.module";
 import { ComponentsModule } from "./components/components.module";
 import { PageNotFoundComponent } from "./pages/page-not-found/page-not-found.component";
 
-export function tokenGetter() {
-  // return localStorage.getItem("rere");
-  const token = JSON.parse(localStorage.getItem("currentUser")).token;
-  if (!token) throw new Error("Token is null");
-  return token;
+export function tokenGetter(): string | null {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const userToken = user ? user.token : null;
+  return userToken;
 }
 
 @NgModule({

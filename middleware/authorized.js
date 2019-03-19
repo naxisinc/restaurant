@@ -4,7 +4,7 @@ let authorized = async (req, res, next) => {
   try {
     const token = req.header("token");
     const user = await User.findByToken(token);
-    if (!user || user.rol !== 1) return Promise.reject();
+    if (!user || user.role !== "admin") return Promise.reject();
     req.user = user;
     req.token = token;
     next();

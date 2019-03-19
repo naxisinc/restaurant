@@ -97,6 +97,8 @@ export class AuthService {
   }
 
   loggedIn() {
+    // const token = this.helper.tokenGetter();
+    // if (!token) return false;
     return !this.helper.isTokenExpired();
   }
 }

@@ -12,13 +12,13 @@ const config = require("../config/database");
 // POST /users
 router.post("/", async (req, res) => {
   try {
-    const body = _.pick(req.body, ["email", "password"]);
+    const body = _.pick(req.body, ["email", "password", "name"]);
     const newUser = new User(body);
     await newUser.save();
-    const token = await newUser.generateAuthToken("auth");
-    res.header("x-auth", token).send(newUser);
+    const token = await newUser.generateAuthToken();
+    res.header("x-auth", token).send(newUser); //
   } catch (err) {
-    res.status(400).send("err");
+    res.status(400).send(err);
   }
 });
 
@@ -32,7 +32,7 @@ router.post("/login", async (req, res) => {
   try {
     const body = _.pick(req.body, ["email", "password"]);
     const user = await User.findByCredentials(body.email, body.password);
-    const token = await user.generateAuthToken("auth");
+    const token = await user.generateAuthToken();
     res
       // .header("x-auth", token)
       .status(200)
@@ -49,25 +49,39 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// POST /users/domeatoken
-router.post("/domeatoken", async (req, res) => {
+// POST /users/provider-exist
+router.post("/provider-exist", async (req, res) => {
   try {
-    const token = jwt
-      .sign(
-        {
-          _id: req.body.id,
-          // exp: Math.floor(Date.now() / 1000) + 60 * 60 //1hr
-          exp: Math.floor(Date.now() / 1000) + 60 * 10080 // 1 week
-        },
-        config.secret
-      )
-      .toString();
-    res
-      .header("x-auth", token)
-      .status(200)
-      .json({ _id: req.body.id, email: req.body.email });
+    const criteria = _.pick(req.body, ["email", "provider"]);
+    const user = await User.findOne(criteria);
+    if (user) {
+      const token = await user.generateAuthToken();
+      res.status(200).json({
+        _id: user._id,
+        email: user.email,
+        role: user.role,
+        token
+      });
+    } else {
+      res.status(200).send();
+    }
   } catch (e) {
     res.status(400).send();
+  }
+});
+
+// PATH /user
+router.patch("/", authenticate, async (req, res) => {
+  try {
+    // console.log(req.user);
+    const updateObj = _.pick(req.body, ["email", "password", "name", "avatar"]);
+    const result = await User.findByIdAndUpdate(req.user._id, updateObj, {
+      new: true
+    });
+    // console.log(result);
+    res.status(200).send();
+  } catch (e) {
+    console.log(e);
   }
 });
 
@@ -88,7 +102,7 @@ router.post("/verify-email", async (req, res) => {
     if (!user) {
       return res.status(401).send();
     }
-    const token = await user.generateAuthToken("email-confirmation");
+    const token = await user.generateAuthToken();
 
     // Setting email
     const mailOptions = {
@@ -127,7 +141,7 @@ router.get("/recovery-password/:token", async (req, res) => {
   try {
     const token = req.params.token;
     const user = await User.findByToken(token);
-    const resetPassToken = await user.generateAuthToken("reset-password");
+    const resetPassToken = await user.generateAuthToken();
     await user.removeToken(token);
     res.redirect(
       decodeURIComponent(
