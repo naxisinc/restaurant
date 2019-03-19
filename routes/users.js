@@ -42,6 +42,8 @@ router.post("/login", async (req, res) => {
         role: user.role,
         token
       });
+    // console.log(user); // aqui user es el object completo
+    // res.status(200).send(user); // aqui solo lo q toJSON selecciono (email, _id)
   } catch (e) {
     res.status(400).send();
   }
@@ -50,12 +52,10 @@ router.post("/login", async (req, res) => {
 // POST /users/domeatoken
 router.post("/domeatoken", async (req, res) => {
   try {
-    const access = "x-auth";
     const token = jwt
       .sign(
         {
           _id: req.body.id,
-          access,
           // exp: Math.floor(Date.now() / 1000) + 60 * 60 //1hr
           exp: Math.floor(Date.now() / 1000) + 60 * 10080 // 1 week
         },

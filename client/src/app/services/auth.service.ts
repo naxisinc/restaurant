@@ -36,7 +36,6 @@ export class AuthService {
     return this.http
       .post("http://localhost:3000/users/login", credentials, {
         headers
-        // observe: "response"
       })
       .pipe(
         map(user => {
@@ -55,8 +54,7 @@ export class AuthService {
   doMeAToken(user) {
     const headers = new HttpHeaders({ "Content-Type": "application/json" });
     return this.http.post("http://localhost:3000/users/domeatoken", user, {
-      headers,
-      observe: "response"
+      headers
     });
   }
 
@@ -82,16 +80,20 @@ export class AuthService {
   }*/
 
   logout() {
-    // remove user from local storage to log user out
-    localStorage.removeItem("currentUser");
-    this.currentUserSubject.next(null);
-
     const headers = new HttpHeaders({
-      "x-auth": localStorage.getItem("x-auth")
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
-    return this.http.delete("http://localhost:3000/users/logout", {
-      headers
-    });
+    return this.http
+      .delete("http://localhost:3000/users/logout", {
+        headers
+      })
+      .pipe(
+        map(() => {
+          // remove user from local storage to log user out
+          localStorage.removeItem("currentUser");
+          this.currentUserSubject.next(null);
+        })
+      );
   }
 
   loggedIn() {

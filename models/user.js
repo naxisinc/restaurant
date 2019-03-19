@@ -27,10 +27,6 @@ const UserSchema = new mongoose.Schema(
     },
     tokens: [
       {
-        access: {
-          type: String,
-          required: true
-        },
         token: {
           type: String,
           required: true
@@ -50,6 +46,10 @@ const UserSchema = new mongoose.Schema(
     avatar: {
       type: String,
       default: "anonymousavatar.jpg"
+    },
+    provider: {
+      type: String,
+      default: "LOCAL"
     }
   },
   {
@@ -63,15 +63,13 @@ UserSchema.methods.toJSON = function() {
   return _.pick(userObject, ["_id", "email"]);
 };
 
-UserSchema.methods.generateAuthToken = function(type) {
+UserSchema.methods.generateAuthToken = function() {
   let user = this;
-  let access = type;
   // toHexString se usa para convertir el objectID de mongo en string
   let token = jwt
     .sign(
       {
         _id: user._id.toHexString(),
-        access,
         // exp: Math.floor(Date.now() / 1000) + 60 * 60 //1hr
         exp: Math.floor(Date.now() / 1000) + 60 * 10080 // 1 week
       },
@@ -80,7 +78,7 @@ UserSchema.methods.generateAuthToken = function(type) {
     .toString();
 
   //Update the user tokens array
-  user.tokens = user.tokens.concat([{ access, token }]);
+  user.tokens = user.tokens.concat([{ token }]);
 
   return user.save().then(() => {
     return token;
@@ -109,8 +107,7 @@ UserSchema.statics.findByToken = function(token) {
 
   return User.findOne({
     _id: decoded._id,
-    "tokens.token": token,
-    "tokens.access": decoded.access
+    "tokens.token": token
   });
 };
 

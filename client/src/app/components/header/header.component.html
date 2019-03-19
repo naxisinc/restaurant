@@ -1,9 +1,11 @@
 <div class="header mat-elevation-z6">
   <ul id="header-navbar">
-    <li *ngIf="!authService.loggedIn()">
+    <!-- <li *ngIf="!authService.loggedIn()"> -->
+    <li>
       <a routerLink="/login">Login</a>
     </li>
-    <li *ngIf="authService.loggedIn()">
+    <!-- <li *ngIf="authService.loggedIn()"> -->
+    <li>
       <a class="pointer"
         (click)="onLogoutClick()">Logout
       </a>
