@@ -13,7 +13,10 @@ import { ComponentsModule } from "./components/components.module";
 import { PageNotFoundComponent } from "./pages/page-not-found/page-not-found.component";
 
 export function tokenGetter() {
-  return localStorage.getItem("x-auth");
+  // return localStorage.getItem("rere");
+  const token = JSON.parse(localStorage.getItem("currentUser")).token;
+  if (!token) throw new Error("Token is null");
+  return token;
 }
 
 @NgModule({

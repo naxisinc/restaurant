@@ -41,13 +41,13 @@ export class FacebookComponent implements OnInit {
         res => {
           // console.log(res);
           // Storing the token in the localStorage
-          res.headers.keys().map(key => {
-            if (key === "x-auth") {
-              const token = res.headers.get(key);
-              localStorage.setItem("x-auth", token);
-              localStorage.setItem("provider", this.user.provider);
-            }
-          });
+          // res.headers.keys().map(key => {
+          //   if (key === "x-auth") {
+          //     const token = res.headers.get(key);
+          //     localStorage.setItem("x-auth", token);
+          //     localStorage.setItem("provider", this.user.provider);
+          //   }
+          // });
         },
         err => console.log(err)
       );
