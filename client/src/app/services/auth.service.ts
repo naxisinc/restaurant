@@ -51,33 +51,12 @@ export class AuthService {
       );
   }
 
-  doMeAToken(user) {
+  provider(user) {
     const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.http.post("http://localhost:3000/users/domeatoken", user, {
+    return this.http.post("http://localhost:3000/users/provider", user, {
       headers
     });
   }
-
-  /*verifyEmail(email) {
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.http.post("http://localhost:3000/users/verify-email", email, {
-      headers
-    });
-  }
-
-  changePassword(data) {
-    const headers = new HttpHeaders({
-      "Content-Type": "application/json",
-      "x-auth": data.token
-    });
-    return this.http.patch(
-      "http://localhost:3000/users/change-password",
-      data,
-      {
-        headers
-      }
-    );
-  }*/
 
   logout() {
     const headers = new HttpHeaders({
@@ -89,7 +68,7 @@ export class AuthService {
       })
       .pipe(
         map(() => {
-          // remove user from local storage to log user out
+          // remove user from local storage
           localStorage.removeItem("currentUser");
           this.currentUserSubject.next(null);
         })
@@ -97,8 +76,6 @@ export class AuthService {
   }
 
   loggedIn() {
-    // const token = this.helper.tokenGetter();
-    // if (!token) return false;
     return !this.helper.isTokenExpired();
   }
 }

@@ -152,8 +152,7 @@ UserSchema.pre("findOneAndUpdate", function(next) {
   if (pass) {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(pass, salt, (err, hash) => {
-        console.log(hash);
-        this.update({}, { $set: { password: hash } });
+        this._update.password = hash;
         next();
       });
     });

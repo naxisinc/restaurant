@@ -12,11 +12,21 @@ const config = require("../config/database");
 // POST /users
 router.post("/", async (req, res) => {
   try {
-    const body = _.pick(req.body, ["email", "password", "name"]);
-    const newUser = new User(body);
-    await newUser.save();
-    const token = await newUser.generateAuthToken();
-    res.header("x-auth", token).send(newUser); //
+    const body = _.pick(req.body, [
+      "email",
+      "password",
+      "name",
+      "avatar",
+      "provider"
+    ]);
+    console.log(body);
+    const user = new User(body);
+    console.log(user);
+    await user.save();
+    const token = await user.generateAuthToken();
+    res
+      .status(200)
+      .json({ _id: user._id, email: user.email, role: user.role, token });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -33,24 +43,20 @@ router.post("/login", async (req, res) => {
     const body = _.pick(req.body, ["email", "password"]);
     const user = await User.findByCredentials(body.email, body.password);
     const token = await user.generateAuthToken();
-    res
-      // .header("x-auth", token)
-      .status(200)
-      .json({
-        _id: user._id,
-        email: user.email,
-        role: user.role,
-        token
-      });
-    // console.log(user); // aqui user es el object completo
-    // res.status(200).send(user); // aqui solo lo q toJSON selecciono (email, _id)
+    res.status(200).json({
+      _id: user._id,
+      email: user.email,
+      role: user.role,
+      token
+    });
   } catch (e) {
     res.status(400).send();
   }
 });
 
-// POST /users/provider-exist
-router.post("/provider-exist", async (req, res) => {
+// POST /users/provider
+// @ Check if provider already exist
+router.post("/provider", async (req, res) => {
   try {
     const criteria = _.pick(req.body, ["email", "provider"]);
     const user = await User.findOne(criteria);
@@ -73,13 +79,11 @@ router.post("/provider-exist", async (req, res) => {
 // PATH /user
 router.patch("/", authenticate, async (req, res) => {
   try {
-    // console.log(req.user);
     const updateObj = _.pick(req.body, ["email", "password", "name", "avatar"]);
     const result = await User.findByIdAndUpdate(req.user._id, updateObj, {
       new: true
     });
-    // console.log(result);
-    res.status(200).send();
+    res.status(200).send(result);
   } catch (e) {
     console.log(e);
   }

@@ -8,6 +8,7 @@ import {
 } from "ng4-social-login";
 import { Router } from "@angular/router";
 import { AuthService } from "src/app/services/auth.service";
+import { UserService } from "src/app/services/user.service";
 
 @Component({
   selector: "app-facebook",
@@ -21,7 +22,8 @@ export class FacebookComponent implements OnInit {
   constructor(
     private authSocialService: AuthSocialService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {}
@@ -35,22 +37,19 @@ export class FacebookComponent implements OnInit {
       this.user = await this.authSocialService.signIn(
         FacebookLoginProvider.PROVIDER_ID
       );
+      // adjusting user array
+      this.user["password"] = this.user.id;
+      delete this.user.id;
+      this.user["avatar"] = this.user.photoUrl;
+      delete this.user.photoUrl;
       console.log(this.user);
 
-      this.authService.doMeAToken(this.user).subscribe(
-        res => {
-          // console.log(res);
-          // Storing the token in the localStorage
-          // res.headers.keys().map(key => {
-          //   if (key === "x-auth") {
-          //     const token = res.headers.get(key);
-          //     localStorage.setItem("x-auth", token);
-          //     localStorage.setItem("provider", this.user.provider);
-          //   }
-          // });
-        },
-        err => console.log(err)
-      );
+      const provider = await this.authService.provider(this.user).toPromise();
+
+      if (!provider) {
+        const added = await this.userService.postUser(this.user).toPromise();
+        console.log(added);
+      }
 
       // Redirect from Dashboard
       this.router.navigate(["home"]);
