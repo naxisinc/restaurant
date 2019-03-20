@@ -1,6 +1,7 @@
 import { Component, HostListener } from "@angular/core";
 import { AuthService } from "./services/auth.service";
 import { DeviceCounterService } from "./services/devicecounter.service";
+import { SubjectService } from "./services/subject.service";
 
 @Component({
   selector: "app-root",
@@ -17,6 +18,7 @@ export class AppComponent {
   device: string;
   constructor(
     private authService: AuthService,
+    private subjectService: SubjectService,
     private deviceCounterService: DeviceCounterService
   ) {
     let ua = navigator.userAgent;
@@ -47,7 +49,7 @@ export class AppComponent {
   @HostListener("document:wheel", ["$event"])
   resetTimer() {
     if (this.authService.loggedIn()) {
-      this.authService.notifyUserAction();
+      this.subjectService.notifyUserAction();
     }
   }
 }

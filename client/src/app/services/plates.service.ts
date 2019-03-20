@@ -23,7 +23,7 @@ export class PlatesService {
     payload.append("description", plate.description);
     payload.append("details", JSON.stringify(plate.sizeDetails));
     const headers = new HttpHeaders({
-      "x-auth": localStorage.getItem("x-auth")
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
     return this.http.post("http://localhost:3000/plates", payload, {
       headers
@@ -38,7 +38,7 @@ export class PlatesService {
     payload.append("_category", plate._category);
     payload.append("details", JSON.stringify(plate.sizeDetails));
     const headers = new HttpHeaders({
-      "x-auth": localStorage.getItem("x-auth")
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
     return this.http.patch(
       "http://localhost:3000/plates/" + plate.id,
@@ -51,7 +51,7 @@ export class PlatesService {
 
   deletePlate(id) {
     const headers = new HttpHeaders({
-      "x-auth": localStorage.getItem("x-auth")
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
     return this.http.delete("http://localhost:3000/plates/" + id, {
       headers

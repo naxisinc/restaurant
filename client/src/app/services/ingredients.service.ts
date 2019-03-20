@@ -1,37 +1,37 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class IngredientsService {
   constructor(private http: HttpClient) {}
 
   getIngredients() {
-    return this.http.get('http://localhost:3000/ingredients');
+    return this.http.get("http://localhost:3000/ingredients");
   }
 
   postIngredient(ingredient) {
     let payload = new FormData();
-    payload.append('description', ingredient.description);
-    payload.append('file', ingredient.file);
+    payload.append("description", ingredient.description);
+    payload.append("file", ingredient.file);
     const headers = new HttpHeaders({
-      'x-auth': localStorage.getItem('x-auth')
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
-    return this.http.post('http://localhost:3000/ingredients', payload, {
+    return this.http.post("http://localhost:3000/ingredients", payload, {
       headers
     });
   }
 
   patchIngredient(ingredient) {
     let payload = new FormData();
-    payload.append('description', ingredient.description);
-    payload.append('file', ingredient.file);
+    payload.append("description", ingredient.description);
+    payload.append("file", ingredient.file);
     const headers = new HttpHeaders({
-      'x-auth': localStorage.getItem('x-auth')
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
     return this.http.patch(
-      'http://localhost:3000/ingredients/' + ingredient.id,
+      "http://localhost:3000/ingredients/" + ingredient.id,
       payload,
       {
         headers
@@ -41,9 +41,9 @@ export class IngredientsService {
 
   deleteIngredient(id) {
     const headers = new HttpHeaders({
-      'x-auth': localStorage.getItem('x-auth')
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
-    return this.http.delete('http://localhost:3000/ingredients/' + id, {
+    return this.http.delete("http://localhost:3000/ingredients/" + id, {
       headers
     });
   }

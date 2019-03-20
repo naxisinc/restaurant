@@ -1,35 +1,32 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { map } from "rxjs/Operators";
+import { SubjectService } from "./subject.service";
+import { AuthSocialService } from "ng4-social-login";
 
 @Injectable({
   providedIn: "root"
 })
 export class AuthService {
-  // Esto es para saber si user esta activo en la session
-  _userActionOccured: Subject<void> = new Subject();
-  get userActionOccured(): Observable<void> {
-    return this._userActionOccured.asObservable();
-  }
-  notifyUserAction() {
-    this._userActionOccured.next();
+  // private currentUserSubject: BehaviorSubject<any>;
+  // public currentUser: Observable<any>;
+
+  constructor(
+    private http: HttpClient,
+    private helper: JwtHelperService,
+    private subjectService: SubjectService,
+    private authSocialService: AuthSocialService
+  ) {
+    // this.currentUserSubject = new BehaviorSubject<any>(
+    //   JSON.parse(localStorage.getItem("currentUser"))
+    // );
+    // this.currentUser = this.currentUserSubject.asObservable();
   }
 
-  private currentUserSubject: BehaviorSubject<any>;
-  public currentUser: Observable<any>;
-
-  constructor(private http: HttpClient, private helper: JwtHelperService) {
-    this.currentUserSubject = new BehaviorSubject<any>(
-      JSON.parse(localStorage.getItem("currentUser"))
-    );
-    this.currentUser = this.currentUserSubject.asObservable();
-  }
-
-  public get currentUserValue(): any {
-    return this.currentUserSubject.value;
-  }
+  // public get currentUserValue(): any {
+  //   return this.currentUserSubject.value;
+  // }
 
   authenticateUser(credentials) {
     const headers = new HttpHeaders({ "Content-Type": "application/json" });
@@ -43,7 +40,8 @@ export class AuthService {
           if (user && user["token"]) {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem("currentUser", JSON.stringify(user));
-            this.currentUserSubject.next(user);
+            // this.currentUserSubject.next(user);
+            this.subjectService.setCurrentUser(user);
           }
 
           return user;
@@ -53,12 +51,26 @@ export class AuthService {
 
   provider(user) {
     const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.http.post("http://localhost:3000/users/provider", user, {
-      headers
-    });
+    return this.http
+      .post("http://localhost:3000/users/provider", user, {
+        headers
+      })
+      .pipe(
+        map(user => {
+          // login successful if there's a jwt token in the response
+          if (user && user["token"]) {
+            // store user details and jwt token in local storage to keep user logged in between page refreshes
+            localStorage.setItem("currentUser", JSON.stringify(user));
+            // this.currentUserSubject.next(user);
+            this.subjectService.setCurrentUser(user);
+          }
+
+          return user;
+        })
+      );
   }
 
-  logout() {
+  logout(provider) {
     const headers = new HttpHeaders({
       token: JSON.parse(localStorage.getItem("currentUser")).token
     });
@@ -70,7 +82,11 @@ export class AuthService {
         map(() => {
           // remove user from local storage
           localStorage.removeItem("currentUser");
-          this.currentUserSubject.next(null);
+          // this.currentUserSubject.next(null);
+          this.subjectService.setCurrentUser(null);
+          if (provider) {
+            this.authSocialService.signOut();
+          }
         })
       );
   }

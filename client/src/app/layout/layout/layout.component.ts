@@ -61,7 +61,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   onLogoutClick() {
-    this.authService.logout().subscribe(
+    const pro = JSON.parse(localStorage.getItem("currentUser")).provider;
+    this.authService.logout(pro).subscribe(
       res => {
         this.router.navigate(["home"]);
       },
@@ -83,7 +84,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.resetTimer();
-    this.authService.userActionOccured
+    this.subjectService.userActionOccured
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
         if (this.timerSubscription) {

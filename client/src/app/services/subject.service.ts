@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Subject, Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root"
@@ -67,5 +67,23 @@ export class SubjectService {
   dishSelected = this.dishSelect.asObservable();
   setDishSelect(ingredient: object) {
     this.dishSelect.next(ingredient);
+  }
+
+  // =========== User LogIn ==========
+  private currentUserSubject = new BehaviorSubject<any>(
+    JSON.parse(localStorage.getItem("currentUser"))
+  );
+  currentUser = this.currentUserSubject.asObservable();
+  setCurrentUser(user: object) {
+    this.currentUserSubject.next(user);
+  }
+
+  // ======== User Action Listener =======
+  _userActionOccured: Subject<void> = new Subject();
+  get userActionOccured(): Observable<void> {
+    return this._userActionOccured.asObservable();
+  }
+  notifyUserAction() {
+    this._userActionOccured.next();
   }
 }

@@ -14,7 +14,7 @@ export class CommentsAdminService {
   patchComment(comment) {
     const headers = new HttpHeaders({
       "Content-Type": "application/json",
-      "x-auth": localStorage.getItem("x-auth")
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
     return this.http.patch(
       "http://localhost:3000/admin/comments/" + comment.id,
@@ -27,7 +27,7 @@ export class CommentsAdminService {
 
   deleteComment(id) {
     const headers = new HttpHeaders({
-      "x-auth": localStorage.getItem("x-auth")
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
     return this.http.delete("http://localhost:3000/admin/comments/" + id, {
       headers

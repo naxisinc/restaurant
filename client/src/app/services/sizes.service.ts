@@ -1,39 +1,39 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class SizesService {
   constructor(private http: HttpClient) {}
 
   getSizes() {
-    return this.http.get('http://localhost:3000/sizes');
+    return this.http.get("http://localhost:3000/sizes");
   }
 
   postSize(size) {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'x-auth': localStorage.getItem('x-auth')
+      "Content-Type": "application/json",
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
-    return this.http.post('http://localhost:3000/sizes', size, { headers });
+    return this.http.post("http://localhost:3000/sizes", size, { headers });
   }
 
   patchSize(size) {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'x-auth': localStorage.getItem('x-auth')
+      "Content-Type": "application/json",
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
-    return this.http.patch('http://localhost:3000/sizes/' + size.id, size, {
+    return this.http.patch("http://localhost:3000/sizes/" + size.id, size, {
       headers
     });
   }
 
   deleteSize(id) {
     const headers = new HttpHeaders({
-      'x-auth': localStorage.getItem('x-auth')
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
-    return this.http.delete('http://localhost:3000/sizes/' + id, {
+    return this.http.delete("http://localhost:3000/sizes/" + id, {
       headers
     });
   }

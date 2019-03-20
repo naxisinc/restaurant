@@ -42,17 +42,20 @@ export class FacebookComponent implements OnInit {
       delete this.user.id;
       this.user["avatar"] = this.user.photoUrl;
       delete this.user.photoUrl;
-      console.log(this.user);
 
       const provider = await this.authService.provider(this.user).toPromise();
-
       if (!provider) {
-        const added = await this.userService.postUser(this.user).toPromise();
-        console.log(added);
+        await this.userService.postUser(this.user).toPromise();
+      } else {
+        // Actualiza por si el user cambio algo en
+        // la plataforma externa y debe ser actualizado
+        // localmente, digase name, email or avatar
+        await this.userService.patchUser(provider).toPromise();
       }
 
       // Redirect from Dashboard
       this.router.navigate(["home"]);
+      this.authSocialService.signOut();
     } catch (e) {
       console.log(e);
     }

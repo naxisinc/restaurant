@@ -5,27 +5,30 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot
 } from "@angular/router";
-import { AuthService } from "../services/auth.service";
+import { SubjectService } from "../services/subject.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  currentUser: any;
+
+  constructor(private subjectService: SubjectService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    // if (this.authService.loggedIn()) {
-    //   return true;
-    // } else {
-    //   this.router.navigate(["/login"]);
-    // }
+    // subscribe for catch the current user
+    this.subjectService.currentUser.subscribe(
+      succ => {
+        this.currentUser = succ;
+      },
+      err => console.log(err)
+    );
 
-    const currentUser = this.authService.currentUserValue;
-    if (currentUser) {
+    if (this.currentUser) {
       // check if route is restricted by role
       if (
         route.data.roles &&
-        route.data.roles.indexOf(currentUser.role) === -1
+        route.data.roles.indexOf(this.currentUser.role) === -1
       ) {
         // role not authorised so redirect to home page
         this.router.navigate(["/"]);
@@ -37,7 +40,9 @@ export class AuthGuard implements CanActivate {
     }
 
     // not logged in so redirect to login page with the return url
-    this.router.navigate(["/login"], { queryParams: { returnUrl: state.url } });
+    this.router.navigate(["/login"], {
+      queryParams: { returnUrl: state.url }
+    });
     return false;
   }
 }

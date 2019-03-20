@@ -19,14 +19,16 @@ router.post("/", async (req, res) => {
       "avatar",
       "provider"
     ]);
-    console.log(body);
     const user = new User(body);
-    console.log(user);
     await user.save();
     const token = await user.generateAuthToken();
-    res
-      .status(200)
-      .json({ _id: user._id, email: user.email, role: user.role, token });
+    res.status(200).json({
+      token,
+      _id: user._id,
+      role: user.role,
+      email: user.email,
+      provider: user.provider
+    });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -44,10 +46,10 @@ router.post("/login", async (req, res) => {
     const user = await User.findByCredentials(body.email, body.password);
     const token = await user.generateAuthToken();
     res.status(200).json({
+      token,
       _id: user._id,
-      email: user.email,
       role: user.role,
-      token
+      email: user.email
     });
   } catch (e) {
     res.status(400).send();
@@ -63,10 +65,11 @@ router.post("/provider", async (req, res) => {
     if (user) {
       const token = await user.generateAuthToken();
       res.status(200).json({
+        token,
         _id: user._id,
-        email: user.email,
         role: user.role,
-        token
+        email: user.email,
+        provider: user.provider
       });
     } else {
       res.status(200).send();
@@ -85,7 +88,7 @@ router.patch("/", authenticate, async (req, res) => {
     });
     res.status(200).send(result);
   } catch (e) {
-    console.log(e);
+    res.status(400).send();
   }
 });
 
