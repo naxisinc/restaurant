@@ -148,7 +148,7 @@ UserSchema.pre("save", function(next) {
 
 UserSchema.pre("findOneAndUpdate", function(next) {
   const pass = this._update.password;
-
+  // console.log(this._update);
   if (pass) {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(pass, salt, (err, hash) => {

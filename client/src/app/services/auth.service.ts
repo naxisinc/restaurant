@@ -9,24 +9,12 @@ import { AuthSocialService } from "ng4-social-login";
   providedIn: "root"
 })
 export class AuthService {
-  // private currentUserSubject: BehaviorSubject<any>;
-  // public currentUser: Observable<any>;
-
   constructor(
     private http: HttpClient,
     private helper: JwtHelperService,
     private subjectService: SubjectService,
     private authSocialService: AuthSocialService
-  ) {
-    // this.currentUserSubject = new BehaviorSubject<any>(
-    //   JSON.parse(localStorage.getItem("currentUser"))
-    // );
-    // this.currentUser = this.currentUserSubject.asObservable();
-  }
-
-  // public get currentUserValue(): any {
-  //   return this.currentUserSubject.value;
-  // }
+  ) {}
 
   authenticateUser(credentials) {
     const headers = new HttpHeaders({ "Content-Type": "application/json" });
@@ -40,7 +28,6 @@ export class AuthService {
           if (user && user["token"]) {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem("currentUser", JSON.stringify(user));
-            // this.currentUserSubject.next(user);
             this.subjectService.setCurrentUser(user);
           }
 

@@ -17,7 +17,6 @@ import { UserService } from "src/app/services/user.service";
 })
 export class FacebookComponent implements OnInit {
   private user: SocialUser;
-  private loggedIn: boolean;
 
   constructor(
     private authSocialService: AuthSocialService,
@@ -55,7 +54,6 @@ export class FacebookComponent implements OnInit {
 
       // Redirect from Dashboard
       this.router.navigate(["home"]);
-      this.authSocialService.signOut();
     } catch (e) {
       console.log(e);
     }

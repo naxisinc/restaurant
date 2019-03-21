@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const url = require("url");
+const { ObjectID } = require("mongodb");
 
 const User = require("../models/user");
 const { sendEmail } = require("../utils/sendEmail");
 const { authenticate } = require("../middleware/authenticate");
-const config = require("../config/database");
 
 // POST /users
 router.post("/", async (req, res) => {
@@ -80,10 +79,13 @@ router.post("/provider", async (req, res) => {
 });
 
 // PATH /user
-router.patch("/", authenticate, async (req, res) => {
+router.patch("/:id", authenticate, async (req, res) => {
   try {
+    const id = req.params.id;
+    if (!ObjectID.isValid(id)) return res.status(404).send();
+    // password solo aplica para LOCAL users.
     const updateObj = _.pick(req.body, ["email", "password", "name", "avatar"]);
-    const result = await User.findByIdAndUpdate(req.user._id, updateObj, {
+    const result = await User.findByIdAndUpdate(id, updateObj, {
       new: true
     });
     res.status(200).send(result);
