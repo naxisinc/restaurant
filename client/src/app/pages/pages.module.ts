@@ -38,6 +38,7 @@ import { LocationComponent } from "./location/location.component";
 import { AboutComponent } from "./about/about.component";
 import { FacebookComponent } from "./users/login/facebook/facebook.component";
 import { GoogleComponent } from "./users/login/google/google.component";
+import { SignupComponent } from "./users/signup/signup.component";
 
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
   observer: true,
@@ -79,6 +80,7 @@ const COMPONENTS = [
   AboutComponent,
   DashboardComponent,
   LoginComponent,
+  SignupComponent,
   FacebookComponent,
   GoogleComponent,
   UsersComponent,

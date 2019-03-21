@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { HomeComponent } from "./home/home.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { LoginComponent } from "./users/login/login.component";
+import { SignupComponent } from "./users/signup/signup.component";
 import { UsersComponent } from "./users/users.component";
 import { MixedComponent } from "./mixed/mixed.component";
 import { IngredientsComponent } from "./ingredients/ingredients.component";
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: "location", component: LocationComponent },
   { path: "about", component: AboutComponent },
   { path: "login", component: LoginComponent },
+  { path: "signup", component: SignupComponent },
   { path: "recoverpass", component: RecoverPassComponent },
   { path: "changepass", component: ChangePassComponent },
   {

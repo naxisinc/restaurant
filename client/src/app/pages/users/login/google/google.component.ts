@@ -25,6 +25,7 @@ export class GoogleComponent implements OnInit {
 
   ngOnInit() {}
 
+  // Esto no funciona para ello tengo q haber hosteado el site bajo un dominio authorized by google
   async signInWithGoogle() {
     try {
       this.user = await this.authSocialService.signIn(
