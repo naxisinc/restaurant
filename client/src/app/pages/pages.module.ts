@@ -12,7 +12,7 @@ import { NgxChartsModule } from "@swimlane/ngx-charts";
 import {
   SocialLoginModule,
   AuthServiceConfig,
-  // GoogleLoginProvider,
+  GoogleLoginProvider,
   FacebookLoginProvider
   // LinkedinLoginProvider
 } from "ng4-social-login";
@@ -37,6 +37,7 @@ import { MenuComponent } from "./menu/menu.component";
 import { LocationComponent } from "./location/location.component";
 import { AboutComponent } from "./about/about.component";
 import { FacebookComponent } from "./users/login/facebook/facebook.component";
+import { GoogleComponent } from "./users/login/google/google.component";
 
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
   observer: true,
@@ -49,12 +50,12 @@ const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
 
 const CONFIG = new AuthServiceConfig(
   [
-    // {
-    //   id: GoogleLoginProvider.PROVIDER_ID,
-    //   provider: new GoogleLoginProvider(
-    //     "528257019237-cmk5abldl3hgmjkfbe1tg1suqn46pof7.apps.googleusercontent.com"
-    //   )
-    // },
+    {
+      id: GoogleLoginProvider.PROVIDER_ID,
+      provider: new GoogleLoginProvider(
+        "130910503719-9a6gqldf6vmljg0hg1gbj3541213m9i8.apps.googleusercontent.com"
+      )
+    },
     {
       id: FacebookLoginProvider.PROVIDER_ID,
       provider: new FacebookLoginProvider("289185382020600")
@@ -79,6 +80,7 @@ const COMPONENTS = [
   DashboardComponent,
   LoginComponent,
   FacebookComponent,
+  GoogleComponent,
   UsersComponent,
   MixedComponent,
   MixedFormComponent,

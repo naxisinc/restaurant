@@ -1,19 +1,19 @@
 import { Component, OnInit } from "@angular/core";
 import {
   AuthSocialService,
-  FacebookLoginProvider,
+  GoogleLoginProvider,
   SocialUser
 } from "ng4-social-login";
-import { Router } from "@angular/router";
 import { AuthService } from "src/app/services/auth.service";
 import { UserService } from "src/app/services/user.service";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: "app-facebook",
-  templateUrl: "./facebook.component.html",
-  styleUrls: ["./facebook.component.scss"]
+  selector: "app-google",
+  templateUrl: "./google.component.html",
+  styleUrls: ["./google.component.scss"]
 })
-export class FacebookComponent implements OnInit {
+export class GoogleComponent implements OnInit {
   private user: SocialUser;
 
   constructor(
@@ -25,11 +25,14 @@ export class FacebookComponent implements OnInit {
 
   ngOnInit() {}
 
-  async signInWithFB() {
+  async signInWithGoogle() {
     try {
       this.user = await this.authSocialService.signIn(
-        FacebookLoginProvider.PROVIDER_ID
+        GoogleLoginProvider.PROVIDER_ID
       );
+
+      console.log(this.user);
+
       // adjusting user array
       this.user["password"] = this.user.id;
       delete this.user.id;
