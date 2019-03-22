@@ -43,6 +43,7 @@ export class UserService {
     });
   }
 
+  // Step 1
   emailVerification(data) {
     const headers = new HttpHeaders({ "Content-Type": "application/json" });
     return this.http.post(
@@ -52,5 +53,27 @@ export class UserService {
         headers
       }
     );
+  }
+
+  // Step 2
+  tokenValidation(token) {
+    const headers = new HttpHeaders({ "Content-Type": "application/json" });
+    return this.http
+      .post("http://localhost:3000/users/token-validation", token, {
+        headers
+      })
+      .pipe(
+        map(user => {
+          // console.log(user);
+          // login successful if there's a jwt token in the response
+          if (user && user["token"]) {
+            // store user details and jwt token in local storage to keep user logged in between page refreshes
+            localStorage.setItem("currentUser", JSON.stringify(user));
+            this.subjectService.setCurrentUser(user);
+          }
+
+          return user;
+        })
+      );
   }
 }

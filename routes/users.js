@@ -113,18 +113,17 @@ router.delete("/logout", authenticate, async (req, res) => {
 router.post("/email-verification", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
-    console.log(user);
     if (!user) return res.status(401).send();
     // const token = await user.generateAuthToken();
     // Doing the email
     const mailOptions = {
       from: "Naxis INC. <pcastillo@naxis.us>",
-      to: user.email,
+      to: req.body.email,
       subject: "Email Verification",
       text:
         "Hello.\nPlease, to activate your account follow the next link:" +
-        "\n\nhttp://localhost:3000/users/token-validation/" +
-        user.token +
+        "\n\nhttp://localhost:4200/validation/" +
+        req.body.token +
         ".\n\n" +
         "Please note that this confirmation link expires soon and may require your immediate attention if you wish to access your online account in the future.\n\n" +
         "PLEASE DO NOT REPLY TO THIS MESSAGE."
@@ -138,24 +137,16 @@ router.post("/email-verification", async (req, res) => {
 // GET /users/token-validation
 // @desc: Aqui voy a comprobar si el token enviado
 // desde el link es valido.
-router.get("/token-validation/:token", async (req, res) => {
+router.post("/token-validation", async (req, res) => {
   try {
-    const token = req.params.token;
+    const token = req.body.token;
     const user = await User.findByToken(token);
-    const resetPassToken = await user.generateAuthToken();
-    await user.removeToken(token);
-    res.redirect(
-      decodeURIComponent(
-        url.format({
-          protocol: "https:",
-          host: "fast-shore-26090.herokuapp.com",
-          pathname: "/#/change-password",
-          query: {
-            token: resetPassToken
-          }
-        })
-      )
-    );
+    res.status(200).json({
+      token,
+      _id: user._id,
+      role: user.role,
+      email: user.email
+    });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -202,26 +193,26 @@ async function createEmail(mailOptions) {
   }
 }
 
-// GET /users/recovery-password
-router.get("/recovery-password/:token", async (req, res) => {
-  try {
-    const token = req.params.token;
-    const user = await User.findByToken(token);
-    await user.removeToken(token);
-    res.redirect(
-      decodeURIComponent(
-        url.format({
-          protocol: "http:",
-          host: "localhost:4200",
-          pathname: "/",
-          query: { user }
-        })
-      )
-    );
-  } catch (e) {
-    res.status(400).send(e);
-  }
-});
+// // GET /users/recovery-password
+// router.get("/recovery-password/:token", async (req, res) => {
+//   try {
+//     const token = req.params.token;
+//     const user = await User.findByToken(token);
+//     await user.removeToken(token);
+//     res.redirect(
+//       decodeURIComponent(
+//         url.format({
+//           protocol: "http:",
+//           host: "localhost:4200",
+//           pathname: "/",
+//           query: { user }
+//         })
+//       )
+//     );
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// });
 
 // PATH /change-password
 router.patch("/change-password", authenticate, async (req, res) => {

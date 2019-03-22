@@ -39,6 +39,7 @@ import { AboutComponent } from "./about/about.component";
 import { FacebookComponent } from "./users/login/facebook/facebook.component";
 import { GoogleComponent } from "./users/login/google/google.component";
 import { SignupComponent } from "./users/signup/signup.component";
+import { AfterSignUpLinkComponent } from "./users/signup/after-sign-up-link/after-sign-up-link.component";
 
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
   observer: true,
@@ -80,7 +81,6 @@ const COMPONENTS = [
   AboutComponent,
   DashboardComponent,
   LoginComponent,
-  SignupComponent,
   FacebookComponent,
   GoogleComponent,
   UsersComponent,
@@ -92,7 +92,9 @@ const COMPONENTS = [
   PlatesFormComponent,
   CommentsAdminComponent,
   ChangePassComponent,
-  RecoverPassComponent
+  RecoverPassComponent,
+  SignupComponent,
+  AfterSignUpLinkComponent
 ];
 
 const CudForms = [
