@@ -1,0 +1,15 @@
+@import "../../../../scss/variables";
+
+form {
+  margin: 1rem auto;
+  text-align: center;
+}
+
+mat-form-field,
+.btn {
+  width: 100%;
+}
+
+.btn {
+  margin-top: 2rem;
+}

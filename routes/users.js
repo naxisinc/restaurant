@@ -104,37 +104,94 @@ router.delete("/logout", authenticate, async (req, res) => {
   }
 });
 
-// POST /users/verify-email
-router.post("/verify-email", async (req, res) => {
+// POST /users/email-verification
+// @desc: Para verificar si el email q entro el user
+// es valido envio un email a la direccion dada. En el
+// cuerpo envio un token q sera agregado al array de
+// token del user y este tendra q seguir el link antes
+// de q este expire. De lo contrario uno nuevo sera enviado
+router.post("/email-verification", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
-    if (!user) {
-      return res.status(401).send();
-    }
-    const token = await user.generateAuthToken();
-
-    // Setting email
+    console.log(user);
+    if (!user) return res.status(401).send();
+    // const token = await user.generateAuthToken();
+    // Doing the email
     const mailOptions = {
-      from: "Air Technik INC. <airtnik@gmail.com>",
+      from: "Naxis INC. <pcastillo@naxis.us>",
       to: user.email,
-      subject: "Password reset instructions",
+      subject: "Email Verification",
       text:
-        "Hello.\nPlease, to reset your password follow the next link:" +
-        "\n\nhttps://fast-shore-26090.herokuapp.com/users/recovery-password/" +
-        token +
+        "Hello.\nPlease, to activate your account follow the next link:" +
+        "\n\nhttp://localhost:3000/users/token-validation/" +
+        user.token +
         ".\n\n" +
         "Please note that this confirmation link expires soon and may require your immediate attention if you wish to access your online account in the future.\n\n" +
         "PLEASE DO NOT REPLY TO THIS MESSAGE."
     };
-    if (await createEmail(mailOptions)) {
-      res.status(200).send();
-    } else {
-      res.status(400).send();
-    }
+    if (await createEmail(mailOptions)) res.status(200).send();
+    res.status(400).send();
   } catch (err) {
     res.status(400).send();
   }
 });
+// GET /users/token-validation
+// @desc: Aqui voy a comprobar si el token enviado
+// desde el link es valido.
+router.get("/token-validation/:token", async (req, res) => {
+  try {
+    const token = req.params.token;
+    const user = await User.findByToken(token);
+    const resetPassToken = await user.generateAuthToken();
+    await user.removeToken(token);
+    res.redirect(
+      decodeURIComponent(
+        url.format({
+          protocol: "https:",
+          host: "fast-shore-26090.herokuapp.com",
+          pathname: "/#/change-password",
+          query: {
+            token: resetPassToken
+          }
+        })
+      )
+    );
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+// // POST /users/verify-email
+// router.post("/verify-email", async (req, res) => {
+//   try {
+//     const user = await User.findOne({ email: req.body.email });
+//     if (!user) {
+//       return res.status(401).send();
+//     }
+//     const token = await user.generateAuthToken();
+
+//     // Setting email
+//     const mailOptions = {
+//       from: "Air Technik INC. <airtnik@gmail.com>",
+//       to: user.email,
+//       subject: "Password reset instructions",
+//       text:
+//         "Hello.\nPlease, to reset your password follow the next link:" +
+//         "\n\nhttps://fast-shore-26090.herokuapp.com/users/recovery-password/" +
+//         token +
+//         ".\n\n" +
+//         "Please note that this confirmation link expires soon and may require your immediate attention if you wish to access your online account in the future.\n\n" +
+//         "PLEASE DO NOT REPLY TO THIS MESSAGE."
+//     };
+//     if (await createEmail(mailOptions)) {
+//       res.status(200).send();
+//     } else {
+//       res.status(400).send();
+//     }
+//   } catch (err) {
+//     res.status(400).send();
+//   }
+// });
 
 async function createEmail(mailOptions) {
   try {
@@ -150,17 +207,14 @@ router.get("/recovery-password/:token", async (req, res) => {
   try {
     const token = req.params.token;
     const user = await User.findByToken(token);
-    const resetPassToken = await user.generateAuthToken();
     await user.removeToken(token);
     res.redirect(
       decodeURIComponent(
         url.format({
-          protocol: "https:",
-          host: "fast-shore-26090.herokuapp.com",
-          pathname: "/#/change-password",
-          query: {
-            token: resetPassToken
-          }
+          protocol: "http:",
+          host: "localhost:4200",
+          pathname: "/",
+          query: { user }
         })
       )
     );

@@ -20,8 +20,9 @@ export class UserService {
       })
       .pipe(
         map(user => {
+          // console.log(user);
           // login successful if there's a jwt token in the response
-          if (user && user["token"]) {
+          if (user && user["token"] && user["provider"] !== "LOCAL") {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem("currentUser", JSON.stringify(user));
             this.subjectService.setCurrentUser(user);
@@ -40,5 +41,16 @@ export class UserService {
     return this.http.patch("http://localhost:3000/users/" + user._id, user, {
       headers
     });
+  }
+
+  emailVerification(data) {
+    const headers = new HttpHeaders({ "Content-Type": "application/json" });
+    return this.http.post(
+      "http://localhost:3000/users/email-verification",
+      data,
+      {
+        headers
+      }
+    );
   }
 }

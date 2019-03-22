@@ -41,7 +41,8 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      minlength: 1
+      minlength: 3,
+      maxlength: 50
     },
     avatar: {
       type: String,
@@ -50,6 +51,10 @@ const UserSchema = new mongoose.Schema(
     provider: {
       type: String,
       default: "LOCAL"
+    },
+    active: {
+      type: Boolean,
+      default: false
     }
   },
   {

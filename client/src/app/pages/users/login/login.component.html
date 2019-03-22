@@ -1,19 +1,21 @@
-<form id="login-form" [formGroup]="loginForm">
+<form id="login-form"
+  [formGroup]="loginForm">
   <h2>Sing In</h2>
   <div>
     <mat-form-field>
-      <input matInput formControlName="email" placeholder="Email or Username" />
+      <input matInput
+        formControlName="email"
+        placeholder="Enter your Email" />
     </mat-form-field>
   </div>
   <div>
     <mat-form-field>
-      <input
-        matInput
+      <input matInput
         formControlName="password"
         placeholder="Enter your password"
-        [type]="hide ? 'password' : 'text'"
-      />
-      <mat-icon matSuffix (click)="hide = !hide">{{
+        [type]="hide ? 'password' : 'text'" />
+      <mat-icon matSuffix
+        (click)="hide = !hide">{{
         hide ? "visibility_off" : "visibility"
       }}</mat-icon>
     </mat-form-field>
@@ -22,13 +24,11 @@
     <a routerLink="/recoverpass">Forgot password</a>
   </div>
   <div>
-    <button
-      class="login"
+    <button class="login"
       mat-raised-button
       color="primary"
       (click)="onLogin()"
-      [disabled]="!loginForm.valid"
-    >
+      [disabled]="!loginForm.valid">
       Login
     </button>
   </div>
@@ -40,8 +40,8 @@
     <hr class="bar" />
   </div>
   <div>
-    <a class="new-account" mat-stroked-button routerLink="/signup"
-      >Create an account</a
-    >
+    <a class="new-account"
+      mat-stroked-button
+      routerLink="/signup">Create an account</a>
   </div>
 </form>
