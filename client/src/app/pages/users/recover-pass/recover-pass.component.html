@@ -1,3 +1,13 @@
-<p>
-  recover-pass works!
-</p>
+<form [formGroup]="recoverForm"
+  class="form">
+  <mat-form-field>
+    <input matInput
+      placeholder="Enter your email address"
+      formControlName="email">
+  </mat-form-field>
+  <button class="btn"
+    mat-raised-button
+    color="primary"
+    [disabled]="!recoverForm.valid"
+    (click)="recover()">Recover your password</button>
+</form>

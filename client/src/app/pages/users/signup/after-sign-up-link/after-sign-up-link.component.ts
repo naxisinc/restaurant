@@ -5,20 +5,34 @@ import { UserService } from "src/app/services/user.service";
 @Component({
   selector: "app-after-sign-up-link",
   template: `
-    <app-not-found></app-not-found>
+    <h1 style="margin: 4rem auto; width:600px;">
+      {{ msg }}
+    </h1>
   `,
   styles: []
 })
 export class AfterSignUpLinkComponent implements OnInit {
+  result: any;
+  msg: string;
+
   constructor(private router: Router, private userService: UserService) {}
 
   ngOnInit() {
     let obj = {
       token: this.router.url.split("/").pop()
     };
+    console.log(obj);
     this.userService.tokenValidation(obj).subscribe(
       res => {
-        this.router.navigate(["/"]);
+        this.result = res;
+        // Fue un recovery password request
+        if (this.result.canRecover) {
+          this.router.navigate(["/change-password/" + this.result.token]);
+        }
+        // sign-up request
+        else {
+          this.router.navigate(["/"]);
+        }
       },
       err => console.log(err)
     );

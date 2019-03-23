@@ -109,21 +109,39 @@ router.delete("/logout", authenticate, async (req, res) => {
 // es valido envio un email a la direccion dada. En el
 // cuerpo envio un token q sera agregado al array de
 // token del user y este tendra q seguir el link antes
-// de q este expire. De lo contrario uno nuevo sera enviado
+// de q este expire. De lo contrario uno nuevo sera enviado.
+// A esta ruta voy a venir por dos razones:
+// 1. Cuando se cree un nuevo user
+// 2. Cuando el user olvide el password
 router.post("/email-verification", async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    let user = "";
+    let token = "";
+    let text = "";
+    // El user olvido el password
+    if (req.body.email) {
+      user = await User.findOne({ email: req.body.email });
+      token = await user.generateAuthToken();
+      text = "reset your password";
+    }
+    // Nuevo user buscando validar su email
+    else {
+      token = req.body.token;
+      user = await User.findByToken(token);
+      text = "activate your account";
+    }
     if (!user) return res.status(401).send();
-    // const token = await user.generateAuthToken();
     // Doing the email
     const mailOptions = {
       from: "Naxis INC. <pcastillo@naxis.us>",
-      to: req.body.email,
+      to: user.email,
       subject: "Email Verification",
       text:
-        "Hello.\nPlease, to activate your account follow the next link:" +
+        "Hello.\nPlease, to " +
+        text +
+        " follow the next link:" +
         "\n\nhttp://localhost:4200/validation/" +
-        req.body.token +
+        token +
         ".\n\n" +
         "Please note that this confirmation link expires soon and may require your immediate attention if you wish to access your online account in the future.\n\n" +
         "PLEASE DO NOT REPLY TO THIS MESSAGE."
@@ -137,10 +155,19 @@ router.post("/email-verification", async (req, res) => {
 // GET /users/token-validation
 // @desc: Aqui voy a comprobar si el token enviado
 // desde el link es valido.
+// A esta ruta voy a venir por dos razones:
+// 1. Cuando se cree un nuevo user
+// 2. Cuando el user olvide el password
 router.post("/token-validation", async (req, res) => {
   try {
     const token = req.body.token;
     const user = await User.findByToken(token);
+    if (!user) res.status(401).send();
+    // El user busca recuperar su password
+    if (user.active) res.status(200).json({ canRecover: true, token });
+
+    // El user quiere hacer login con el email ya validado
+    await User.findByIdAndUpdate({ _id: user._id }, { active: true }); // Activar user
     res.status(200).json({
       token,
       _id: user._id,

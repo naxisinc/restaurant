@@ -13,6 +13,7 @@ import { CustomValidator } from "src/app/services/validator.service";
 export class SignupComponent implements OnInit {
   hide = true;
   userAdded: any;
+  message: string = "";
 
   signUpForm = this.fb.group(
     {
@@ -21,8 +22,8 @@ export class SignupComponent implements OnInit {
         [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
       ],
       email: ["", [Validators.required, Validators.email]],
-      password: ["", Validators.required],
-      confirmPassword: ["", Validators.required]
+      password: ["", [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ["", [Validators.required, Validators.minLength(6)]]
     },
     {
       validator: CustomValidator.MatchPassword // my validator method
@@ -48,16 +49,16 @@ export class SignupComponent implements OnInit {
     this.userService.postUser(obj).subscribe(
       succ => {
         this.userAdded = succ;
-        if (this.userAdded.provider === "LOCAL") {
-          let obj = {
-            email: this.userAdded.email,
-            token: this.userAdded.token
-          };
-          this.userService
-            .emailVerification(obj)
-            .subscribe(res => console.log(res));
-        }
-        // this.router.navigate(["/"]);
+        let obj = {
+          token: this.userAdded.token
+        };
+        this.userService.sendEmailVerification(obj).subscribe(
+          res => {
+            this.message =
+              "An email was sent to your inbox.Please check it and follow the instructions.";
+          },
+          err => console.log(err)
+        );
       },
       err => console.log(err)
     );

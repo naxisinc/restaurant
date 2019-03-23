@@ -44,7 +44,7 @@ export class UserService {
   }
 
   // Step 1
-  emailVerification(data) {
+  sendEmailVerification(data) {
     const headers = new HttpHeaders({ "Content-Type": "application/json" });
     return this.http.post(
       "http://localhost:3000/users/email-verification",
@@ -65,8 +65,8 @@ export class UserService {
       .pipe(
         map(user => {
           // console.log(user);
-          // login successful if there's a jwt token in the response
-          if (user && user["token"]) {
+          // if canRecover is undefined | null | false was a sign-up request
+          if (!user["canRecover"]) {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem("currentUser", JSON.stringify(user));
             this.subjectService.setCurrentUser(user);
