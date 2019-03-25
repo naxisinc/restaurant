@@ -24,8 +24,9 @@ export class AuthService {
       })
       .pipe(
         map(user => {
+          // console.log(user);
           // login successful if there's a jwt token in the response
-          if (user && user["token"]) {
+          if (user["token"]) {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem("currentUser", JSON.stringify(user));
             this.subjectService.setCurrentUser(user);
@@ -36,19 +37,18 @@ export class AuthService {
       );
   }
 
-  provider(user) {
+  authenticateProvider(user) {
     const headers = new HttpHeaders({ "Content-Type": "application/json" });
     return this.http
-      .post("http://localhost:3000/users/provider", user, {
+      .post("http://localhost:3000/users/login-provider", user, {
         headers
       })
       .pipe(
         map(user => {
           // login successful if there's a jwt token in the response
-          if (user && user["token"]) {
+          if (user["token"]) {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem("currentUser", JSON.stringify(user));
-            // this.currentUserSubject.next(user);
             this.subjectService.setCurrentUser(user);
           }
 
@@ -58,6 +58,7 @@ export class AuthService {
   }
 
   logout(provider) {
+    // console.log(provider);
     const headers = new HttpHeaders({
       token: JSON.parse(localStorage.getItem("currentUser")).token
     });
@@ -69,9 +70,8 @@ export class AuthService {
         map(() => {
           // remove user from local storage
           localStorage.removeItem("currentUser");
-          // this.currentUserSubject.next(null);
           this.subjectService.setCurrentUser(null);
-          if (provider) {
+          if (provider !== "LOCAL") {
             this.authSocialService.signOut();
           }
         })
@@ -79,6 +79,8 @@ export class AuthService {
   }
 
   loggedIn() {
+    const token = this.helper.tokenGetter();
+    if (!token) return false;
     return !this.helper.isTokenExpired();
   }
 }

@@ -26,7 +26,7 @@ const routes: Routes = [
   { path: "signup", component: SignupComponent },
   { path: "validation/:token", component: AfterSignUpLinkComponent },
   { path: "password-recovery", component: RecoverPassComponent },
-  { path: "change-password/:token", component: ChangePassComponent },
+  { path: "change-password/:id/:token", component: ChangePassComponent },
   {
     path: "admin/dashboard",
     component: DashboardComponent,

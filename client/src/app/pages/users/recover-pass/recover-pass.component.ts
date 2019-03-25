@@ -1,6 +1,13 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  AbstractControl
+} from "@angular/forms";
 import { UserService } from "src/app/services/user.service";
+import { CustomValidator } from "src/app/services/validator.service";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-recover-pass",
@@ -8,12 +15,24 @@ import { UserService } from "src/app/services/user.service";
   styleUrls: ["./recover-pass.component.scss"]
 })
 export class RecoverPassComponent implements OnInit {
-  recoverForm = this.fb.group({
-    email: ["", [Validators.required, Validators.email]]
-  });
+  wasSent: Boolean = false;
+  message: string =
+    "An email was sent to your inbox.Please check it and follow the instructions.";
+
+  // Reactive Form
+  recoverForm: FormGroup;
+
   constructor(private fb: FormBuilder, private userService: UserService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.recoverForm = this.fb.group({
+      email: [
+        "",
+        [Validators.required, Validators.email],
+        CustomValidator.ValidateEmailExist(this.userService)
+      ]
+    });
+  }
 
   recover() {
     let obj = {
@@ -21,7 +40,8 @@ export class RecoverPassComponent implements OnInit {
     };
     this.userService.sendEmailVerification(obj).subscribe(
       succ => {
-        //
+        this.recoverForm.reset();
+        this.wasSent = true;
       },
       err => console.log(err)
     );

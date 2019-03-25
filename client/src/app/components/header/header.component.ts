@@ -13,8 +13,9 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {}
 
   onLogoutClick() {
-    const pro = JSON.parse(localStorage.getItem("currentUser")).provider;
-    this.authService.logout(pro).subscribe(
+    const provider = JSON.parse(localStorage.getItem("currentUser")).user
+      .provider;
+    this.authService.logout(provider).subscribe(
       res => {
         this.router.navigate(["home"]);
       },

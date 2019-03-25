@@ -11,23 +11,11 @@ const { authenticate } = require("../middleware/authenticate");
 // POST /users
 router.post("/", async (req, res) => {
   try {
-    const body = _.pick(req.body, [
-      "email",
-      "password",
-      "name",
-      "avatar",
-      "provider"
-    ]);
+    const body = _.pick(req.body, ["email", "password", "name", "avatar"]);
     const user = new User(body);
     await user.save();
     const token = await user.generateAuthToken();
-    res.status(200).json({
-      token,
-      _id: user._id,
-      role: user.role,
-      email: user.email,
-      provider: user.provider
-    });
+    res.status(200).send({ user, token });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -44,34 +32,46 @@ router.post("/login", async (req, res) => {
     const body = _.pick(req.body, ["email", "password"]);
     const user = await User.findByCredentials(body.email, body.password);
     const token = await user.generateAuthToken();
-    res.status(200).json({
-      token,
-      _id: user._id,
-      role: user.role,
-      email: user.email
-    });
+    res.status(200).send({ user, token });
   } catch (e) {
     res.status(400).send();
   }
 });
 
 // POST /users/provider
-// @ Check if provider already exist
-router.post("/provider", async (req, res) => {
+// @ Check if provider already exist, if no lo creo
+router.post("/login-provider", async (req, res) => {
   try {
-    const criteria = _.pick(req.body, ["email", "provider"]);
-    const user = await User.findOne(criteria);
+    const body = _.pick(req.body, [
+      "email",
+      "password",
+      "name",
+      "avatar",
+      "provider"
+    ]);
+    const user = await User.findOne({
+      email: body.email,
+      provider: body.provider
+    });
     if (user) {
+      // si el user ha cambiado el avatar desde
+      // su ultimo login entonces actualizalo
+      let query_avatar = req.body.avatar;
+      if (user.avatar !== query_avatar) {
+        await User.findByIdAndUpdate(
+          { _id: user._id },
+          { avatar: query_avatar }
+        );
+      }
       const token = await user.generateAuthToken();
-      res.status(200).json({
-        token,
-        _id: user._id,
-        role: user.role,
-        email: user.email,
-        provider: user.provider
-      });
+      res.status(200).send({ user, token });
     } else {
-      res.status(200).send();
+      // Creo el nuevo user
+      body.active = true;
+      const user = new User(body);
+      await user.save();
+      const token = await user.generateAuthToken();
+      res.status(200).send({ user, token });
     }
   } catch (e) {
     res.status(400).send();
@@ -83,8 +83,7 @@ router.patch("/:id", authenticate, async (req, res) => {
   try {
     const id = req.params.id;
     if (!ObjectID.isValid(id)) return res.status(404).send();
-    // password solo aplica para LOCAL users.
-    const updateObj = _.pick(req.body, ["email", "password", "name", "avatar"]);
+    const updateObj = _.pick(req.body, ["password", "name", "avatar"]);
     const result = await User.findByIdAndUpdate(id, updateObj, {
       new: true
     });
@@ -99,6 +98,18 @@ router.delete("/logout", authenticate, async (req, res) => {
   try {
     await req.user.removeToken(req.token);
     res.status(200).send();
+  } catch (e) {
+    res.status(400).send();
+  }
+});
+
+// @desc: Aqui lo q hago es Verificar que el Email isNotTaken (vent)
+// si NotTaken return true, si isTaken false
+router.post("/vent", async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) res.status(200).send(false);
+    res.status(200).send(true);
   } catch (e) {
     res.status(400).send();
   }
@@ -121,6 +132,7 @@ router.post("/email-verification", async (req, res) => {
     // El user olvido el password
     if (req.body.email) {
       user = await User.findOne({ email: req.body.email });
+      if (!user) res.status(401).send();
       token = await user.generateAuthToken();
       text = "reset your password";
     }
@@ -128,9 +140,9 @@ router.post("/email-verification", async (req, res) => {
     else {
       token = req.body.token;
       user = await User.findByToken(token);
+      if (!user) return res.status(401).send();
       text = "activate your account";
     }
-    if (!user) return res.status(401).send();
     // Doing the email
     const mailOptions = {
       from: "Naxis INC. <pcastillo@naxis.us>",
@@ -152,7 +164,8 @@ router.post("/email-verification", async (req, res) => {
     res.status(400).send();
   }
 });
-// GET /users/token-validation
+
+// POST /users/token-validation
 // @desc: Aqui voy a comprobar si el token enviado
 // desde el link es valido.
 // A esta ruta voy a venir por dos razones:
@@ -164,52 +177,16 @@ router.post("/token-validation", async (req, res) => {
     const user = await User.findByToken(token);
     if (!user) res.status(401).send();
     // El user busca recuperar su password
-    if (user.active) res.status(200).json({ canRecover: true, token });
+    if (user.active)
+      res.status(200).send({ canRecover: true, _id: user._id, token });
 
     // El user quiere hacer login con el email ya validado
     await User.findByIdAndUpdate({ _id: user._id }, { active: true }); // Activar user
-    res.status(200).json({
-      token,
-      _id: user._id,
-      role: user.role,
-      email: user.email
-    });
-  } catch (e) {
-    res.status(400).send(e);
+    res.status(200).send({ user, token });
+  } catch (err) {
+    res.status(400).send();
   }
 });
-
-// // POST /users/verify-email
-// router.post("/verify-email", async (req, res) => {
-//   try {
-//     const user = await User.findOne({ email: req.body.email });
-//     if (!user) {
-//       return res.status(401).send();
-//     }
-//     const token = await user.generateAuthToken();
-
-//     // Setting email
-//     const mailOptions = {
-//       from: "Air Technik INC. <airtnik@gmail.com>",
-//       to: user.email,
-//       subject: "Password reset instructions",
-//       text:
-//         "Hello.\nPlease, to reset your password follow the next link:" +
-//         "\n\nhttps://fast-shore-26090.herokuapp.com/users/recovery-password/" +
-//         token +
-//         ".\n\n" +
-//         "Please note that this confirmation link expires soon and may require your immediate attention if you wish to access your online account in the future.\n\n" +
-//         "PLEASE DO NOT REPLY TO THIS MESSAGE."
-//     };
-//     if (await createEmail(mailOptions)) {
-//       res.status(200).send();
-//     } else {
-//       res.status(400).send();
-//     }
-//   } catch (err) {
-//     res.status(400).send();
-//   }
-// });
 
 async function createEmail(mailOptions) {
   try {
@@ -219,62 +196,5 @@ async function createEmail(mailOptions) {
     return 0;
   }
 }
-
-// // GET /users/recovery-password
-// router.get("/recovery-password/:token", async (req, res) => {
-//   try {
-//     const token = req.params.token;
-//     const user = await User.findByToken(token);
-//     await user.removeToken(token);
-//     res.redirect(
-//       decodeURIComponent(
-//         url.format({
-//           protocol: "http:",
-//           host: "localhost:4200",
-//           pathname: "/",
-//           query: { user }
-//         })
-//       )
-//     );
-//   } catch (e) {
-//     res.status(400).send(e);
-//   }
-// });
-
-// PATH /change-password
-router.patch("/change-password", authenticate, async (req, res) => {
-  try {
-    req.user.password = req.body.password;
-    await req.user.save();
-    await req.user.removeToken(req.body.token);
-    res.status(200).send();
-  } catch (e) {
-    res.status(400).send(e);
-  }
-});
-
-router.post("/send-email", async (req, res) => {
-  try {
-    let mailOptions = {
-      from: "Air Technik INC. <airtnik@gmail.com>",
-      to: "airtnik@gmail.com",
-      subject: "Email sent from airtechnik.com",
-      text:
-        "From: " +
-        req.body.email +
-        "\nMy name is: " +
-        req.body.name +
-        "\n\n" +
-        req.body.message
-    };
-    if (await createEmail(mailOptions)) {
-      res.status(200).send();
-    } else {
-      res.status(400).send();
-    }
-  } catch (err) {
-    res.status(400).send();
-  }
-});
 
 module.exports = router;

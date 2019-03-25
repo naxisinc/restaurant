@@ -1,29 +1,26 @@
 import { Injectable } from "@angular/core";
-import {
-  FormControl,
-  FormGroupDirective,
-  NgForm,
-  AbstractControl
-} from "@angular/forms";
-import { ErrorStateMatcher } from "@angular/material/core";
+import { AbstractControl } from "@angular/forms";
+import { UserService } from "./user.service";
+import { map } from "rxjs/operators";
+// import { ErrorStateMatcher } from "@angular/material/core";
 
 @Injectable({
   providedIn: "root"
 })
 /** Instantaneous Error when invalid control is dirty, touched, or submitted. */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(
-      control &&
-      control.invalid &&
-      (control.dirty || control.touched || isSubmitted)
-    );
-  }
-}
+// export class MyErrorStateMatcher implements ErrorStateMatcher {
+//   isErrorState(
+//     control: FormControl | null,
+//     form: FormGroupDirective | NgForm | null
+//   ): boolean {
+//     const isSubmitted = form && form.submitted;
+//     return !!(
+//       control &&
+//       control.invalid &&
+//       (control.dirty || control.touched || isSubmitted)
+//     );
+//   }
+// }
 
 // ===== CUSTOM VALIDATORS ======
 @Injectable({
@@ -44,14 +41,34 @@ export class CustomValidator {
   }
 
   static MatchPassword(AC: AbstractControl) {
-    let password = AC.get("password").value; // to get value in input tag
-    let confirmPassword = AC.get("confirmPassword").value; // to get value in input tag
+    let password = AC.get("password").value;
+    let confirmPassword = AC.get("confirmPassword").value;
     if (password !== confirmPassword) {
-      // console.log("false");
       AC.get("confirmPassword").setErrors({ MatchPassword: true });
     } else {
-      // console.log("true");
       return null;
     }
+  }
+
+  static ValidateEmailNotTaken(userService: UserService) {
+    return (control: AbstractControl) => {
+      let obj = { email: control.value };
+      return userService.checkEmailNotTaken(obj).pipe(
+        map(res => {
+          return res ? null : { emailTaken: true };
+        })
+      );
+    };
+  }
+
+  static ValidateEmailExist(userService: UserService) {
+    return (control: AbstractControl) => {
+      let obj = { email: control.value };
+      return userService.checkEmailNotTaken(obj).pipe(
+        map(res => {
+          return !res ? null : { emailTaken: true };
+        })
+      );
+    };
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { map } from "rxjs/Operators";
 import { SubjectService } from "./subject.service";
+import { AuthService } from "./auth.service";
 
 @Injectable({
   providedIn: "root"
@@ -9,7 +10,8 @@ import { SubjectService } from "./subject.service";
 export class UserService {
   constructor(
     private http: HttpClient,
-    private subjectService: SubjectService
+    private subjectService: SubjectService,
+    private authService: AuthService
   ) {}
 
   postUser(user) {
@@ -22,7 +24,7 @@ export class UserService {
         map(user => {
           // console.log(user);
           // login successful if there's a jwt token in the response
-          if (user && user["token"] && user["provider"] !== "LOCAL") {
+          if (user["token"] && user["user"]["provider"] !== "LOCAL") {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem("currentUser", JSON.stringify(user));
             this.subjectService.setCurrentUser(user);
@@ -39,6 +41,15 @@ export class UserService {
       token: JSON.parse(localStorage.getItem("currentUser")).token
     });
     return this.http.patch("http://localhost:3000/users/" + user._id, user, {
+      headers
+    });
+  }
+
+  checkEmailNotTaken(email) {
+    const headers = new HttpHeaders({
+      "Content-Type": "application/json"
+    });
+    return this.http.post("http://localhost:3000/users/vent", email, {
       headers
     });
   }

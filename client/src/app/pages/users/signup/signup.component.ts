@@ -12,8 +12,10 @@ import { CustomValidator } from "src/app/services/validator.service";
 })
 export class SignupComponent implements OnInit {
   hide = true;
+  wasSent = false;
   userAdded: any;
-  message: string = "";
+  message: string =
+    "An email was sent to your inbox.Please check it and follow the instructions.";
 
   signUpForm = this.fb.group(
     {
@@ -54,8 +56,8 @@ export class SignupComponent implements OnInit {
         };
         this.userService.sendEmailVerification(obj).subscribe(
           res => {
-            this.message =
-              "An email was sent to your inbox.Please check it and follow the instructions.";
+            this.signUpForm.reset();
+            this.wasSent = true;
           },
           err => console.log(err)
         );

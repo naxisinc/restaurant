@@ -12,7 +12,7 @@ import { UserService } from "src/app/services/user.service";
   styles: []
 })
 export class AfterSignUpLinkComponent implements OnInit {
-  result: any;
+  user: any;
   msg: string;
 
   constructor(private router: Router, private userService: UserService) {}
@@ -21,13 +21,15 @@ export class AfterSignUpLinkComponent implements OnInit {
     let obj = {
       token: this.router.url.split("/").pop()
     };
-    console.log(obj);
+    // console.log(obj);
     this.userService.tokenValidation(obj).subscribe(
       res => {
-        this.result = res;
+        this.user = res;
         // Fue un recovery password request
-        if (this.result.canRecover) {
-          this.router.navigate(["/change-password/" + this.result.token]);
+        if (this.user.canRecover) {
+          this.router.navigate([
+            "/change-password/" + this.user._id + "/" + this.user.token
+          ]);
         }
         // sign-up request
         else {

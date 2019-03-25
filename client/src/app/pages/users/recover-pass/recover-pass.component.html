@@ -1,13 +1,25 @@
 <form [formGroup]="recoverForm"
+  [hidden]="wasSent"
   class="form">
   <mat-form-field>
     <input matInput
       placeholder="Enter your email address"
       formControlName="email">
+    <mat-error *ngIf="recoverForm.controls.email.hasError('required')">The email field is required.
+    </mat-error>
+    <mat-error *ngIf="recoverForm.controls.email.hasError('email')">Enter a valid email.</mat-error>
+    <mat-error *ngIf="recoverForm.controls.email.hasError('emailTaken')">This email is not in our records.
+    </mat-error>
   </mat-form-field>
   <button class="btn"
+    focus
     mat-raised-button
     color="primary"
     [disabled]="!recoverForm.valid"
     (click)="recover()">Recover your password</button>
 </form>
+
+<div class="check-email"
+  [hidden]='!wasSent'>
+  <h1>{{message}}</h1>
+</div>

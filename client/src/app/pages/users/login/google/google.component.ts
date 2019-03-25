@@ -40,16 +40,6 @@ export class GoogleComponent implements OnInit {
       this.user["avatar"] = this.user.photoUrl;
       delete this.user.photoUrl;
 
-      const provider = await this.authService.provider(this.user).toPromise();
-      if (!provider) {
-        await this.userService.postUser(this.user).toPromise();
-      } else {
-        // Actualiza por si el user cambio algo en
-        // la plataforma externa y debe ser actualizado
-        // localmente, digase name, email or avatar
-        await this.userService.patchUser(provider).toPromise();
-      }
-
       // Redirect from Dashboard
       this.router.navigate(["home"]);
     } catch (e) {

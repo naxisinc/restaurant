@@ -74,6 +74,9 @@ export class SubjectService {
     JSON.parse(localStorage.getItem("currentUser"))
   );
   currentUser = this.currentUserSubject.asObservable();
+  public get currentUserValue() {
+    return this.currentUserSubject.value;
+  }
   setCurrentUser(user: object) {
     this.currentUserSubject.next(user);
   }
