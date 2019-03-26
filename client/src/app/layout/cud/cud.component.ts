@@ -17,8 +17,10 @@ export class CudComponent implements OnInit {
       .pipe(filter(event => event instanceof NavigationStart))
       .subscribe((event: NavigationStart) => {
         this.route = event.url.split("/").pop();
-        this.subjectService.changeRoute(this.route);
         // console.log(this.route);
+        // Lo guardo en un Observer pq lo voy a necesitar a
+        // la hora de gestionar los mixesComponents (sizes & categories)
+        this.subjectService.changeRoute(this.route);
       });
   }
 

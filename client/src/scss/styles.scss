@@ -85,6 +85,9 @@ body {
 .hide {
   display: none;
 }
+.pointer {
+  cursor: pointer;
+}
 // .footer-cell,
 // .footer-row,
 // .noData-div {
@@ -143,12 +146,9 @@ header {
 #divider {
   margin: 1rem 0;
 }
-.pointer {
-  cursor: pointer;
-}
-.mat-tab-header-pagination {
-  z-index: 1 !important;
-}
+// .mat-tab-header-pagination {
+//   z-index: 1 !important;
+// }
 mat-error {
   font-size: 10.5px;
 }
@@ -160,16 +160,14 @@ mat-error {
   min-width: 0 !important;
 }
 .form {
-  margin: 1rem auto;
+  margin: auto;
+  padding-top: 1rem;
   text-align: center;
 }
+// notificacion despues de enviar el email
 .check-email {
   margin: auto;
   padding: 2rem;
   background: rgb(255, 58, 58);
   color: white;
-}
-.contenido {
-  margin: auto;
-  padding: 1rem 2rem;
 }

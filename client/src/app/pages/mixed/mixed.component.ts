@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatSort, MatTableDataSource, MatPaginator } from "@angular/material";
 import { CategoriesService } from "src/app/services/categories.service";
 import { SizesService } from "src/app/services/sizes.service";
-import { Router } from "@angular/router";
 import { SubjectService } from "src/app/services/subject.service";
 
 @Component({
@@ -21,8 +20,7 @@ export class MixedComponent implements OnInit {
   constructor(
     private categoryService: CategoriesService,
     private subjectService: SubjectService,
-    private sizeService: SizesService,
-    private router: Router
+    private sizeService: SizesService
   ) {
     // Getting the route from observer
     this.subjectService.currentRoute.subscribe(route => {

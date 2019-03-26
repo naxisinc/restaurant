@@ -1,11 +1,11 @@
 @import "../../../../scss/variables";
 .sidenav {
   width: 175px;
-  padding-top: 60px; //new
+  padding-top: 60px; //header height (new)
 }
 .sidenav-end {
   width: 382px; //min width when resize the web browser
-  padding-top: 60px; //new
+  padding-top: 60px; //header height (new)
 }
 .sidenav-container {
   // overflow: auto; // para el footer

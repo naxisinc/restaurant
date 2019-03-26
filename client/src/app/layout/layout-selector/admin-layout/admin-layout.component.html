@@ -31,10 +31,7 @@
     class="sidenav-end"
     (keydown.escape)="close('escape')"
     [mode]="(isEnoughBig$ | async) ? 'over' : 'side'"
-    [opened]="
-      (!(isEnoughBig$ | async) && isCudRoute && authService.loggedIn()) ||
-      isItemSelected
-    "
+    [opened]="(!(isEnoughBig$ | async) && isCudRoute) || isItemSelected"
   >
     <mat-toolbar>Action Form</mat-toolbar>
     <!-- <section class="mat-typography"> -->
@@ -54,13 +51,12 @@
       </button>
       <span>My app</span>
       <span class="spacer"></span>
-      <h1 *ngIf="authService.loggedIn()">
+      <h1>
         {{ minutesDisplay }}:{{
           secondsDisplay && secondsDisplay <= 59 ? secondsDisplay : "00"
         }}
       </h1>
     </mat-toolbar>
-    <!--ng-content> </ng-content-->
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

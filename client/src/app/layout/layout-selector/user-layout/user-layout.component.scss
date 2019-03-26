@@ -1,0 +1,6 @@
+@import "../../../../scss/variables";
+
+#div-routes {
+  padding-top: 60px; //header height (new)
+  min-height: calc(100% - 160px); //60px del header 100 footer
+}

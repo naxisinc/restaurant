@@ -29,23 +29,26 @@ export class LayoutSelectorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.subjectService.currentUser.subscribe(res => {
-      // console.log(res);
-      if (res && res.user.role === "admin") {
-        this.currentLyIndex = 0;
-      } else {
-        this.currentLyIndex = 1;
-      }
-      let adItem = this.layout[this.currentLyIndex];
+    this.subjectService.currentUser.subscribe(
+      res => {
+        // console.log(res);
+        if (res && res.user.role === "admin") {
+          this.currentLyIndex = 0;
+        } else {
+          this.currentLyIndex = 1;
+        }
+        let adItem = this.layout[this.currentLyIndex];
 
-      let componentFactory = this.componentFactoryResolver.resolveComponentFactory(
-        adItem.component
-      );
+        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(
+          adItem.component
+        );
 
-      let viewContainerRef = this.adHost.viewContainerRef;
-      viewContainerRef.clear();
+        let viewContainerRef = this.adHost.viewContainerRef;
+        viewContainerRef.clear();
 
-      viewContainerRef.createComponent(componentFactory);
-    });
+        viewContainerRef.createComponent(componentFactory);
+      },
+      err => console.log(err)
+    );
   }
 }

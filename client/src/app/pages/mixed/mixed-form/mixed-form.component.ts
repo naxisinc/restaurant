@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
 
 import { SizesService } from "src/app/services/sizes.service";
 import { CategoriesService } from "src/app/services/categories.service";
@@ -27,8 +26,7 @@ export class MixedFormComponent implements OnInit {
   constructor(
     private sizeService: SizesService,
     private categoryService: CategoriesService,
-    private subjectService: SubjectService,
-    private router: Router
+    private subjectService: SubjectService
   ) {
     this.subjectService.currentRoute.subscribe(route => {
       this.element = route;
