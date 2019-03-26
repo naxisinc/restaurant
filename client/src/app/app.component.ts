@@ -1,50 +1,28 @@
-import { Component, HostListener } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { AuthService } from "./services/auth.service";
 import { DeviceCounterService } from "./services/devicecounter.service";
 import { SubjectService } from "./services/subject.service";
+import { LayoutItem } from "./layout/layout-selector/layout-item";
+import { LayoutService } from "./layout/layout-selector/layout.service";
 
 @Component({
   selector: "app-root",
   template: `
     <!--section class="mat-typography"></session-->
-
-    <app-header></app-header>
-
-    <app-layout *ngIf="view === 'admin'">
-      <router-outlet></router-outlet>
-    </app-layout>
-
-    <!--div *ngIf="view === 'user'"-->
-    <router-outlet></router-outlet>
-    <!--/div-->
-
-    <app-footer></app-footer>
+    <app-layout-selector [layout]="layout"></app-layout-selector>
   `,
   styleUrls: ["./app.component.scss"]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   device: string;
-  view: string = "user";
+  layout: LayoutItem[];
 
   constructor(
     private authService: AuthService,
+    private layoutService: LayoutService,
     private subjectService: SubjectService,
     private deviceCounterService: DeviceCounterService
   ) {
-    if (this.authService.loggedIn()) {
-      // this.view = this.subjectService.currentUserValue.user.role;
-      // console.log(this.view);
-      this.subjectService.currentUser.subscribe(res => {
-        console.log(res);
-        if (res) {
-          this.view = res.user.role;
-          console.log(this.view);
-        } else {
-          this.view = "user";
-        }
-      });
-    }
-
     let ua = navigator.userAgent;
     if (
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(
@@ -56,6 +34,11 @@ export class AppComponent {
 
     // Counting the device type
     this.deviceType();
+  }
+
+  ngOnInit() {
+    this.layout = this.layoutService.getLayouts();
+    console.log(this.layout);
   }
 
   deviceType() {
