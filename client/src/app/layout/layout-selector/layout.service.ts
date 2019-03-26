@@ -8,6 +8,8 @@ import { LayoutItem } from "./layout-item";
 export class LayoutService {
   getLayouts() {
     // Aqui listo los distintos layout q quiero en el app
+    // en la posicion 0 tendre el layout para el role admin
+    // y en 1 al de los users.
     return [
       new LayoutItem(AdminLayoutComponent),
       new LayoutItem(UserLayoutComponent)

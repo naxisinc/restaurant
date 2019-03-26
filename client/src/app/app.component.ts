@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.layout = this.layoutService.getLayouts();
-    console.log(this.layout);
+    // console.log(this.layout);
   }
 
   deviceType() {

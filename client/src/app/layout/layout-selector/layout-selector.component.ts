@@ -7,6 +7,7 @@ import {
 } from "@angular/core";
 import { LayoutItem } from "./layout-item";
 import { LyDirective } from "./layout.directive";
+import { SubjectService } from "src/app/services/subject.service";
 
 @Component({
   selector: "app-layout-selector",
@@ -19,39 +20,32 @@ import { LyDirective } from "./layout.directive";
 })
 export class LayoutSelectorComponent implements OnInit {
   @Input() layout: LayoutItem[];
-  currentAdIndex = -1;
+  currentLyIndex = 1;
   @ViewChild(LyDirective) adHost: LyDirective;
-  interval: any;
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
+  constructor(
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private subjectService: SubjectService
+  ) {}
 
   ngOnInit() {
-    this.loadComponent();
-    this.getAds();
-  }
+    this.subjectService.currentUser.subscribe(res => {
+      // console.log(res);
+      if (res && res.user.role === "admin") {
+        this.currentLyIndex = 0;
+      } else {
+        this.currentLyIndex = 1;
+      }
+      let adItem = this.layout[this.currentLyIndex];
 
-  ngOnDestroy() {
-    clearInterval(this.interval);
-  }
+      let componentFactory = this.componentFactoryResolver.resolveComponentFactory(
+        adItem.component
+      );
 
-  loadComponent() {
-    this.currentAdIndex = (this.currentAdIndex + 1) % this.layout.length;
-    let adItem = this.layout[this.currentAdIndex];
+      let viewContainerRef = this.adHost.viewContainerRef;
+      viewContainerRef.clear();
 
-    let componentFactory = this.componentFactoryResolver.resolveComponentFactory(
-      adItem.component
-    );
-
-    let viewContainerRef = this.adHost.viewContainerRef;
-    viewContainerRef.clear();
-
-    let componentRef = viewContainerRef.createComponent(componentFactory);
-    // (<AdComponent>componentRef.instance).data = adItem.data;
-  }
-
-  getAds() {
-    this.interval = setInterval(() => {
-      this.loadComponent();
-    }, 3000);
+      viewContainerRef.createComponent(componentFactory);
+    });
   }
 }

@@ -1,4 +1,70 @@
-<p style="margin-top:4rem;">
-  admin-layout works!
-  <router-outlet></router-outlet>
-</p>
+<!-- <section class="mat-typography">
+  <app-header></app-header>
+</section> -->
+
+<mat-sidenav-container
+  class="sidenav-container"
+  (backdropClick)="close('backdrop')"
+>
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="!(isHandset$ | async)"
+  >
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home">*Home</a>
+      <a mat-list-item routerLink="/admin/dashboard">Dashboard</a>
+      <a mat-list-item routerLink="/admin/sizes">Sizes</a>
+      <a mat-list-item routerLink="/admin/categories">Categories</a>
+      <a mat-list-item routerLink="/admin/ingredients">Ingredients</a>
+      <a mat-list-item routerLink="/admin/plates">Dishes</a>
+      <a mat-list-item routerLink="/admin/comments">Comments</a>
+      <a mat-list-item routerLink="/users">Users</a>
+      <mat-divider></mat-divider>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav
+    position="end"
+    class="sidenav-end"
+    (keydown.escape)="close('escape')"
+    [mode]="(isEnoughBig$ | async) ? 'over' : 'side'"
+    [opened]="
+      (!(isEnoughBig$ | async) && isCudRoute && authService.loggedIn()) ||
+      isItemSelected
+    "
+  >
+    <mat-toolbar>Action Form</mat-toolbar>
+    <!-- <section class="mat-typography"> -->
+    <app-cud></app-cud>
+    <!-- </section> -->
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar>
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="(isHandset$ | async)"
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>My app</span>
+      <span class="spacer"></span>
+      <h1 *ngIf="authService.loggedIn()">
+        {{ minutesDisplay }}:{{
+          secondsDisplay && secondsDisplay <= 59 ? secondsDisplay : "00"
+        }}
+      </h1>
+    </mat-toolbar>
+    <!--ng-content> </ng-content-->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<!-- <section class="mat-typography">
+  <app-footer></app-footer>
+</section> -->
