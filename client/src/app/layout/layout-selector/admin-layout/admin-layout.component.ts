@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild,
+  AfterViewInit
+} from "@angular/core";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -15,7 +22,7 @@ import { SubjectService } from "../../../services/subject.service";
   templateUrl: "./admin-layout.component.html",
   styleUrls: ["./admin-layout.component.scss"]
 })
-export class AdminLayoutComponent implements OnInit, OnDestroy {
+export class AdminLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
@@ -27,6 +34,12 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   isCudRoute: boolean = false;
   isItemSelected: boolean;
+
+  /* Esto es para calcular las alturas de los sidenav del layout */
+  @ViewChild("drawer") left_nav: ElementRef;
+  @ViewChild("content") content: ElementRef;
+  @ViewChild("endnav") right_nav: ElementRef;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
@@ -93,6 +106,30 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
         }
         this.resetTimer();
       });
+  }
+
+  ngAfterViewInit() {
+    // Calc the max height
+    const start_sidenav = document.getElementsByClassName(
+      "sidenav"
+    ) as HTMLCollectionOf<HTMLElement>;
+    // const content = document.getElementsByTagName(
+    //   "mat-sidenav-container"
+    // ) as HTMLCollectionOf<HTMLElement>;
+    // const end_sidenav = document.getElementsByTagName(
+    //   "mat-sidenav-container"
+    // ) as HTMLCollectionOf<HTMLElement>;
+    // const startHeight = start_sidenav[0].offsetHeight;
+    // const contentHeight = content[0].offsetHeight;
+    // const endHeight = end_sidenav[0].offsetHeight;
+    console.log(start_sidenav[0].offsetHeight);
+    // console.log(contentHeight);
+    // console.log(endHeight);
+
+    /* Right way but not working */
+    // console.log(this.left_nav.nativeElement);
+    // console.log(this.content.nativeElement.offsetHeight);
+    // console.log(this.right_nav.nativeElement.offsetHeight);
   }
 
   ngOnDestroy() {

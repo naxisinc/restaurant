@@ -2,13 +2,15 @@
   <app-header></app-header>
 </section> -->
 
-<mat-sidenav-container
+<mat-drawer-container
+  #content
   class="sidenav-container"
   (backdropClick)="close('backdrop')"
 >
-  <mat-sidenav
+  <mat-drawer
     #drawer
     class="sidenav"
+    fixedInViewport="false"
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="!(isHandset$ | async)"
@@ -22,13 +24,29 @@
       <a mat-list-item routerLink="/admin/ingredients">Ingredients</a>
       <a mat-list-item routerLink="/admin/plates">Dishes</a>
       <a mat-list-item routerLink="/admin/comments">Comments</a>
+      <a mat-list-item routerLink="/home">*Home</a>
+      <a mat-list-item routerLink="/admin/dashboard">Dashboard</a>
+      <a mat-list-item routerLink="/admin/sizes">Sizes</a>
+      <a mat-list-item routerLink="/admin/categories">Categories</a>
+      <a mat-list-item routerLink="/admin/ingredients">Ingredients</a>
+      <a mat-list-item routerLink="/admin/plates">Dishes</a>
+      <a mat-list-item routerLink="/admin/comments">Comments</a>
+      <a mat-list-item routerLink="/home">*Home</a>
+      <a mat-list-item routerLink="/admin/dashboard">Dashboard</a>
+      <a mat-list-item routerLink="/admin/sizes">Sizes</a>
+      <a mat-list-item routerLink="/admin/categories">Categories</a>
+      <a mat-list-item routerLink="/admin/ingredients">Ingredients</a>
+      <a mat-list-item routerLink="/admin/plates">Dishes</a>
+      <a mat-list-item routerLink="/admin/comments">Comments</a>
       <a mat-list-item routerLink="/users">Users</a>
       <mat-divider></mat-divider>
     </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav
+  </mat-drawer>
+  <mat-drawer
+    #endnav
     position="end"
     class="sidenav-end"
+    fixedInViewport="false"
     (keydown.escape)="close('escape')"
     [mode]="(isEnoughBig$ | async) ? 'over' : 'side'"
     [opened]="(!(isEnoughBig$ | async) && isCudRoute) || isItemSelected"
@@ -37,8 +55,8 @@
     <!-- <section class="mat-typography"> -->
     <app-cud></app-cud>
     <!-- </section> -->
-  </mat-sidenav>
-  <mat-sidenav-content>
+  </mat-drawer>
+  <mat-drawer-content>
     <mat-toolbar>
       <button
         type="button"
@@ -58,8 +76,8 @@
       </h1>
     </mat-toolbar>
     <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </mat-drawer-content>
+</mat-drawer-container>
 
 <!-- <section class="mat-typography">
   <app-footer></app-footer>
