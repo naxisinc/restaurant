@@ -9,12 +9,10 @@
   padding-top: 60px; //header height (new)
 }
 .sidenav-container {
-  // overflow: auto; // para el footer
-  // padding-bottom: 100px; // para el footer
-  padding-top: 60px; //new
-  // min-height: calc(100% - 100px); //100px footer
+  padding-top: 60px; // header height
+  // min-height: calc(100% - 100px); //100px footer height
 
-  min-height: 1717px; // random value
+  // min-height: 1717px; // random value
   // min-height: 1181px; // A heighgt
   // min-height: 892.5px; // C height
 }

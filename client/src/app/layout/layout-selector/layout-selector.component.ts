@@ -15,8 +15,7 @@ import { SubjectService } from "src/app/services/subject.service";
     <app-header></app-header>
     <ng-template layout-host></ng-template>
     <app-footer></app-footer>
-  `,
-  styleUrls: ["./layout-selector.component.scss"]
+  `
 })
 export class LayoutSelectorComponent implements OnInit {
   @Input() layout: LayoutItem[];
