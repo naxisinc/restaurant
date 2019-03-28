@@ -89,4 +89,11 @@ export class SubjectService {
   notifyUserAction() {
     this._userActionOccured.next();
   }
+
+  // Set the min-height to mat-navbar-container
+  private height = new BehaviorSubject<number>(0);
+  getMinHeight = this.height.asObservable();
+  setMinHeight(min_height: number) {
+    this.height.next(min_height);
+  }
 }

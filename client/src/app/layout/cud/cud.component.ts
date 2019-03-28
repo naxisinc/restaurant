@@ -1,6 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { Router, NavigationStart } from "@angular/router";
-import { filter } from "rxjs/operators";
 
 import { SubjectService } from "../../services/subject.service";
 
@@ -12,16 +10,8 @@ import { SubjectService } from "../../services/subject.service";
 export class CudComponent implements OnInit {
   route: string;
 
-  constructor(private router: Router, private subjectService: SubjectService) {
-    router.events
-      .pipe(filter(event => event instanceof NavigationStart))
-      .subscribe((event: NavigationStart) => {
-        this.route = event.url.split("/").pop();
-        // console.log(this.route);
-        // Lo guardo en un Observer pq lo voy a necesitar a
-        // la hora de gestionar los mixesComponents (sizes & categories)
-        this.subjectService.changeRoute(this.route);
-      });
+  constructor(private subjectService: SubjectService) {
+    this.subjectService.currentRoute.subscribe(res => (this.route = res));
   }
 
   ngOnInit() {}
