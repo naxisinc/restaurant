@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { CustomValidator } from "src/app/services/validator.service";
 import { SubjectService } from "src/app/services/subject.service";
@@ -23,6 +23,7 @@ export class IngredientsFormComponent implements OnInit {
   isSelected: boolean = false;
   selected: Object;
   @ViewChild("fileInput") fileInput;
+  @ViewChild("ing") ing;
 
   constructor(
     private fb: FormBuilder,
@@ -45,6 +46,10 @@ export class IngredientsFormComponent implements OnInit {
       },
       err => console.log(err)
     );
+  }
+
+  ngAfterViewInit() {
+    console.log(this.ing);
   }
 
   add() {

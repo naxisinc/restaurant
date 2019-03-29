@@ -1,63 +1,51 @@
-<div class="cud-div">
-  <form>
-    <mat-form-field>
-      <input
-        matInput
-        placeholder="{{ element | titlecase }}"
-        [formControl]="elementFormControl"
-        [errorStateMatcher]="matcher"
-      />
-      <mat-error *ngIf="elementFormControl.hasError('required')">
-        {{ element | titlecase }} are <strong>required.</strong>
-      </mat-error>
-      <mat-error *ngIf="elementFormControl.hasError('minlength')">
-        {{ element | titlecase }} must be at least 3 characters long.
-      </mat-error>
-      <mat-error *ngIf="elementFormControl.hasError('maxlength')">
-        {{ element | titlecase }} must have less that 20 characters.
-      </mat-error>
-    </mat-form-field>
-  </form>
-  <button
-    mat-stroked-button
-    color="primary"
-    (click)="add()"
-    *ngIf="!isSelected"
-    [disabled]="elementFormControl.invalid"
-  >
-    Add
-  </button>
-  <button
-    mat-stroked-button
-    color="primary"
-    (click)="edit()"
-    *ngIf="isSelected"
-    [disabled]="elementFormControl.invalid"
-  >
-    Edit
-  </button>
-  <button
-    mat-stroked-button
-    color="primary"
-    (click)="delete()"
-    *ngIf="isSelected"
-  >
-    Delete
-  </button>
-  <button
-    mat-stroked-button
-    color="primary"
-    (click)="cancel()"
-    *ngIf="isSelected"
-  >
-    Cancel
-  </button>
-  <mat-divider id="divider"></mat-divider>
-  <div id="info">
-    <div *ngIf="!isSelected">
-      To <strong>edit</strong> or <strong>delete</strong> an item, it must be
-      selected from the list.
-    </div>
-    <div *ngIf="isSelected">Press <strong>Cancel</strong> to go back.</div>
+<form>
+  <mat-form-field>
+    <input matInput
+      placeholder="{{ element | titlecase }}"
+      [formControl]="elementFormControl"
+      [errorStateMatcher]="matcher" />
+    <mat-error *ngIf="elementFormControl.hasError('required')">
+      {{ element | titlecase }} are <strong>required.</strong>
+    </mat-error>
+    <mat-error *ngIf="elementFormControl.hasError('minlength')">
+      {{ element | titlecase }} must be at least 3 characters long.
+    </mat-error>
+    <mat-error *ngIf="elementFormControl.hasError('maxlength')">
+      {{ element | titlecase }} must have less that 20 characters.
+    </mat-error>
+  </mat-form-field>
+</form>
+<button mat-stroked-button
+  color="primary"
+  (click)="add()"
+  *ngIf="!isSelected"
+  [disabled]="elementFormControl.invalid">
+  Add
+</button>
+<button mat-stroked-button
+  color="primary"
+  (click)="edit()"
+  *ngIf="isSelected"
+  [disabled]="elementFormControl.invalid">
+  Edit
+</button>
+<button mat-stroked-button
+  color="primary"
+  (click)="delete()"
+  *ngIf="isSelected">
+  Delete
+</button>
+<button mat-stroked-button
+  color="primary"
+  (click)="cancel()"
+  *ngIf="isSelected">
+  Cancel
+</button>
+<mat-divider id="divider"></mat-divider>
+<div id="info">
+  <div *ngIf="!isSelected">
+    To <strong>edit</strong> or <strong>delete</strong> an item, it must be
+    selected from the list.
   </div>
+  <div *ngIf="isSelected">Press <strong>Cancel</strong> to go back.</div>
 </div>

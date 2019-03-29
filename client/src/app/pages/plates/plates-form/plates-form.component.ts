@@ -1,10 +1,12 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
 import { FormGroup, FormBuilder, Validators, FormArray } from "@angular/forms";
 import { CustomValidator } from "src/app/services/validator.service";
 import { SizesService } from "src/app/services/sizes.service";
 import { PlatesService } from "src/app/services/plates.service";
 import { SubjectService } from "src/app/services/subject.service";
 import { Router } from "@angular/router";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-plates-form",
@@ -20,6 +22,7 @@ export class PlatesFormComponent implements OnInit {
   isSelected: boolean = false;
   selected: Object;
   @ViewChild("fileInput") fileInput;
+  @ViewChild("dish") dish; //
 
   // Set the Ingredients in the child component
   setIngredients = [];
@@ -44,19 +47,7 @@ export class PlatesFormComponent implements OnInit {
     private plateService: PlatesService,
     private subjectService: SubjectService,
     private router: Router
-  ) {
-    // Get sizes
-    this.sizesService.getSizes().subscribe(
-      res => {
-        this.sizes = res;
-        this.sizes.forEach(size => {
-          this.items = this.parentForm.get("items") as FormArray;
-          this.items.push(this.createItem(size._id, size.description));
-        });
-      },
-      err => console.log(err)
-    );
-  }
+  ) {}
 
   createItem(id, description): FormGroup {
     return this.fb.group({
@@ -72,11 +63,29 @@ export class PlatesFormComponent implements OnInit {
     });
   }
 
+  // itemsObs: Observable<Array<any>>;
+  itemsObs: any;
   ngOnInit() {
+    // Get sizes
+    // this.itemsObs =
+    this.sizesService.getSizes().subscribe(
+      res => {
+        this.sizes = res;
+        this.sizes.forEach(size => {
+          this.items = this.parentForm.get("items") as FormArray;
+          this.items.push(this.createItem(size._id, size.description));
+        });
+        this.itemsObs = this.parentForm.get("items")["controls"];
+        console.log(this.itemsObs);
+      },
+      err => console.log(err)
+    );
+
+    // DishSelected Observable
     this.subjectService.dishSelected.subscribe(
-      succ => {
-        if (succ !== null) {
-          this.selected = succ;
+      res => {
+        if (res !== null) {
+          this.selected = res;
           // console.log(this.selected);
           this.parentForm.patchValue({
             description: this.selected["description"],
@@ -96,6 +105,12 @@ export class PlatesFormComponent implements OnInit {
       },
       err => console.log(err)
     );
+  }
+
+  ngAfterViewInit() {
+    console.log(this.dish);
+    console.log(this.dish.nativeElement.clientHeight);
+    console.log(this.dish.nativeElement.offsetHeight);
   }
 
   gettingIngredients(list) {
@@ -136,7 +151,7 @@ export class PlatesFormComponent implements OnInit {
   edit() {
     let data = this.getFormValues();
     this.plateService.patchPlate(data).subscribe(
-      succ => {
+      res => {
         this.clearEverything();
       },
       err => {
@@ -150,7 +165,7 @@ export class PlatesFormComponent implements OnInit {
 
   delete() {
     this.plateService.deletePlate(this.selected["_id"]).subscribe(
-      succ => {
+      res => {
         this.clearEverything();
       },
       err => {

@@ -10,9 +10,9 @@ import { SubjectService } from "../../services/subject.service";
 export class CudComponent implements OnInit {
   route: string;
 
-  constructor(private subjectService: SubjectService) {
+  constructor(private subjectService: SubjectService) {}
+
+  ngOnInit() {
     this.subjectService.currentRoute.subscribe(res => (this.route = res));
   }
-
-  ngOnInit() {}
 }

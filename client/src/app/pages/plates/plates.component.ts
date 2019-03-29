@@ -34,9 +34,11 @@ export class PlatesComponent implements OnInit {
 
   constructor(
     private plateService: PlatesService,
-    private categoriesService: CategoriesService,
-    private subjectService: SubjectService
-  ) {
+    private subjectService: SubjectService,
+    private categoriesService: CategoriesService
+  ) {}
+
+  ngOnInit() {
     // Get categories
     this.categoriesService.getCategories().subscribe(
       res => {
@@ -59,9 +61,7 @@ export class PlatesComponent implements OnInit {
       },
       err => console.log(err)
     );
-  }
 
-  ngOnInit() {
     // Getting plates
     this.getPlates();
 

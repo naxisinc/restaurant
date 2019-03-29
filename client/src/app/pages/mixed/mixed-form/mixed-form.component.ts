@@ -27,13 +27,14 @@ export class MixedFormComponent implements OnInit {
     private sizeService: SizesService,
     private categoryService: CategoriesService,
     private subjectService: SubjectService
-  ) {
+  ) {}
+
+  ngOnInit() {
+    // Router observer
     this.subjectService.currentRoute.subscribe(route => {
       this.element = route;
     });
-  }
 
-  ngOnInit() {
     this.subjectService.elementSelected.subscribe(
       succ => {
         if (succ !== null) {

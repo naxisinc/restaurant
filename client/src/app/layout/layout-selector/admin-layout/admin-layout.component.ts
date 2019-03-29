@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ElementRef,
   ViewChild,
   AfterViewInit
 } from "@angular/core";
@@ -38,16 +37,18 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   minHeight: number;
 
   constructor(
-    private breakpointObserver: BreakpointObserver,
-    private authService: AuthService,
     private router: Router,
     private dialog: MatDialog,
-    private subjectService: SubjectService
-  ) {
+    private authService: AuthService,
+    private subjectService: SubjectService,
+    private breakpointObserver: BreakpointObserver
+  ) {}
+
+  ngOnInit() {
     // Guardo la ruta en un Observer pq lo voy a necesitar a
     // la hora de gestionar los mixesComponents (sizes & categories)
     // y de fijar los min-height en el layout container
-    router.events
+    this.router.events
       .pipe(filter(event => event instanceof NavigationStart))
       .subscribe((event: NavigationStart) => {
         let route = event.url.split("/").pop();
@@ -56,7 +57,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Identify the route for hide or show the navbar-end
     this.subjectService.currentRoute.subscribe(route => {
-      console.log(route);
+      // console.log(route); //
       if (route !== null) {
         if (
           route === "sizes" ||
@@ -69,21 +70,6 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
           this.isCudRoute = false;
         }
       }
-
-      /* ============== Body Height ============ */
-      let footerHeight = document.querySelector(".footer").clientHeight;
-      let body = document.documentElement.clientHeight;
-      let bodyHeight = body - footerHeight;
-      /* ======================================= */
-      /* ============== Left Height ============ */
-      let leftTopHeight = this.left_nav._elementRef.nativeElement
-        .lastElementChild.lastElementChild.offsetTop;
-      let leftCenterHeight = this.left_nav._elementRef.nativeElement
-        .lastElementChild.lastElementChild.offsetHeight;
-      let leftHeight = leftTopHeight + leftCenterHeight;
-      /* ======================================= */
-      console.log(bodyHeight);
-      console.log(leftHeight);
     });
 
     // Check if any item was selected for hide or show the navbar-end
@@ -91,14 +77,16 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isItemSelected = flag ? true : false;
     });
 
-    // Setting the min-height
-    this.subjectService.setMinHeight(1200);
-
-    // Getting the min-height
-    this.subjectService.getMinHeight.subscribe(res => {
-      this.minHeight = res;
-      console.log(this.minHeight);
-    });
+    // Timer staff
+    this.resetTimer();
+    this.subjectService.userActionOccured
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        if (this.timerSubscription) {
+          this.timerSubscription.unsubscribe();
+        }
+        this.resetTimer();
+      });
   }
 
   close(reason: string) {
@@ -128,66 +116,56 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   unsubscribe$: Subject<void> = new Subject();
   timerSubscription: Subscription;
 
-  ngOnInit() {
-    this.resetTimer();
-    this.subjectService.userActionOccured
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => {
-        if (this.timerSubscription) {
-          this.timerSubscription.unsubscribe();
-        }
-        this.resetTimer();
-      });
-  }
-
   /* Calcular alturas de los sidenav del layout
   para evitar los scrollbar en los menus */
   @ViewChild("drawer") left_nav;
   @ViewChild("endnav") right_nav;
   ngAfterViewInit() {
+    this.calcNavContainerHeight();
+  }
+
+  calcNavContainerHeight() {
     /* Este delay lo necesita pq el cud-div carga async */
     setTimeout(() => {
-      // /* ============== Body Height ============ */
-      // let footerHeight = document.querySelector(".footer").clientHeight;
-      // let body = document.documentElement.clientHeight;
-      // let bodyHeight = body - footerHeight;
-      // /* ======================================= */
-      // /* ============== Left Height ============ */
-      // let leftTopHeight = this.left_nav._elementRef.nativeElement
-      //   .lastElementChild.lastElementChild.offsetTop;
-      // let leftCenterHeight = this.left_nav._elementRef.nativeElement
-      //   .lastElementChild.lastElementChild.offsetHeight;
-      // let leftHeight = leftTopHeight + leftCenterHeight;
-      // /* ======================================= */
-      // /* ============== Right Height =========== */
-      // let rightTopHeight = this.right_nav._elementRef.nativeElement
-      //   .lastElementChild.lastElementChild.lastElementChild.lastElementChild
-      //   .offsetTop;
-      // let rightCenterHeight = this.right_nav._elementRef.nativeElement
-      //   .lastElementChild.lastElementChild.lastElementChild.lastElementChild
-      //   .offsetHeight;
+      /* ============== Body Height ============ */
+      let footerHeight = document.querySelector(".footer").clientHeight;
+      let body = document.documentElement.clientHeight;
+      let bodyHeight = body - footerHeight;
+      /* ======================================= */
+      /* ============== Left Height ============ */
+      let leftTopHeight = this.left_nav._elementRef.nativeElement
+        .lastElementChild.lastElementChild.offsetTop;
+      let leftCenterHeight = this.left_nav._elementRef.nativeElement
+        .lastElementChild.lastElementChild.offsetHeight;
+      let leftHeight = leftTopHeight + leftCenterHeight;
+      /* ======================================= */
+      /* ============== Right Height =========== */
+      let rightTopHeight = this.right_nav._elementRef.nativeElement
+        .lastElementChild.lastElementChild.lastElementChild.offsetTop;
+      let rightCenterHeight = this.right_nav._elementRef.nativeElement
+        .lastElementChild.lastElementChild.lastElementChild.offsetHeight;
       // console.log(`rightCenterHeight: ${rightCenterHeight}`);
-      // // Getting the styles for catch the marginBottom
-      // let rightStyles = getComputedStyle(
-      //   this.right_nav._elementRef.nativeElement.lastElementChild
-      //     .lastElementChild.lastElementChild.lastElementChild
-      // );
+      // Getting the styles for catch the marginBottom
+      let rightStyles = getComputedStyle(
+        this.right_nav._elementRef.nativeElement.lastElementChild
+          .lastElementChild.lastElementChild
+      );
       // console.log(this.right_nav._elementRef);
       // console.log(`rightTopHeight: ${rightTopHeight}`);
       // console.log(`rightCenterHeight: ${rightTopHeight}`);
       // console.log(`rightBootomHeight: ${parseInt(rightStyles.marginBottom)}`);
-      // let rightHeight =
-      //   rightTopHeight + rightCenterHeight + parseInt(rightStyles.marginBottom);
-      // /* ======================================= */
-      // console.log(`body: ${bodyHeight}`);
-      // console.log(`left: ${leftHeight}`);
-      // console.log(`right: ${rightHeight}`);
+      let rightHeight =
+        rightTopHeight + rightCenterHeight + parseInt(rightStyles.marginBottom);
+      /* ======================================= */
+      console.log(`body: ${bodyHeight}`);
+      console.log(`left: ${leftHeight}`);
+      console.log(`right: ${rightHeight}`);
       /* Setting the min-height value */
-      // if (bodyHeight > leftHeight && bodyHeight > rightHeight) {
-      //   this.minHeight = bodyHeight;
-      // } else {
-      //   this.minHeight = leftHeight > rightHeight ? leftHeight : rightHeight;
-      // }
+      if (bodyHeight > leftHeight && bodyHeight > rightHeight) {
+        this.minHeight = bodyHeight;
+      } else {
+        this.minHeight = leftHeight > rightHeight ? leftHeight : rightHeight;
+      }
       // console.log(this.minHeight);
     }, 0);
   }

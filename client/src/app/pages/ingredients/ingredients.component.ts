@@ -25,9 +25,12 @@ export class IngredientsComponent implements OnInit {
   breakpointContent: number;
 
   constructor(
-    private ingredientService: IngredientsService,
-    private subjectService: SubjectService
-  ) {
+    private subjectService: SubjectService,
+    private ingredientService: IngredientsService
+  ) {}
+
+  ngOnInit() {
+    // Refresh the ingredients observer
     this.subjectService.ingredientRefreshed.subscribe(
       succ => {
         if (succ !== null) {
@@ -36,9 +39,7 @@ export class IngredientsComponent implements OnInit {
       },
       err => console.log(err)
     );
-  }
 
-  ngOnInit() {
     this.getIngredients();
 
     // Formatting Content

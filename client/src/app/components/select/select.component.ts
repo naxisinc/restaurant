@@ -12,7 +12,15 @@ export class SelectComponent implements OnInit {
   @Input() parentForm: FormControl;
   @Output() category = new EventEmitter<any>();
 
-  constructor(private categoriesService: CategoriesService) {
+  constructor(private categoriesService: CategoriesService) {}
+
+  compareFn(optionOne, optionTwo): boolean {
+    if (optionOne && optionTwo) {
+      return optionOne._id === optionTwo._id;
+    }
+  }
+
+  ngOnInit() {
     this.categoriesService.getCategories().subscribe(
       res => {
         this.options = res;
@@ -22,12 +30,4 @@ export class SelectComponent implements OnInit {
       }
     );
   }
-
-  compareFn(optionOne, optionTwo): boolean {
-    if (optionOne && optionTwo) {
-      return optionOne._id === optionTwo._id;
-    }
-  }
-
-  ngOnInit() {}
 }

@@ -1,31 +1,32 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import {
   Component,
   ElementRef,
   ViewChild,
   Output,
   EventEmitter,
-  Input
-} from '@angular/core';
-import { FormControl } from '@angular/forms';
+  Input,
+  OnInit
+} from "@angular/core";
+import { FormControl } from "@angular/forms";
 import {
   MatAutocompleteSelectedEvent,
   MatChipInputEvent,
   MatAutocomplete
-} from '@angular/material';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { IngredientsService } from '../../services/ingredients.service';
+} from "@angular/material";
+import { Observable } from "rxjs";
+import { map, startWith } from "rxjs/operators";
+import { IngredientsService } from "../../services/ingredients.service";
 
 /**
  * @title Chips Autocomplete
  */
 @Component({
-  selector: 'app-chips',
-  templateUrl: 'chips.component.html',
-  styleUrls: ['chips.component.scss']
+  selector: "app-chips",
+  templateUrl: "chips.component.html",
+  styleUrls: ["chips.component.scss"]
 })
-export class ChipsComponent {
+export class ChipsComponent implements OnInit {
   visible = true;
   selectable = true;
   removable = true;
@@ -39,11 +40,13 @@ export class ChipsComponent {
   @Output() ingredients = new EventEmitter();
   Ingredients: any;
 
-  @ViewChild('fruitInput')
+  @ViewChild("fruitInput")
   fruitInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  @ViewChild("auto") matAutocomplete: MatAutocomplete;
 
-  constructor(private ingredientsService: IngredientsService) {
+  constructor(private ingredientsService: IngredientsService) {}
+
+  ngOnInit() {
     this.ingredientsService.getIngredients().subscribe(
       res => {
         this.Ingredients = res;
@@ -61,7 +64,7 @@ export class ChipsComponent {
           fruit ? this._filter(fruit) : this.allFruits.slice()
         )
       );
-    }, 1000);
+    }, 1000); // esto tengo q removerlo
   }
 
   add(event: MatChipInputEvent): void {
@@ -72,7 +75,7 @@ export class ChipsComponent {
       const value = event.value;
 
       // Add our fruit
-      if ((value || '').trim()) {
+      if ((value || "").trim()) {
         if (this.allFruits.includes(value)) {
           this.fruits.push(value.trim());
         }
@@ -80,7 +83,7 @@ export class ChipsComponent {
 
       // Reset the input value
       if (input) {
-        input.value = '';
+        input.value = "";
       }
 
       this.fruitCtrl.setValue(null);
@@ -98,7 +101,7 @@ export class ChipsComponent {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.fruits.push(event.option.viewValue);
-    this.fruitInput.nativeElement.value = '';
+    this.fruitInput.nativeElement.value = "";
     this.fruitCtrl.setValue(null);
     this.emit();
   }

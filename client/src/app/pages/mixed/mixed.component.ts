@@ -18,10 +18,12 @@ export class MixedComponent implements OnInit {
   route: string;
 
   constructor(
-    private categoryService: CategoriesService,
+    private sizeService: SizesService,
     private subjectService: SubjectService,
-    private sizeService: SizesService
-  ) {
+    private categoryService: CategoriesService
+  ) {}
+
+  ngOnInit() {
     // Getting the route from observer
     this.subjectService.currentRoute.subscribe(route => {
       this.route = route;
@@ -36,9 +38,7 @@ export class MixedComponent implements OnInit {
       },
       err => console.log(err)
     );
-  }
 
-  ngOnInit() {
     this.getData();
   }
 

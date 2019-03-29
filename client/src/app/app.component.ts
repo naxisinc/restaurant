@@ -31,12 +31,12 @@ export class AppComponent implements OnInit {
     )
       this.device = "mobile";
     else this.device = "desktop";
-
-    // Counting the device type
-    this.deviceType();
   }
 
   ngOnInit() {
+    // Counting the device type
+    this.deviceType();
+
     this.layout = this.layoutService.getLayouts();
     // console.log(this.layout);
   }
