@@ -10,11 +10,7 @@
 }
 .sidenav-container {
   padding-top: 60px; // header height
-  // min-height: calc(100% - 100px); //100px footer height
-
-  // min-height: 1717px; // random value
-  // min-height: 1181px; // A heighgt
-  // min-height: 892.5px; // C height
+  min-height: calc(100vh - 100px); //100px footer height
 }
 mat-toolbar {
   background: $primary;
@@ -33,7 +29,3 @@ mat-toolbar {
 mat-nav-list {
   padding: 0;
 }
-// .mat-drawer-side,
-// .mat-drawer-side.mat-drawer-end {
-//   border: 0;
-// }

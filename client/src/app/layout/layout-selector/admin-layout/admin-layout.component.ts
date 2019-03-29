@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  AfterViewInit,
-  AfterViewChecked
-} from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { Observable } from "rxjs";
 import { map, filter, takeUntil, take } from "rxjs/operators";
@@ -15,15 +8,13 @@ import { MatDialog, MatDialogRef } from "@angular/material";
 
 import { AuthService } from "../../../services/auth.service";
 import { SubjectService } from "../../../services/subject.service";
-import { PlatesFormComponent } from "../../../pages/plates/plates-form/plates-form.component";
 
 @Component({
   selector: "app-admin-layout",
   templateUrl: "./admin-layout.component.html",
   styleUrls: ["./admin-layout.component.scss"]
 })
-export class AdminLayoutComponent
-  implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
+export class AdminLayoutComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map(result => result.matches));
@@ -36,9 +27,6 @@ export class AdminLayoutComponent
   isCudRoute: boolean = false;
   isItemSelected: boolean;
 
-  /* Dynamic Height para evitar scrollbar en los menu del layout */
-  minHeight: number;
-
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -50,7 +38,6 @@ export class AdminLayoutComponent
   ngOnInit() {
     // Guardo la ruta en un Observer pq lo voy a necesitar a
     // la hora de gestionar los mixesComponents (sizes & categories)
-    // y de fijar los min-height en el layout container
     this.router.events
       .pipe(filter(event => event instanceof NavigationStart))
       .subscribe((event: NavigationStart) => {
@@ -118,51 +105,6 @@ export class AdminLayoutComponent
 
   unsubscribe$: Subject<void> = new Subject();
   timerSubscription: Subscription;
-
-  /* Calcular alturas de los sidenav del layout
-  para evitar los scrollbar en los menus */
-  @ViewChild("drawer") left_nav;
-  @ViewChild(PlatesFormComponent) endMenu;
-  ngAfterViewInit() {
-    this.calcNavContainerHeight();
-  }
-
-  ngAfterViewChecked() {
-    this.minHeight = this.minHeightTemp;
-  }
-
-  minHeightTemp: number;
-  calcNavContainerHeight() {
-    /* ============== Body Height ============ */
-    let footerHeight = document.querySelector(".footer").clientHeight;
-    let body = document.documentElement.clientHeight;
-    let bodyHeight = body - footerHeight;
-    /* ======================================= */
-    /* ============== Left Height ============ */
-    let leftTopHeight = this.left_nav._elementRef.nativeElement.lastElementChild
-      .lastElementChild.offsetTop;
-    let leftCenterHeight = this.left_nav._elementRef.nativeElement
-      .lastElementChild.lastElementChild.offsetHeight;
-    let leftHeight = leftTopHeight + leftCenterHeight;
-    /* ======================================= */
-    /* ============== Right Height =========== */
-    let rightHeight;
-    this.subjectService.getCUDHeight.subscribe(res => {
-      rightHeight = res;
-      /* Setting the min-height value */
-      if (bodyHeight > leftHeight && bodyHeight > rightHeight) {
-        this.minHeightTemp = bodyHeight;
-      } else {
-        this.minHeightTemp =
-          leftHeight > rightHeight ? leftHeight : rightHeight;
-      }
-      console.log(`body: ${bodyHeight}`);
-      console.log(`left: ${leftHeight}`);
-      console.log(`right: ${rightHeight}`);
-      console.log(this.minHeightTemp);
-    });
-    /* ======================================= */
-  }
 
   ngOnDestroy() {
     this.unsubscribe$.next();

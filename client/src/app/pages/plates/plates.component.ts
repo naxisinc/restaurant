@@ -24,8 +24,8 @@ export class PlatesComponent implements OnInit {
 
   // MatPaginator Inputs
   length = 0;
-  pageSize = 2;
-  pageSizeOptions: number[] = [2, 6, 12, 24];
+  pageSize = 3;
+  pageSizeOptions: number[] = [3, 6, 12, 24];
 
   // Filter (Sort by)
   filter = new FormControl();

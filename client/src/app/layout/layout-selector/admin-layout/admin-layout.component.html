@@ -1,10 +1,5 @@
-<!-- <section class="mat-typography">
-  <app-header></app-header>
-</section> -->
-
-<mat-sidenav-container #content
-  [style.min-height.px]="minHeight"
-  class="sidenav-container"
+<!-- [style.min-height.px]="minHeight" -->
+<mat-sidenav-container class="sidenav-container"
   (backdropClick)="close('backdrop')">
   <mat-sidenav #drawer
     class="sidenav"
@@ -33,17 +28,14 @@
       <mat-divider></mat-divider>
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav #endnav
-    position="end"
+  <mat-sidenav position="end"
     class="sidenav-end"
     fixedInViewport="false"
     (keydown.escape)="close('escape')"
     [mode]="(isEnoughBig$ | async) ? 'over' : 'side'"
     [opened]="(!(isEnoughBig$ | async) && isCudRoute) || isItemSelected">
-    <mat-toolbar>Action Form</mat-toolbar>
-    <!-- <section class="mat-typography"> -->
+    <mat-toolbar>Edit area</mat-toolbar>
     <app-cud></app-cud>
-    <!-- </section> -->
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar>
@@ -65,7 +57,3 @@
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
-<!-- <section class="mat-typography">
-  <app-footer></app-footer>
-</section> -->
