@@ -90,10 +90,16 @@ export class SubjectService {
     this._userActionOccured.next();
   }
 
+  // // Set the min-height to mat-navbar-container
+  // private height = new BehaviorSubject<number>(0);
+  // getMinHeight = this.height.asObservable();
+  // setMinHeight(min_height: number) {
+  //   this.height.next(min_height);
+  // }
   // Set the min-height to mat-navbar-container
   private height = new BehaviorSubject<number>(0);
-  getMinHeight = this.height.asObservable();
-  setMinHeight(min_height: number) {
-    this.height.next(min_height);
+  getCUDHeight = this.height.asObservable();
+  setCUDHeight(height: number) {
+    this.height.next(height);
   }
 }

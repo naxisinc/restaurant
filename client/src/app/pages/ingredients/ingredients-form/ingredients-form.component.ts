@@ -49,7 +49,7 @@ export class IngredientsFormComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.ing);
+    // console.log(this.ing);
   }
 
   add() {
