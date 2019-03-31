@@ -1,5 +1,5 @@
 <div id="chart">
-  <div id="chart-header">Visitors Statistics</div>
+  <div id="chart-header">Statistics by route</div>
   <ngx-charts-pie-grid [view]="view"
     [scheme]="colorScheme"
     [results]="chartData"
@@ -7,7 +7,7 @@
 </div>
 
 <div id="stats">
-  <div id="stats-header">Visitors Statistics</div>
+  <div id="stats-header">Connections timeline</div>
   <mat-tab-group id="tabs-stats"
     headerPosition="below">
     <mat-tab label="{{counter.label}}"

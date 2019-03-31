@@ -15,24 +15,24 @@ export class UserService {
   ) {}
 
   postUser(user) {
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.http
-      .post("http://localhost:3000/users", user, {
-        headers
-      })
-      .pipe(
-        map(user => {
-          // console.log(user);
-          // login successful if there's a jwt token in the response
-          if (user["token"] && user["user"]["provider"] !== "LOCAL") {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem("currentUser", JSON.stringify(user));
-            this.subjectService.setCurrentUser(user);
-          }
+    let payload = new FormData();
+    payload.append("name", user.name);
+    payload.append("email", user.email);
+    payload.append("password", user.password);
+    payload.append("file", user.avatar);
+    return this.http.post("http://localhost:3000/users", payload).pipe(
+      map(user => {
+        // console.log(user);
+        // login successful if there's a jwt token in the response
+        if (user["token"] && user["user"]["provider"] !== "LOCAL") {
+          // store user details and jwt token in local storage to keep user logged in between page refreshes
+          localStorage.setItem("currentUser", JSON.stringify(user));
+          this.subjectService.setCurrentUser(user);
+        }
 
-          return user;
-        })
-      );
+        return user;
+      })
+    );
   }
 
   patchUser(user) {

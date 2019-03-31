@@ -13,22 +13,12 @@ export class MenuComponent implements OnInit {
     this.visitCounting();
   }
 
-  menuRoute: any;
-  visitCounting() {
-    this.visitorsCounterService.getRoutesCounter().subscribe(
-      succ => {
-        this.menuRoute = succ;
-        this.menuRoute = this.menuRoute.filter(x => x.name === "menu")[0];
-
-        // Increase the visitor counter for menu
-        this.visitorsCounterService.patchRoute(this.menuRoute).subscribe(
-          succ => {
-            // console.log('increased succesfully');
-          },
-          err => console.log(err)
-        );
-      },
-      err => console.log(err)
-    );
+  async visitCounting() {
+    try {
+      let obj = { route: "menu" };
+      await this.visitorsCounterService.increaseCounter(obj).toPromise();
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

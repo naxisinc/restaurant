@@ -15,7 +15,6 @@ const PlateSchema = new mongoose.Schema(
     },
     averagerate: {
       type: Number,
-      required: true,
       default: 0
     },
     img: {

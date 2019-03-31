@@ -10,7 +10,7 @@ router.post("/", async (req, res) => {
     const type = _.pick(req.body, ["type"]);
     const newConn = new DeviceCounter(type);
     await newConn.save();
-    res.status(200).send(newConn);
+    res.status(201).send();
   } catch (e) {
     res.status(400).send(e);
   }

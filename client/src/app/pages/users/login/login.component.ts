@@ -32,13 +32,6 @@ export class LoginComponent implements OnInit {
     };
     this.authService.authenticateUser(credentials).subscribe(
       res => {
-        // // Storing the token in the localStorage
-        // res.headers.keys().map(key => {
-        //   if (key === "x-auth") {
-        //     const token = res.headers.get(key);
-        //     localStorage.setItem("x-auth", token);
-        //   }
-        // });
         // Redirect from HomePage
         this.router.navigate(["home"]);
       },

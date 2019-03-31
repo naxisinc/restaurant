@@ -13,24 +13,12 @@ export class LocationComponent implements OnInit {
     this.visitCounting();
   }
 
-  locationRoute: any;
-  visitCounting() {
-    this.visitorsCounterService.getRoutesCounter().subscribe(
-      succ => {
-        this.locationRoute = succ;
-        this.locationRoute = this.locationRoute.filter(
-          x => x.name === "location"
-        )[0];
-
-        // Increase the visitor counter for menu
-        this.visitorsCounterService.patchRoute(this.locationRoute).subscribe(
-          succ => {
-            // console.log('increased succesfully');
-          },
-          err => console.log(err)
-        );
-      },
-      err => console.log(err)
-    );
+  async visitCounting() {
+    try {
+      let obj = { route: "location" };
+      await this.visitorsCounterService.increaseCounter(obj).toPromise();
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

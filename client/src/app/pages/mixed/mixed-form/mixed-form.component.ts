@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 
 import { SizesService } from "src/app/services/sizes.service";
@@ -10,18 +10,17 @@ import { SubjectService } from "src/app/services/subject.service";
   templateUrl: "./mixed-form.component.html",
   styleUrls: ["./mixed-form.component.scss"]
 })
-export class MixedFormComponent implements OnInit {
+export class MixedFormComponent implements OnInit, OnDestroy {
   element: string; // sizes OR categories
-
   // Form Validators
   elementFormControl = new FormControl("", [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(20)
   ]);
-
   isSelected: boolean = false;
   selected: Object;
+  private subscriptions$ = [];
 
   constructor(
     private sizeService: SizesService,
@@ -31,19 +30,23 @@ export class MixedFormComponent implements OnInit {
 
   ngOnInit() {
     // Router observer
-    this.subjectService.currentRoute.subscribe(route => {
-      this.element = route;
-    });
+    this.subscriptions$.push(
+      this.subjectService.currentRoute.subscribe(route => {
+        this.element = route;
+      })
+    );
 
-    this.subjectService.elementSelected.subscribe(
-      succ => {
-        if (succ !== null) {
-          this.selected = succ;
-          this.elementFormControl.patchValue(this.selected["description"]);
-          this.isSelected = true;
-        }
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.subjectService.elementSelected.subscribe(
+        succ => {
+          if (succ !== null) {
+            this.selected = succ;
+            this.elementFormControl.patchValue(this.selected["description"]);
+            this.isSelected = true;
+          }
+        },
+        err => console.log(err)
+      )
     );
   }
 
@@ -105,5 +108,6 @@ export class MixedFormComponent implements OnInit {
 
   ngOnDestroy() {
     this.subjectService.setElementSelect(null);
+    this.subscriptions$.forEach(sub => sub.unsubscribe());
   }
 }

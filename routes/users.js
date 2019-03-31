@@ -7,11 +7,13 @@ const { ObjectID } = require("mongodb");
 const User = require("../models/user");
 const { sendEmail } = require("../utils/sendEmail");
 const { authenticate } = require("../middleware/authenticate");
+const { gfs, upload } = require("../middleware/filestorage");
 
 // POST /users
-router.post("/", async (req, res) => {
+router.post("/", upload().single("file"), async (req, res) => {
   try {
-    const body = _.pick(req.body, ["email", "password", "name", "avatar"]);
+    const body = _.pick(req.body, ["email", "password", "name"]);
+    body.avatar = req.file.filename;
     const user = new User(body);
     await user.save();
     const token = await user.generateAuthToken();
@@ -40,15 +42,11 @@ router.post("/login", async (req, res) => {
 
 // POST /users/provider
 // @ Check if provider already exist, if no lo creo
-router.post("/login-provider", async (req, res) => {
+router.post("/login-provider", upload().single("file"), async (req, res) => {
   try {
-    const body = _.pick(req.body, [
-      "email",
-      "password",
-      "name",
-      "avatar",
-      "provider"
-    ]);
+    const body = _.pick(req.body, ["email", "password", "name", "provider"]);
+    body.avatar = req.file.filename;
+
     const user = await User.findOne({
       email: body.email,
       provider: body.provider

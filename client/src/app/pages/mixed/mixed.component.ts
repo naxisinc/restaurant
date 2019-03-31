@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { MatSort, MatTableDataSource, MatPaginator } from "@angular/material";
 import { CategoriesService } from "src/app/services/categories.service";
 import { SizesService } from "src/app/services/sizes.service";
@@ -9,13 +9,14 @@ import { SubjectService } from "src/app/services/subject.service";
   templateUrl: "./mixed.component.html",
   styleUrls: ["./mixed.component.scss"]
 })
-export class MixedComponent implements OnInit {
+export class MixedComponent implements OnInit, OnDestroy {
   listData: MatTableDataSource<any>;
   displayedColumns: string[] = ["description"];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   searchKey: string;
   route: string;
+  private subscriptions$ = [];
 
   constructor(
     private sizeService: SizesService,
@@ -25,18 +26,22 @@ export class MixedComponent implements OnInit {
 
   ngOnInit() {
     // Getting the route from observer
-    this.subjectService.currentRoute.subscribe(route => {
-      this.route = route;
-    });
+    this.subscriptions$.push(
+      this.subjectService.currentRoute.subscribe(route => {
+        this.route = route;
+      })
+    );
 
     // Listen the observer for refresh the datasource
-    this.subjectService.elementRefreshed.subscribe(
-      succ => {
-        if (succ !== null) {
-          this.getData();
-        }
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.subjectService.elementRefreshed.subscribe(
+        succ => {
+          if (succ !== null) {
+            this.getData();
+          }
+        },
+        err => console.log(err)
+      )
     );
 
     this.getData();
@@ -70,5 +75,9 @@ export class MixedComponent implements OnInit {
   show(element) {
     this.subjectService.setElementSelect(element);
     this.subjectService.setItemSelectedFlag(true);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions$.forEach(sub => sub.unsubscribe());
   }
 }

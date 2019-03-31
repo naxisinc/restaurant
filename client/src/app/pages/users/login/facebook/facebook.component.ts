@@ -33,10 +33,12 @@ export class FacebookComponent implements OnInit {
       // adjusting user array
       this.user["password"] = this.user.id;
       delete this.user.id;
-      this.user["avatar"] = this.user.photoUrl;
+      this.user["avatar"] = new File([this.user.photoUrl], "images.jpg", {
+        type: "image/jpeg"
+      });
       delete this.user.photoUrl;
 
-      // console.log(this.user);
+      console.log(this.user);
 
       await this.authService.authenticateProvider(this.user).toPromise();
 

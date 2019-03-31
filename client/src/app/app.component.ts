@@ -1,9 +1,9 @@
-import { Component, HostListener, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit, OnDestroy } from "@angular/core";
 import { AuthService } from "./services/auth.service";
-import { DeviceCounterService } from "./services/devicecounter.service";
 import { SubjectService } from "./services/subject.service";
 import { LayoutItem } from "./layout/layout-selector/layout-item";
 import { LayoutService } from "./layout/layout-selector/layout.service";
+import { DeviceCounterService } from "./services/devicecounter.service";
 
 @Component({
   selector: "app-root",
@@ -13,9 +13,10 @@ import { LayoutService } from "./layout/layout-selector/layout.service";
   `,
   styleUrls: ["./app.component.scss"]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   device: string;
   layout: LayoutItem[];
+  private subscriptions$ = [];
 
   constructor(
     private authService: AuthService,
@@ -38,16 +39,17 @@ export class AppComponent implements OnInit {
     this.deviceType();
 
     this.layout = this.layoutService.getLayouts();
-    // console.log(this.layout);
   }
 
   deviceType() {
     let obj = { type: this.device };
-    this.deviceCounterService.postDevice(obj).subscribe(
-      succ => {
-        // console.log(succ);
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.deviceCounterService.postDevice(obj).subscribe(
+        () => {},
+        err => {
+          throw Error(err);
+        }
+      )
     );
   }
 
@@ -58,5 +60,9 @@ export class AppComponent implements OnInit {
     if (this.authService.loggedIn()) {
       this.subjectService.notifyUserAction();
     }
+  }
+
+  ngOnDestroy() {
+    this.subscriptions$.forEach(subscription => subscription.unsubscribe());
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatPaginator, PageEvent } from "@angular/material";
 
@@ -11,26 +11,23 @@ import { SubjectService } from "src/app/services/subject.service";
   templateUrl: "./plates.component.html",
   styleUrls: ["./plates.component.scss"]
 })
-export class PlatesComponent implements OnInit {
+export class PlatesComponent implements OnInit, OnDestroy {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
-
   // Breakpoints
   breakpointToolbar: number;
   breakpointContent: number;
-
   // MatPaginator Inputs
   length = 0;
   pageSize = 3;
   pageSizeOptions: number[] = [3, 6, 12, 24];
-
   // Filter (Sort by)
   filter = new FormControl();
   sortbyGroups: any;
   filtercolspan: number;
+  private subscriptions$ = [];
 
   constructor(
     private plateService: PlatesService,
@@ -40,26 +37,30 @@ export class PlatesComponent implements OnInit {
 
   ngOnInit() {
     // Get categories
-    this.categoriesService.getCategories().subscribe(
-      res => {
-        this.sortbyGroups = [
-          {
-            name: "Categories", // Group name
-            categories: res
-          }
-        ];
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.categoriesService.getCategories().subscribe(
+        res => {
+          this.sortbyGroups = [
+            {
+              name: "Categories", // Group name
+              categories: res
+            }
+          ];
+        },
+        err => console.log(err)
+      )
     );
 
     // Listen from the refresh observable
-    this.subjectService.dishRefreshed.subscribe(
-      succ => {
-        if (succ !== null) {
-          this.getPlates();
-        }
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.subjectService.dishRefreshed.subscribe(
+        succ => {
+          if (succ !== null) {
+            this.getPlates();
+          }
+        },
+        err => console.log(err)
+      )
     );
 
     // Getting plates
@@ -70,20 +71,22 @@ export class PlatesComponent implements OnInit {
   }
 
   getPlates() {
-    this.plateService.getPlates().subscribe(
-      res => {
-        this.listDataCopy = res;
-        this.length = this.listDataCopy.length;
-        const event = {
-          previousPageIndex: 1,
-          pageIndex: 0,
-          pageSize: this.pageSize,
-          length: this.length
-        };
-        this.paged(event);
-        this.paginator.firstPage();
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.plateService.getPlates().subscribe(
+        res => {
+          this.listDataCopy = res;
+          this.length = this.listDataCopy.length;
+          const event = {
+            previousPageIndex: 1,
+            pageIndex: 0,
+            pageSize: this.pageSize,
+            length: this.length
+          };
+          this.paged(event);
+          this.paginator.firstPage();
+        },
+        err => console.log(err)
+      )
     );
   }
 
@@ -165,5 +168,9 @@ export class PlatesComponent implements OnInit {
   seeComments(plateId, index) {
     localStorage.setItem("plate", plateId);
     localStorage.setItem("index", index);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions$.forEach(sub => sub.unsubscribe());
   }
 }

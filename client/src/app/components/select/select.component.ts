@@ -1,4 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy
+} from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { CategoriesService } from "../../services/categories.service";
 
@@ -7,10 +14,11 @@ import { CategoriesService } from "../../services/categories.service";
   templateUrl: "./select.component.html",
   styleUrls: ["./select.component.scss"]
 })
-export class SelectComponent implements OnInit {
+export class SelectComponent implements OnInit, OnDestroy {
   options: any;
   @Input() parentForm: FormControl;
   @Output() category = new EventEmitter<any>();
+  private subscriptions$ = [];
 
   constructor(private categoriesService: CategoriesService) {}
 
@@ -21,13 +29,19 @@ export class SelectComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.categoriesService.getCategories().subscribe(
-      res => {
-        this.options = res;
-      },
-      err => {
-        //
-      }
+    this.subscriptions$.push(
+      this.categoriesService.getCategories().subscribe(
+        res => {
+          this.options = res;
+        },
+        err => {
+          throw Error(err);
+        }
+      )
     );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions$.forEach(subscription => subscription.unsubscribe());
   }
 }

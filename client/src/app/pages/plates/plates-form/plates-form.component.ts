@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { FormGroup, FormBuilder, Validators, FormArray } from "@angular/forms";
 import { CustomValidator } from "src/app/services/validator.service";
 import { SizesService } from "src/app/services/sizes.service";
@@ -11,18 +11,17 @@ import { Router } from "@angular/router";
   templateUrl: "./plates-form.component.html",
   styleUrls: ["./plates-form.component.scss"]
 })
-export class PlatesFormComponent implements OnInit {
+export class PlatesFormComponent implements OnInit, OnDestroy {
   // Storage sizes
   sizes: any;
   // Save the array of ingredients coming from child component
   ingredientsId = [];
-
   isSelected: boolean = false;
   selected: Object;
   @ViewChild("fileInput") fileInput;
-
   // Set the Ingredients in the child component
   setIngredients = [];
+  private subscriptions$ = [];
 
   // Reactive Form and properties
   parentForm: FormGroup = this.fb.group({
@@ -62,40 +61,44 @@ export class PlatesFormComponent implements OnInit {
 
   ngOnInit() {
     // // Get sizes
-    this.sizesService.getSizes().subscribe(
-      res => {
-        this.sizes = res;
-        this.sizes.forEach(size => {
-          this.items = this.parentForm.get("items") as FormArray;
-          this.items.push(this.createItem(size._id, size.description));
-        });
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.sizesService.getSizes().subscribe(
+        res => {
+          this.sizes = res;
+          this.sizes.forEach(size => {
+            this.items = this.parentForm.get("items") as FormArray;
+            this.items.push(this.createItem(size._id, size.description));
+          });
+        },
+        err => console.log(err)
+      )
     );
 
     // DishSelected Observable
-    this.subjectService.dishSelected.subscribe(
-      res => {
-        if (res !== null) {
-          this.selected = res;
-          // console.log(this.selected);
-          this.parentForm.patchValue({
-            description: this.selected["description"],
-            category: this.selected["_category"],
-            items: this.selected["details"]
-          });
-          // Ingredients
-          //if (!this.isSelected || this.selected["_id"] !== dish._id) {
-          this.setIngredients = [];
-          this.selected["_ingredients"].forEach(ingredient => {
-            this.setIngredients.push(ingredient.description);
-            this.ingredientsId.push(ingredient._id); // update the listener array
-          });
-          //}
-          this.isSelected = true;
-        }
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.subjectService.dishSelected.subscribe(
+        res => {
+          if (res !== null) {
+            this.selected = res;
+            // console.log(this.selected);
+            this.parentForm.patchValue({
+              description: this.selected["description"],
+              category: this.selected["_category"],
+              items: this.selected["details"]
+            });
+            // Ingredients
+            //if (!this.isSelected || this.selected["_id"] !== dish._id) {
+            this.setIngredients = [];
+            this.selected["_ingredients"].forEach(ingredient => {
+              this.setIngredients.push(ingredient.description);
+              this.ingredientsId.push(ingredient._id); // update the listener array
+            });
+            //}
+            this.isSelected = true;
+          }
+        },
+        err => console.log(err)
+      )
     );
   }
 
@@ -122,9 +125,7 @@ export class PlatesFormComponent implements OnInit {
   add() {
     let data = this.getFormValues();
     this.plateService.postPlate(data).subscribe(
-      res => {
-        this.clearEverything();
-      },
+      res => this.clearEverything(),
       err => {
         // Unauthorized
         if (err.status === 401) {
@@ -190,5 +191,6 @@ export class PlatesFormComponent implements OnInit {
 
   ngOnDestroy() {
     this.subjectService.setDishSelect(null);
+    this.subscriptions$.forEach(sub => sub.unsubscribe());
   }
 }

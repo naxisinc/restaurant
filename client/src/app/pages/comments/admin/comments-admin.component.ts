@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { SwiperConfigInterface } from "ngx-swiper-wrapper";
 import { Router } from "@angular/router";
+import { map } from "rxjs/operators";
 
 import { CommentsAdminService } from "../../../services/admin/comments-admin.service";
 import { DialogsComponent } from "../../../components/dialogs/dialogs.component";
@@ -51,6 +52,23 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
     this.commentsOfSelectedPlate = this.plates[index].comments;
   }
 
+  // async getData() {
+  //   try {
+  //     this.plates = await this.platesService.getPlates().toPromise();
+  //     console.log(this.plates);
+
+  //     // for (let i = 0; i < this.plates.length; i++) {
+  //     //   console.log(
+  //     //     await this.commentsAdminService.getCommentByPlateId(
+  //     //       this.plates[i]._id
+  //     //     )
+  //     //   );
+  //     // }
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+
   getData() {
     this.platesService.getPlates().subscribe(
       succ => {
@@ -64,6 +82,7 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
               } else if (!this.plateId && index === 0) {
                 this.commentsOfSelectedPlate = this.plates[0].comments;
               }
+              // console.log(this.commentsOfSelectedPlate);
             },
             err => console.log(err)
           );

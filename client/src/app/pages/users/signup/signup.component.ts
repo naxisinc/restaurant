@@ -45,7 +45,12 @@ export class SignupComponent implements OnInit {
     let obj = {
       name: this.signUpForm.controls.fullname.value,
       email: this.signUpForm.controls.email.value,
-      password: this.signUpForm.controls.password.value
+      password: this.signUpForm.controls.password.value,
+      avatar: new File(
+        ["../../../../assets/images/avatars/male.jpg"],
+        "pic.jpg",
+        { type: "image/jpeg" }
+      )
     };
     // console.log(obj);
     this.userService.postUser(obj).subscribe(

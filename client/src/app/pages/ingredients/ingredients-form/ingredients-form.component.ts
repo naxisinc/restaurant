@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { CustomValidator } from "src/app/services/validator.service";
 import { SubjectService } from "src/app/services/subject.service";
@@ -10,7 +10,7 @@ import { IngredientsService } from "src/app/services/ingredients.service";
   templateUrl: "./ingredients-form.component.html",
   styleUrls: ["./ingredients-form.component.scss"]
 })
-export class IngredientsFormComponent implements OnInit {
+export class IngredientsFormComponent implements OnInit, OnDestroy {
   // Form Validators
   IngredientForm = this.fb.group({
     description: [
@@ -23,6 +23,7 @@ export class IngredientsFormComponent implements OnInit {
   isSelected: boolean = false;
   selected: Object;
   @ViewChild("fileInput") fileInput;
+  private subscriptions$ = [];
 
   constructor(
     private fb: FormBuilder,
@@ -33,17 +34,19 @@ export class IngredientsFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.subjectService.ingredientSelected.subscribe(
-      succ => {
-        if (succ !== null) {
-          this.selected = succ;
-          this.IngredientForm.controls.description.patchValue(
-            this.selected["description"]
-          );
-          this.isSelected = true;
-        }
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.subjectService.ingredientSelected.subscribe(
+        succ => {
+          if (succ !== null) {
+            this.selected = succ;
+            this.IngredientForm.controls.description.patchValue(
+              this.selected["description"]
+            );
+            this.isSelected = true;
+          }
+        },
+        err => console.log(err)
+      )
     );
   }
 
@@ -52,7 +55,6 @@ export class IngredientsFormComponent implements OnInit {
       description: this.IngredientForm.controls.description.value,
       file: this.fileInput.nativeElement.files[0]
     };
-
     this.ingredientService.postIngredient(obj).subscribe(
       succ => {
         this.clearEverything();
@@ -116,5 +118,6 @@ export class IngredientsFormComponent implements OnInit {
 
   ngOnDestroy() {
     this.subjectService.setIngredientSelect(null);
+    this.subscriptions$.forEach(sub => sub.unsubscribe());
   }
 }

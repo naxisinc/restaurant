@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 
 import { VisitorsCounterService } from "src/app/services/visitorscounter.service";
 import { DeviceCounterService } from "src/app/services/devicecounter.service";
@@ -8,7 +8,7 @@ import { DeviceCounterService } from "src/app/services/devicecounter.service";
   templateUrl: "./dashboard.component.html",
   styleUrls: ["./dashboard.component.scss"]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   // ===== Pie Chart Settings =====
   // @docs: https://plnkr.co/edit/1wyoTPr38ajgzUmOhMHi?p=info
   chartData: any;
@@ -23,6 +23,8 @@ export class DashboardComponent implements OnInit {
   onSelect(event) {
     // console.log(event);
   }
+
+  private subscriptions$ = [];
 
   // ===== VISITORS STATISTICS =====
   connectedDeviceCounter: any;
@@ -63,44 +65,50 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.visitedRouteCounterService.getRoutesCounter().subscribe(
-      succ => {
-        this.chartData = succ;
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.visitedRouteCounterService.getRoutesCounter().subscribe(
+        succ => {
+          this.chartData = succ;
+        },
+        err => console.log(err)
+      )
     );
 
-    this.connectedDeviceCounterService.getDeviceCounter().subscribe(
-      succ => {
-        this.connectedDeviceCounter = succ;
-        // console.log(this.connectedDeviceCounter);
+    this.subscriptions$.push(
+      this.connectedDeviceCounterService.getDeviceCounter().subscribe(
+        succ => {
+          this.connectedDeviceCounter = succ;
 
-        // Getting the All connections in the history
-        this.counterConn[5].value = this.connectedDeviceCounter.length; // ALL
-        // Getting the connections counter.
-        for (let i = 0; i < 5; i++) {
-          this.counterConn[i].value = this.connectedDeviceCounter.filter(x => {
-            let a = Math.floor(Date.now() / 1000);
-            let b = Math.floor(Date.parse(x.counted_at) / 1000);
-            let diff = a - b;
-            return diff <= this.timeArray[i];
-          }).length;
-        }
-        // console.log(this.counter);
+          // Getting the All connections in the history
+          this.counterConn[5].value = this.connectedDeviceCounter.length; // ALL
+          // Getting the connections counter by date range.
+          for (let i = 0; i < 5; i++) {
+            this.counterConn[i].value = this.connectedDeviceCounter.filter(
+              x => {
+                let a = Math.floor(Date.now() / 1000);
+                let b = Math.floor(Date.parse(x.counted_at) / 1000);
+                let diff = a - b;
+                return diff <= this.timeArray[i];
+              }
+            ).length;
+          }
 
-        // Getting the total of mobile connections.
-        this.mobileConn = this.connectedDeviceCounter.filter(
-          x => x.type === "mobile"
-        ).length;
-        // console.log(`mobileConn: ${this.mobileConn}`);
+          // Getting the total of mobile connections.
+          this.mobileConn = this.connectedDeviceCounter.filter(
+            x => x.type === "mobile"
+          ).length;
 
-        // Getting the total of desktop connections.
-        this.desktopConn = this.connectedDeviceCounter.filter(
-          x => x.type === "desktop"
-        ).length;
-        // console.log(`desktopConn: ${this.desktopConn}`);
-      },
-      err => console.log(err)
+          // Getting the total of desktop connections.
+          this.desktopConn = this.connectedDeviceCounter.filter(
+            x => x.type === "desktop"
+          ).length;
+        },
+        err => console.log(err)
+      )
     );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions$.forEach(sub => sub.unsubscribe());
   }
 }

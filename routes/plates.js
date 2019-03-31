@@ -20,6 +20,7 @@ router.post("/", authorized, upload().single("file"), async (req, res) => {
       img: req.file.filename,
       description: req.body.description
     });
+
     const plate = await newplate.save();
 
     let details = JSON.parse(req.body.details);
@@ -29,8 +30,8 @@ router.post("/", authorized, upload().single("file"), async (req, res) => {
       await item.save();
     }
     res.status(200).send(plate);
-  } catch (e) {
-    res.status(400).send(e);
+  } catch (err) {
+    res.status(400).send(err);
   }
 });
 

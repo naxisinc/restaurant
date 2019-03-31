@@ -14,7 +14,16 @@ export class VisitorsCounterService {
   postRoute(route) {
     const headers = new HttpHeaders({
       "Content-Type": "application/json",
-      "x-auth": localStorage.getItem("x-auth")
+      token: JSON.parse(localStorage.getItem("currentUser")).token
+    });
+    return this.http.post("http://localhost:3000/visitorscounter", route, {
+      headers
+    });
+  }
+
+  increaseCounter(route) {
+    const headers = new HttpHeaders({
+      "Content-Type": "application/json"
     });
     return this.http.post("http://localhost:3000/visitorscounter", route, {
       headers
@@ -30,7 +39,8 @@ export class VisitorsCounterService {
 
   deleteRoute(id) {
     const headers = new HttpHeaders({
-      "x-auth": localStorage.getItem("x-auth")
+      "Content-Type": "application/json",
+      token: JSON.parse(localStorage.getItem("currentUser")).token
     });
     return this.http.delete("http://localhost:3000/visitorscounter/" + id, {
       headers

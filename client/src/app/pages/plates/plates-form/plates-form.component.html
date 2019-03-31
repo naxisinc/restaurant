@@ -30,7 +30,8 @@
       <mat-tab-group animationDuration="0ms"
         backgroundColor="accent"
         dynamicHeight>
-        <mat-tab *ngFor="let item of items.controls; let i = index"
+        <!-- <mat-tab *ngFor="let item of items.controls; let i = index" -->
+        <mat-tab *ngFor="let item of parentForm.get('items').controls; let i = index"
           label="{{ item.value.description }}">
           <div [formGroupName]="i">
             <mat-form-field style="margin-top:1rem;">

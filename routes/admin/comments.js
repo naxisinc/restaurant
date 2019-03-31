@@ -61,7 +61,12 @@ router.get("/:id", async (req, res) => {
 
     // Getting the user name from Users
     for (let i = 0; i < comments.length; i++) {
-      comments[i]._creator = await User.findById(comments[i]._creator);
+      const user = await User.findById(comments[i]._creator);
+      comments[i]._creator = {
+        _id: user._id,
+        email: user.email,
+        avatar: user.avatar
+      };
     }
 
     if (!comments) return res.status(404).send();

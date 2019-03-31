@@ -13,22 +13,12 @@ export class AboutComponent implements OnInit {
     this.visitCounting();
   }
 
-  aboutRoute: any;
-  visitCounting() {
-    this.visitorsCounterService.getRoutesCounter().subscribe(
-      succ => {
-        this.aboutRoute = succ;
-        this.aboutRoute = this.aboutRoute.filter(x => x.name === "about")[0];
-
-        // Increase the visitor counter for menu
-        this.visitorsCounterService.patchRoute(this.aboutRoute).subscribe(
-          succ => {
-            // console.log('increased succesfully');
-          },
-          err => console.log(err)
-        );
-      },
-      err => console.log(err)
-    );
+  async visitCounting() {
+    try {
+      let obj = { route: "about" };
+      await this.visitorsCounterService.increaseCounter(obj).toPromise();
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

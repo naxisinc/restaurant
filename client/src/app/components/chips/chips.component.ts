@@ -6,7 +6,8 @@ import {
   Output,
   EventEmitter,
   Input,
-  OnInit
+  OnInit,
+  OnDestroy
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import {
@@ -26,7 +27,7 @@ import { IngredientsService } from "../../services/ingredients.service";
   templateUrl: "chips.component.html",
   styleUrls: ["chips.component.scss"]
 })
-export class ChipsComponent implements OnInit {
+export class ChipsComponent implements OnInit, OnDestroy {
   visible = true;
   selectable = true;
   removable = true;
@@ -39,6 +40,7 @@ export class ChipsComponent implements OnInit {
   // Exporting the list of ingredients
   @Output() ingredients = new EventEmitter();
   Ingredients: any;
+  private subscriptions$ = [];
 
   @ViewChild("fruitInput")
   fruitInput: ElementRef<HTMLInputElement>;
@@ -47,14 +49,16 @@ export class ChipsComponent implements OnInit {
   constructor(private ingredientsService: IngredientsService) {}
 
   ngOnInit() {
-    this.ingredientsService.getIngredients().subscribe(
-      res => {
-        this.Ingredients = res;
-        this.allFruits = this.Ingredients.map(x => x.description);
-      },
-      err => {
-        console.log(err);
-      }
+    this.subscriptions$.push(
+      this.ingredientsService.getIngredients().subscribe(
+        res => {
+          this.Ingredients = res;
+          this.allFruits = this.Ingredients.map(x => x.description);
+        },
+        err => {
+          console.log(err);
+        }
+      )
     );
 
     setTimeout(() => {
@@ -121,5 +125,9 @@ export class ChipsComponent implements OnInit {
     return this.allFruits.filter(
       fruit => fruit.toLowerCase().indexOf(filterValue) === 0
     );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions$.forEach(sub => sub.unsubscribe());
   }
 }

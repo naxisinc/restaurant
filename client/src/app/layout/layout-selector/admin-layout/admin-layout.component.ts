@@ -26,6 +26,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   isCudRoute: boolean = false;
   isItemSelected: boolean;
+  private subscriptions$ = [];
 
   constructor(
     private router: Router,
@@ -38,34 +39,40 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Guardo la ruta en un Observer pq lo voy a necesitar a
     // la hora de gestionar los mixesComponents (sizes & categories)
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationStart))
-      .subscribe((event: NavigationStart) => {
-        let route = event.url.split("/").pop();
-        this.subjectService.changeRoute(route);
-      });
+    this.subscriptions$.push(
+      this.router.events
+        .pipe(filter(event => event instanceof NavigationStart))
+        .subscribe((event: NavigationStart) => {
+          let route = event.url.split("/").pop();
+          this.subjectService.changeRoute(route);
+        })
+    );
 
     // Identify the route for hide or show the navbar-end
-    this.subjectService.currentRoute.subscribe(route => {
-      // console.log(route); //
-      if (route !== null) {
-        if (
-          route === "sizes" ||
-          route === "categories" ||
-          route === "ingredients" ||
-          route === "plates"
-        ) {
-          this.isCudRoute = true;
-        } else {
-          this.isCudRoute = false;
+    this.subscriptions$.push(
+      this.subjectService.currentRoute.subscribe(route => {
+        // console.log(route); //
+        if (route !== null) {
+          if (
+            route === "sizes" ||
+            route === "categories" ||
+            route === "ingredients" ||
+            route === "plates"
+          ) {
+            this.isCudRoute = true;
+          } else {
+            this.isCudRoute = false;
+          }
         }
-      }
-    });
+      })
+    );
 
     // Check if any item was selected for hide or show the navbar-end
-    this.subjectService.getItemSelectedFlag.subscribe(flag => {
-      this.isItemSelected = flag ? true : false;
-    });
+    this.subscriptions$.push(
+      this.subjectService.getItemSelectedFlag.subscribe(flag => {
+        this.isItemSelected = flag ? true : false;
+      })
+    );
 
     // Timer staff
     this.resetTimer();
@@ -109,6 +116,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.subscriptions$.forEach(subscription => subscription.unsubscribe());
   }
 
   resetTimer(endTime: number = this.endTime) {

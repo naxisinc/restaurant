@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { MatPaginator, PageEvent } from "@angular/material";
 
 import { IngredientsService } from "../../services/ingredients.service";
@@ -9,20 +9,18 @@ import { SubjectService } from "src/app/services/subject.service";
   templateUrl: "./ingredients.component.html",
   styleUrls: ["./ingredients.component.scss"]
 })
-export class IngredientsComponent implements OnInit {
+export class IngredientsComponent implements OnInit, OnDestroy {
   searchKey: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
   listData: any; // show the requested array
   listDataCopy: any; // keep the original array
-
   // MatPaginator Inputs
   length = 0;
   pageSize = 6;
   pageSizeOptions: number[] = [6, 12, 24, 60];
-
   // Breakpoints
   breakpointContent: number;
+  private subscriptions$ = [];
 
   constructor(
     private subjectService: SubjectService,
@@ -31,13 +29,15 @@ export class IngredientsComponent implements OnInit {
 
   ngOnInit() {
     // Refresh the ingredients observer
-    this.subjectService.ingredientRefreshed.subscribe(
-      succ => {
-        if (succ !== null) {
-          this.getIngredients();
-        }
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.subjectService.ingredientRefreshed.subscribe(
+        succ => {
+          if (succ !== null) {
+            this.getIngredients();
+          }
+        },
+        err => console.log(err)
+      )
     );
 
     this.getIngredients();
@@ -47,20 +47,22 @@ export class IngredientsComponent implements OnInit {
   }
 
   getIngredients() {
-    this.ingredientService.getIngredients().subscribe(
-      res => {
-        this.listDataCopy = res;
-        this.length = this.listDataCopy.length;
-        const event = {
-          previousPageIndex: 1,
-          pageIndex: 0,
-          pageSize: this.pageSize,
-          length: this.length
-        };
-        this.paged(event);
-        this.paginator.firstPage();
-      },
-      err => console.log(err)
+    this.subscriptions$.push(
+      this.ingredientService.getIngredients().subscribe(
+        res => {
+          this.listDataCopy = res;
+          this.length = this.listDataCopy.length;
+          const event = {
+            previousPageIndex: 1,
+            pageIndex: 0,
+            pageSize: this.pageSize,
+            length: this.length
+          };
+          this.paged(event);
+          this.paginator.firstPage();
+        },
+        err => console.log(err)
+      )
     );
   }
 
@@ -101,5 +103,9 @@ export class IngredientsComponent implements OnInit {
   show(ingredient) {
     this.subjectService.setIngredientSelect(ingredient);
     this.subjectService.setItemSelectedFlag(true);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions$.forEach(sub => sub.unsubscribe());
   }
 }
