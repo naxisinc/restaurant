@@ -82,7 +82,6 @@ export class CommentsAdminComponent implements OnInit, OnDestroy {
               } else if (!this.plateId && index === 0) {
                 this.commentsOfSelectedPlate = this.plates[0].comments;
               }
-              // console.log(this.commentsOfSelectedPlate);
             },
             err => console.log(err)
           );

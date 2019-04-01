@@ -38,14 +38,9 @@ export class AuthService {
   }
 
   authenticateProvider(user) {
-    let payload = new FormData();
-    payload.append("email", user.email);
-    payload.append("password", user.password);
-    payload.append("name", user.name);
-    payload.append("file", user.avatar);
-    payload.append("provider", user.provider);
+    const headers = new HttpHeaders({ "Content-Type": "application/json" });
     return this.http
-      .post("http://localhost:3000/users/login-provider", payload)
+      .post("http://localhost:3000/users/login-provider", user, { headers })
       .pipe(
         map(user => {
           // login successful if there's a jwt token in the response

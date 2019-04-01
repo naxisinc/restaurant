@@ -13,11 +13,11 @@ const CommentSchema = new mongoose.Schema(
     },
     created_at: {
       type: Date,
-      required: true,
       default: Date.now
     },
     headline: {
       type: String,
+      required: true,
       trim: true
     },
     comment: {

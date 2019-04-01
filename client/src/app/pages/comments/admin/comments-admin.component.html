@@ -37,7 +37,7 @@
   <!--../../../../assets/images/avatars/images.jpg-->
   <mat-list-item *ngFor="let comment of commentsOfSelectedPlate; let i = index">
     <img matListAvatar
-      src="http://localhost:3000/images/{{ comment.avatar }}"
+      src="{{ comment._creator.avatar }}"
       alt="" />
 
     <div matLine>
@@ -54,6 +54,10 @@
     <h2 matLine>
       <span> {{ comment.created_at | date }} </span>
     </h2>
+
+    <div matLine>
+      <strong> {{ comment.headline }} </strong>
+    </div>
 
     <p matLine>
       <span> {{ comment.comment }} </span>

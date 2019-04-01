@@ -42,25 +42,25 @@ router.post("/login", async (req, res) => {
 
 // POST /users/provider
 // @ Check if provider already exist, if no lo creo
-router.post("/login-provider", upload().single("file"), async (req, res) => {
+router.post("/login-provider", async (req, res) => {
   try {
-    const body = _.pick(req.body, ["email", "password", "name", "provider"]);
-    body.avatar = req.file.filename;
+    const body = _.pick(req.body, [
+      "email",
+      "password",
+      "name",
+      "provider",
+      "avatar"
+    ]);
 
     const user = await User.findOne({
       email: body.email,
       provider: body.provider
     });
     if (user) {
-      // si el user ha cambiado el avatar desde
-      // su ultimo login entonces actualizalo
-      let query_avatar = req.body.avatar;
-      if (user.avatar !== query_avatar) {
-        await User.findByIdAndUpdate(
-          { _id: user._id },
-          { avatar: query_avatar }
-        );
-      }
+      // actualizo lo q pudo haber cambiado
+      await User.findByIdAndUpdate({ _id: user._id }, body, {
+        new: true
+      });
       const token = await user.generateAuthToken();
       res.status(200).send({ user, token });
     } else {
@@ -69,7 +69,7 @@ router.post("/login-provider", upload().single("file"), async (req, res) => {
       const user = new User(body);
       await user.save();
       const token = await user.generateAuthToken();
-      res.status(200).send({ user, token });
+      res.status(201).send({ user, token });
     }
   } catch (e) {
     res.status(400).send();

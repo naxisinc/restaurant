@@ -55,6 +55,7 @@ export class IngredientsFormComponent implements OnInit, OnDestroy {
       description: this.IngredientForm.controls.description.value,
       file: this.fileInput.nativeElement.files[0]
     };
+
     this.ingredientService.postIngredient(obj).subscribe(
       succ => {
         this.clearEverything();

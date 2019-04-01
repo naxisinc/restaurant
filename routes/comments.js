@@ -16,6 +16,7 @@ router.post("/", authenticate, async (req, res) => {
     const comment = new Comment({
       _creator: req.user._id,
       _plate: plateId,
+      headline: req.body.headline,
       comment: req.body.comment,
       rate: comment_rate
     });

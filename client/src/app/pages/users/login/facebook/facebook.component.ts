@@ -33,12 +33,8 @@ export class FacebookComponent implements OnInit {
       // adjusting user array
       this.user["password"] = this.user.id;
       delete this.user.id;
-      this.user["avatar"] = new File([this.user.photoUrl], "images.jpg", {
-        type: "image/jpeg"
-      });
+      this.user["avatar"] = this.user.photoUrl;
       delete this.user.photoUrl;
-
-      console.log(this.user);
 
       await this.authService.authenticateProvider(this.user).toPromise();
 
@@ -48,4 +44,14 @@ export class FacebookComponent implements OnInit {
       console.log(e);
     }
   }
+
+  // downloadPhoto(url) {
+  //   var link = document.createElement("a");
+  //   link.download = "image.jpg";
+  //   link.href = url;
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  //   // delete link;
+  // }
 }
